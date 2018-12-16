@@ -1,0 +1,68 @@
+This document describes the language provided by this toolchain.
+
+Variable types
+sint    Signed 2 byte integer
+uint    Unsigned 2 byte integer
+lsint   Signed 4 byte integer
+luint   Unsigned 4 byte integer
+char    Unsigned 1 byte integer
+<type> [] 8 byte pointer towards specified type
+float   4 byte floating point
+double  8 byte floating point
+struct  A n-byte data structure defined at compiletime. Similar to structures in C.
+
+Arithmatic Operators
+
+=       Equals
++       Sum of L/R operands
+-       Difference of L/R operands
+*       Product of L/R operands
+/       Quotient of L/R operands
+%       Modulus
+^^      L to the power of R
++=      Increment L by R
+-=      Decrement L by R
+*=      Set to Product
+/=      Set to Quotient
+
+Logical Operators
+&&      And
+||      Or
+!!      Not (Logical and bitwise)
+!       Not (Logical and bitwise)
+!&      NAND
+!|      NOR
+|!      XOR
+<       Less Than
+>       Greater Than
+==      Equals
+!=      Not Equals
+<=      Less Than or Equal
+>=      Greater Than or Equal
+
+
+Bitwise Operators
+&       Bitwise AND
+|       Bitwise OR
+!       Invert (Logical and Bitwise)
+^       Invert
+
+Control Operators
+if (condition){code}    Test condition and execute instructions if passed
+else {code}             Catch failed if test and continue
+loop (condition) {code} Iterate whilst condition holds
+switch (value){         Execute a code block by comparing value to each case value, or execute a default block if no matches are found
+    case value_1: {code};
+    ...
+    {default code};
+}  
+goto                    Jump instruction to a marker within the same scope
+return (value)          Indicate value to be returned to callee
+
+Reserved Keywords
+[variable_type] All data types specified in 'Varaible Types' section are keywords for declaring variables
+import          Include another code file to allow for reference links or high-scope data
+new             Allocate memory of some size to the heap
+delete          DeAllocate memory allocated by 'new'
+sizeof          Return 2 byte unsigned integer specifying size of given type
+static          Specify variable as static within a procedure

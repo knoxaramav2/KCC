@@ -1,0 +1,27 @@
+import io
+
+struct Player = {
+
+    init(char [] _name) = {
+        name = _name;
+    }
+
+    sint health = 50;
+    char [] name;
+}
+
+entry function main
+{
+    print("What is your name?");
+
+    char [] usin;
+
+    loop(usin != null){
+        usin = getkb();
+    }
+
+    Player player = new Player;
+    player(usin);
+
+    print("Welcome, "+player.name);
+}

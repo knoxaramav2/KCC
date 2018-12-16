@@ -1,0 +1,9 @@
+import io
+
+entry function main
+{
+    char [] hello = "Hello";
+    char [] world = " world"
+    char [] hello_world = hello + world;
+    print(hello_world);
+}
