@@ -1,0 +1,16 @@
+import graphics
+
+class : user {
+    int : health;
+    int : maxHealth;
+    str : name;
+    flt : speed;
+
+    _init() : {
+        
+    }
+
+    _destroy() : {
+        delete(spriteSheet);
+    }
+};

@@ -9,9 +9,10 @@ namespace OPTIONS{
 
     //Not important for overall operation
     enum CliWrnErrEnum{
-        CLI_ERR_OK,
-        CLI_ERR_MISFORMED,
-        CLI_ERR_UNKNOWN
+        CLI_ERR_OK,//Probably not used
+        CLI_ERR_MISFORMED,//Illegally formed options
+        CLI_ERR_UNKNOWN,//
+        CLI_ERR_EMPTY_VALUE
     };
 
     struct CliWrnErr{
@@ -43,15 +44,18 @@ namespace OPTIONS{
 
     SubCommandOptions getSubCommandOptions();
     std::vector <CliWrnErr> getCliWrnErr();
+    void printVerbose();
 
     //Switches
     bool pedantic;
     bool ignoreWarning;
-    bool elevateWarning;
-
+    bool verbose;
 
     //Values
     int optimizationLevel;
+
+    //Input/Output
+    std::string outputFileName;
 
     //Paths
     std::vector <std::string> sourceFiles;

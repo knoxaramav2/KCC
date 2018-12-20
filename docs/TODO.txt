@@ -1,0 +1,1 @@
+add bin path to project for data file discovery

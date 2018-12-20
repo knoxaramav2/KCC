@@ -1,0 +1,5 @@
+#The purpose of this set of example files is to set
+#a target for which the toolchain should be able to 
+#successfully compile an executable game described
+#in the code from plain-text source files
+

@@ -51,7 +51,7 @@ subdirs:
 
 .PHONY: run
 run:
-	bin/$(TITLE_COMPILER) -h
+	$(MAKE) -C bin/src/Test
 
 .PHONY: clean
 clean:

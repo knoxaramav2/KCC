@@ -66,3 +66,7 @@ new             Allocate memory of some size to the heap
 delete          DeAllocate memory allocated by 'new'
 sizeof          Return 2 byte unsigned integer specifying size of given type
 static          Specify variable as static within a procedure
+
+Class Keywords
+_init
+_destroy

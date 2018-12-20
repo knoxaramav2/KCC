@@ -13,13 +13,13 @@ void cliArgProc(int argc, char ** argv){
     CliOptions cliOptions(argc, argv);
     SubCommandOptions subOptions = cliOptions.getSubCommandOptions();
     vector <CliWrnErr> cliWrnErr = cliOptions.getCliWrnErr();
-
-
 }
 
 int main(int argc, char ** argv, char ** argx){
 
     cliArgProc(argc, argv);
+
+    printf("\r\nDONE\r\n");
 
     return 0;
 }

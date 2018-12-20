@@ -1,1 +1,4 @@
 -h --help       Display help information
+-w              Ignore Warnings
+-p              Pedantic
+-v              Verbose

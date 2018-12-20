@@ -1,0 +1,25 @@
+This document provides basic coverage of compiling a program 
+from code to executable.
+
+
+##### Basic Program ######
+
+    For language information, please refer to the languageDetails.txt
+file included.
+
+    --main.kcc--
+
+    @import io
+
+    entry main
+    {
+        *char hello = "hello";
+        *char world = "world";
+        *char helloWorld;
+
+        #note: ' ' represent characters which are treated as numbers
+        #use " " for concatenation 
+        helloWorld = hello + " " + world;
+
+        print (helloWorld);
+    }
