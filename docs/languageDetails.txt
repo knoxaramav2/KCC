@@ -70,3 +70,11 @@ static          Specify variable as static within a procedure
 Class Keywords
 _init
 _destroy
+
+Variable Declaration
+
+<type> varName                  Specify variable at default value
+<type> varName = value;         Specify variable and initialize
+*<type> varName                 Specify pointer of size of <type>
+*<type> varname = new(<type>)   Specify pointer and allocate memory at defualt value
+*<type> varname = <*<type>>     Specify pointer and point to existing memory

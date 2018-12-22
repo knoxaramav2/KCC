@@ -23,3 +23,6 @@ file included.
 
         print (helloWorld);
     }
+
+    --compiling--
+    kcc main.kcc -v --output

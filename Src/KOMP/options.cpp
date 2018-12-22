@@ -63,6 +63,8 @@ CliOptions::CliOptions(int argc, char ** argv){
                     case 'w': ignoreWarning = true; break;
                     case 'p': pedantic = true; break;
                     case 'v': verbose = true; break;
+                    case 'o': noLink = true; break;
+                    case 'a': outputAsm = true; break;
 
                     default:
                     _cliWrnErr.push_back(CliWrnErr(string(1, c), CliWrnErrEnum::CLI_ERR_UNKNOWN));
@@ -161,6 +163,8 @@ void CliOptions::setDefault(){
     pedantic = false;
     ignoreWarning = false;
     verbose = false;
+    noLink = false;
+    outputAsm = false;
 
     //Values
     optimizationLevel = 0;

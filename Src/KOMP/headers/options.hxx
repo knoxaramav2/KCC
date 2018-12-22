@@ -50,6 +50,8 @@ namespace OPTIONS{
     bool pedantic;
     bool ignoreWarning;
     bool verbose;
+    bool noLink;
+    bool outputAsm;
 
     //Values
     int optimizationLevel;

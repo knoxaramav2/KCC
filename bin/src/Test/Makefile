@@ -5,10 +5,10 @@ BIN_PATH = $(shell pwd)
 CC = kcc
 EXE_PATH=result
 
-SRC=main.kcc
+SRC=main.kcc dep.kcc
 
-all: compile
+all: $(EXE_PATH)
 	echo $(EXE_PATH) Done.
 
-compile : $(SRC)
-	$(CC) $@ -hv --output=$(EXE_PATH)
+$(EXE_PATH) : $(SRC)
+	$(CC) $^ -hv
