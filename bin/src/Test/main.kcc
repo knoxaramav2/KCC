@@ -1,0 +1,5 @@
+uses io
+
+uses dep.kcc
+
+main:function(argc:int, argv:string*)
