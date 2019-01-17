@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "KCC": {
+      "commandName": "Project",
+      "commandLineArgs": "-h --exe=test"
+    }
+  }
+}
