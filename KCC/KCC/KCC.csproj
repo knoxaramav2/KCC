@@ -10,4 +10,8 @@
     <Folder Include="TestScripts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ namespace KCC
         static int Main(string[] args)
         {
             var cliOptions = new CliOptions(args);
-
+            
             if (!cliOptions.IsValid())
             {
                 ColorIO.WriteLineError("Fatal Errors Found: Cannot Continue");
@@ -17,11 +17,6 @@ namespace KCC
             }
 
             return 0;
-        }
-
-        static string[] SplitOption(string option, char delimiter)
-        {
-            return option.Split(delimiter);
         }
     }
 }
