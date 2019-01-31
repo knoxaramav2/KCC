@@ -8,6 +8,8 @@ namespace CommonLangLib
 {
     public enum Lexeme
     {
+        //Misc Management
+
         //Data Types
         Int,
         Float,
@@ -58,6 +60,28 @@ namespace CommonLangLib
         IncPre,
         IncPost,
         DecPre,
-        DecPost
+        DecPost,
+
+        //Enclosures
+        OpenBrace,
+        OpenBracket,
+        OpenParenth,
+
+        CloseBrace,
+        CloseBracket,
+        CloseParenth
+    }
+
+    public static class LexemeHelpter
+    {
+        public static bool isCloseGroup(Lexeme lexeme)
+        {
+            return lexeme >= Lexeme.CloseBrace && lexeme <= Lexeme.CloseParenth;
+        }
+
+        public static bool isOpenGroup(Lexeme lexeme)
+        {
+            return lexeme >= Lexeme.OpenBrace && lexeme <= Lexeme.OpenParenth;
+        }
     }
 }
