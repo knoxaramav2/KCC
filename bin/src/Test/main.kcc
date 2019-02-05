@@ -1,5 +1,5 @@
-uses io
+function <void> main(string[] args,{
 
-uses dep.kcc
+	
 
-main:function(argc:int, argv:string*)
+});

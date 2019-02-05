@@ -37,15 +37,15 @@ namespace Lexer
             _enclosureLevel = 0;
         }
 
-        public void push(Token t)
+        public void Push(Token t)
         {
             _outputStack.Add(t);
         }
 
-        public void push(Lexeme lexeme)
+        public void Push(Lexeme lexeme, string word)
         {
             //collapse operator stack for enclosed area
-            if (LexemeHelpter.isCloseGroup(lexeme))
+            if (LexemeHelper.isCloseGroup(lexeme))
             {
                 Lexeme compatGroup;
                 switch (lexeme)
@@ -81,10 +81,14 @@ namespace Lexer
                 }
             }
             //append and track open container
-            else if (LexemeHelpter.isOpenGroup(lexeme))
+            else if (LexemeHelper.isOpenGroup(lexeme))
             {
                 _operatorStack.Add(lexeme);
                 ++_enclosureLevel;
+            }
+            else
+            {
+
             }
         }
     }

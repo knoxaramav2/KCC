@@ -2,27 +2,45 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KCC
+namespace CommonLangLib
 {
     enum ErrorCode
     {
         WARNING,
+        //File Warnings
+        FILE_REDUNDANT,
 
-        ERROR
+        ERROR,
+        //File Errors
+        FILE_NOT_FOUND
     }
 
     class ErrorReporter
     {
+        private static ErrorReporter _self;
         private readonly List<ErrorDetails> _errorDetails;
-
-        public ErrorReporter()
+        private ErrorReporter()
         {
             _errorDetails = new List<ErrorDetails>();
+
+            FatalError = false;
+        }
+
+        public bool FatalError { get; private set; }
+
+        public static ErrorReporter GetInstance()
+        {
+            return _self ?? (_self = new ErrorReporter());
         }
 
         public void Add(string msg, ErrorCode errorCode)
         {
             var errorDetails = new ErrorDetails(msg, errorCode);
+
+            if (errorCode > ErrorCode.ERROR)
+            {
+                FatalError = true;
+            }
 
             _errorDetails.Add(errorDetails);
         }

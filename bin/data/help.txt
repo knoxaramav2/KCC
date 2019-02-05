@@ -2,3 +2,6 @@
 -w              Ignore Warnings
 -p              Pedantic
 -v              Verbose
+
+--exe=<name>	Set executable name
+--intdbg	Enable internal debug messages

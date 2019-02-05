@@ -2,7 +2,7 @@
   "profiles": {
     "KCC": {
       "commandName": "Project",
-      "commandLineArgs": "-h --exe=test"
+      "commandLineArgs": "Test\\main.kcc Test\\dep.kcc -h --intdbg --exe=test"
     }
   }
 }

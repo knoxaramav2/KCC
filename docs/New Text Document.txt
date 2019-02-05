@@ -1,0 +1,4 @@
+-h		Print help dialogue
+
+--exe=<output>	Set output executable	
+--intdbg	Allow internal debug messages

@@ -9,6 +9,7 @@ namespace CommonLangLib
     public enum Lexeme
     {
         //Misc Management
+        NA,
 
         //Data Types
         Int,
@@ -72,7 +73,7 @@ namespace CommonLangLib
         CloseParenth
     }
 
-    public static class LexemeHelpter
+    public static class LexemeHelper
     {
         public static bool isCloseGroup(Lexeme lexeme)
         {

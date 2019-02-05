@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ColorIO.cs" />
+    <Compile Include="ErrorReporter.cs" />
+    <Compile Include="KCCEnv.cs" />
     <Compile Include="Lexeme.cs" />
+    <Compile Include="PageInfo.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

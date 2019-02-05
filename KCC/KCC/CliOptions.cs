@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CommonLangLib;
 
 namespace KCC
 {
     class CliOptions
     {
 
-        private bool canContinue;
+        private bool _canContinue;
 
         //Start Switches
         public bool ReadHelpDoc;
+        public bool EnableDebugMessages;
 
         //Function Switches
 
@@ -21,8 +23,10 @@ namespace KCC
         //Level Options
         public bool OptimizeLevel;
 
-        public CliOptions(string[] args)
+        public CliOptions(IReadOnlyList<string> args)
         {
+            _canContinue = true;
+
             ReadHelpDoc = false;
             InputFiles = new List<string>();
             OptimizeLevel = false;
@@ -74,19 +78,22 @@ namespace KCC
                             if (OutputName != null || argVal.Length != 2)
                             {
                                 ColorIO.WriteLineError("Must set exactly one value");
-                                canContinue = false;
+                                _canContinue = false;
                             }
                             else
                             {
                                 OutputName = argVal[0];
                             }
                             break;
+                        case "--intdbg":
+                            EnableDebugMessages = true;
+                            break;
                     }
                 }
             }
 
             if (OutputName == null ||
-                !canContinue)
+                !_canContinue)
             {
 
             }
@@ -94,7 +101,7 @@ namespace KCC
 
         public bool IsValid()
         {
-            return canContinue;
+            return _canContinue;
         }
     }
 }

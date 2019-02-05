@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace KCC
+namespace CommonLangLib
 {
 
-    static class ColorIO
+    public static class ColorIO
     {
         public static void WriteLineClr(string msg, ConsoleColor clr)
         {
