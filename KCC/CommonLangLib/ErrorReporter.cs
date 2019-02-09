@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CommonLangLib
 {
-    enum ErrorCode
+    public enum ErrorCode
     {
         WARNING,
         //File Warnings
@@ -15,7 +15,7 @@ namespace CommonLangLib
         FILE_NOT_FOUND
     }
 
-    class ErrorReporter
+    public class ErrorReporter
     {
         private static ErrorReporter _self;
         private readonly List<ErrorDetails> _errorDetails;
@@ -70,9 +70,23 @@ namespace CommonLangLib
             var cc = errorDetails.ErrorCode < ErrorCode.ERROR ? ConsoleColor.DarkYellow : ConsoleColor.DarkRed;
             ColorIO.WriteLineClr(errorDetails.Message, cc);
         }
+
+        public void PrintAll()
+        {
+            while (_errorDetails.Count > 0)
+            {
+                PrintNext();
+            }
+        }
+
+        public bool ValidateAndFlush()
+        {
+            PrintAll();
+            return FatalError;
+        }
     }
 
-    internal class ErrorDetails
+    public class ErrorDetails
     {
         public string Message;
         public ErrorCode ErrorCode;

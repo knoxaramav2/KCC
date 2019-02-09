@@ -13,18 +13,13 @@ namespace CommonLangLib
 
         public PageInfo(string filePath)
         {
-  
             uri = filePath;
+            _rawCode = File.ReadAllLines(uri);
+        }
 
-            try
-            {
-                _rawCode = File.ReadAllLines(uri);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+        public string GetUri()
+        {
+            return uri;
         }
     }
 
@@ -33,9 +28,12 @@ namespace CommonLangLib
         private static PageDistro _self;
         private ArrayList _pages;
 
+        private int _index;
+
         private PageDistro()
         {
             _pages = new ArrayList();
+            _index = 0;
         }
 
         public static PageDistro GetInstance()
@@ -65,6 +63,16 @@ namespace CommonLangLib
                 ErrorReporter.GetInstance().Add(
                     e.ToString(), ErrorCode.FILE_NOT_FOUND);
             }
+        }
+
+        public PageInfo GetNextPage()
+        {
+            if (_index >= _pages.Count)
+            {
+                return null;
+            }
+
+            return (PageInfo) _pages[_index++];
         }
     }
 }

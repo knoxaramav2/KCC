@@ -18,6 +18,9 @@ namespace KCC
             //Initialize
             Debug.Init(cliOptions.EnableDebugMessages);
             KCCEnv.Init();
+
+            var errorReporter = ErrorReporter.GetInstance();
+            var pageDistro = PageDistro.GetInstance();
     
             //TODO replace with ErrorReporter.FatalError?
             if (!cliOptions.IsValid())
@@ -29,7 +32,13 @@ namespace KCC
             //Load initial files
             InitFiles(cliOptions);
 
+            if (errorReporter.ValidateAndFlush()){return -1;}
+
             //Begin parsing files
+            while (pageDistro.GetNextPage() != null)
+            {
+                
+            }
 
             return 0;
         }
