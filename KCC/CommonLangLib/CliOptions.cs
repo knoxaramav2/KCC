@@ -5,8 +5,9 @@ using CommonLangLib;
 
 namespace KCC
 {
-    class CliOptions
+    public class CliOptions
     {
+        private static CliOptions _self;
 
         private bool _canContinue;
 
@@ -21,17 +22,25 @@ namespace KCC
         public List<string> InputFiles;
 
         //Level Options
-        public bool OptimizeLevel;
+        public int OptimizeLevel;
+        public int VerboseLevel;
 
-        public CliOptions(IReadOnlyList<string> args)
+        private CliOptions()
         {
             _canContinue = true;
 
             ReadHelpDoc = false;
-            InputFiles = new List<string>();
-            OptimizeLevel = false;
+            EnableDebugMessages = false;
 
-            ParseCli(args);
+            InputFiles = new List<string>();
+
+            OptimizeLevel = 0;
+            VerboseLevel = 0;
+        }
+
+        public static CliOptions GetInstance()
+        {
+            return _self ?? (_self = new CliOptions());
         }
 
         public void ParseCli(IReadOnlyList<string> args)

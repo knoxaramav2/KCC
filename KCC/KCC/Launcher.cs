@@ -12,7 +12,8 @@ namespace KCC
         private static int Main(string[] args)
         {
             //Parse CLI options
-            var cliOptions = new CliOptions(args);
+            var cliOptions = CliOptions.GetInstance();
+            cliOptions.ParseCli(args);
 
             //Initialize
             Debug.Init(cliOptions.EnableDebugMessages);
@@ -28,14 +29,18 @@ namespace KCC
             //Load initial files
             InitFiles(cliOptions);
 
+            //Begin parsing files
+
             return 0;
         }
 
         private static void InitFiles(CliOptions cliOptions)
         {
+            var pageDistro = PageDistro.GetInstance();
+
             foreach (var file in cliOptions.InputFiles)
             {
-                PageDistro.GetInstance().LoadFile(file);
+                pageDistro.LoadFile(file);
             }
         }
     }
