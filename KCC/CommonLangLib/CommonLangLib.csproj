@@ -42,13 +42,18 @@
   <ItemGroup>
     <Compile Include="CliOptions.cs" />
     <Compile Include="ColorIO.cs" />
+    <Compile Include="ConfigContext.cs" />
     <Compile Include="ErrorReporter.cs" />
+    <Compile Include="FileProcessor.cs" />
     <Compile Include="KCCEnv.cs" />
     <Compile Include="Lexeme.cs" />
     <Compile Include="PageInfo.cs" />
     <Compile Include="PrintUtils.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -61,7 +61,7 @@ namespace CommonLangLib
             catch (FileNotFoundException e)
             {
                 ErrorReporter.GetInstance().Add(
-                    e.ToString(), ErrorCode.FILE_NOT_FOUND);
+                    e.ToString(), ErrorCode.FileNotFound);
             }
         }
 

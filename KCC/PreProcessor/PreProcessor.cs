@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommonLangLib;
 
 namespace PreProcessor
 {
-    public class Class1
+    public class PreProcessor : IFileProcessor<PageInfo, PageInfo>
     {
+        public PageInfo Execute(PageInfo input)
+        {
+            return input;
+        }
     }
 }

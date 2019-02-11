@@ -6,13 +6,16 @@ namespace CommonLangLib
 {
     public enum ErrorCode
     {
-        WARNING,
+        Warning,
         //File Warnings
-        FILE_REDUNDANT,
+        FileRedundant,
+
+        //Macro Warnings
+        MacroRedefine,
 
         ERROR,
         //File Errors
-        FILE_NOT_FOUND
+        FileNotFound
     }
 
     public class ErrorReporter
