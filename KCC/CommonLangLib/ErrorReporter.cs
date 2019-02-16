@@ -13,7 +13,7 @@ namespace CommonLangLib
         //Macro Warnings
         MacroRedefine,
 
-        ERROR,
+        Error,
         //File Errors
         FileNotFound
     }
@@ -40,7 +40,7 @@ namespace CommonLangLib
         {
             var errorDetails = new ErrorDetails(msg, errorCode);
 
-            if (errorCode > ErrorCode.ERROR)
+            if (errorCode > ErrorCode.Error)
             {
                 FatalError = true;
             }
@@ -70,7 +70,7 @@ namespace CommonLangLib
             }
 
             var errorDetails = Pop();
-            var cc = errorDetails.ErrorCode < ErrorCode.ERROR ? ConsoleColor.DarkYellow : ConsoleColor.DarkRed;
+            var cc = errorDetails.ErrorCode < ErrorCode.Error ? ConsoleColor.DarkYellow : ConsoleColor.DarkRed;
             ColorIO.WriteLineClr(errorDetails.Message, cc);
         }
 

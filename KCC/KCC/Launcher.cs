@@ -21,7 +21,9 @@ namespace KCC
 
             var errorReporter = ErrorReporter.GetInstance();
             var pageDistro = PageDistro.GetInstance();
-    
+
+            errorReporter.ValidateAndFlush();
+
             //TODO replace with ErrorReporter.FatalError?
             if (!cliOptions.IsValid())
             {

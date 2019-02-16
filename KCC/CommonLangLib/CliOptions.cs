@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CommonLangLib;
 
@@ -23,7 +24,7 @@ namespace KCC
 
         //Level Options
         public int OptimizeLevel;
-        public int VerboseLevel;
+        public Verbosity VerboseLevel;
 
         private CliOptions()
         {
@@ -35,7 +36,9 @@ namespace KCC
             InputFiles = new List<string>();
 
             OptimizeLevel = 0;
-            VerboseLevel = 0;
+            VerboseLevel = Verbosity.Basic;
+
+            OutputName = "out.exe";
         }
 
         public static CliOptions GetInstance()
@@ -47,6 +50,7 @@ namespace KCC
         {
             var inputActive = true;
             var argSize = args.Count;
+            var reporter = ErrorReporter.GetInstance();
 
             for (var i = 0; i < argSize; ++i)
             {
@@ -74,37 +78,71 @@ namespace KCC
                             case 'h':
                                 ReadHelpDoc = true;
                                 break;
+                            case 'v':
+                                var val = DetectOptionValue(arg, j);
+                                if (val == null)
+                                {
+                                    VerboseLevel = Verbosity.Detailed;
+                                }
+                                else
+                                {
+                                    switch (val)
+                                    {
+                                        case "none":
+                                        case "silent":
+                                            VerboseLevel = Verbosity.None;
+                                            break;
+                                        case "basic":
+                                            VerboseLevel = Verbosity.Basic;
+                                            break;
+                                        case "detailed":
+                                        case "loud":
+                                            VerboseLevel = Verbosity.Detailed;
+                                            break;
+                                        default:
+                                            reporter.Add("Unknown verbose level", ErrorCode.Error);
+                                            break;
+                                    }
+
+                                    j = arg.Length;
+                                }
+                                break;
+
+                            default:
+                                reporter.Add("Unrecognized option '"+arg[j]+"'", ErrorCode.Error);
+                                break;
                         }
                     }
                 }
                 else
                 {
-                    var argVal = arg.Split('=');
+                    var value = DetectOptionValue(arg, 0);
+                    var statement = arg;
 
-                    switch (argVal[0])
+                    if (value != null)
+                    {
+                        statement = statement.Substring(0, statement.Length-value.Length-1);
+                    }
+
+                    switch (statement)
                     {
                         case "--exe":
-                            if (OutputName != null || argVal.Length != 2)
+                            if (value == null)
                             {
-                                ColorIO.WriteLineError("Must set exactly one value");
+                                reporter.Add(statement+": Must supply a value", ErrorCode.Error);
                                 _canContinue = false;
                             }
-                            else
-                            {
-                                OutputName = argVal[0];
-                            }
+                            OutputName = value;              
                             break;
                         case "--intdbg":
                             EnableDebugMessages = true;
                             break;
+                        default:
+                            _canContinue = false;
+                            reporter.Add("Unrecognized option '" + statement + "'", ErrorCode.Error);
+                            break;
                     }
                 }
-            }
-
-            if (OutputName == null ||
-                !_canContinue)
-            {
-
             }
         }
 
@@ -112,5 +150,20 @@ namespace KCC
         {
             return _canContinue;
         }
+
+
+        //Detect if current option at 'start' index of 'item' sets a value
+        private static string DetectOptionValue(string item, int start)
+        {
+            var idx = item.IndexOf('=', start);
+            return idx == -1 ? null : item.Substring(idx + 1);
+        }
+    }
+
+    public enum Verbosity
+    {
+        None,
+        Basic,
+        Detailed
     }
 }
