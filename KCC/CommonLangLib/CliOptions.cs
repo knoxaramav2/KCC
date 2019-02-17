@@ -20,7 +20,8 @@ namespace KCC
 
         //String Options
         public string OutputName;
-        public List<string> InputFiles;
+        public List<string> Libraries;
+        public string Src { get; private set; }
 
         //Level Options
         public int OptimizeLevel;
@@ -33,7 +34,8 @@ namespace KCC
             ReadHelpDoc = false;
             EnableDebugMessages = false;
 
-            InputFiles = new List<string>();
+            Libraries = new List<string>();
+            Src = null;
 
             OptimizeLevel = 0;
             VerboseLevel = Verbosity.Basic;
@@ -48,26 +50,12 @@ namespace KCC
 
         public void ParseCli(IReadOnlyList<string> args)
         {
-            var inputActive = true;
             var argSize = args.Count;
             var reporter = ErrorReporter.GetInstance();
 
             for (var i = 0; i < argSize; ++i)
             {
                 var arg = args[i];
-
-                if (inputActive)
-                {
-                    if (arg[0] == '-')
-                    {
-                        inputActive = false;
-                    }
-                    else
-                    {
-                        InputFiles.Add(arg);
-                        continue;
-                    }
-                }
 
                 if (arg[1] != '-')
                 {
@@ -131,11 +119,26 @@ namespace KCC
                             {
                                 reporter.Add(statement+": Must supply a value", ErrorCode.Error);
                                 _canContinue = false;
+                                break;
                             }
                             OutputName = value;              
                             break;
                         case "--intdbg":
                             EnableDebugMessages = true;
+                            break;
+                        case "--src":
+                            if (value == null)
+                            {
+                                reporter.Add(statement + ": Must supply a value", ErrorCode.Error);
+                                _canContinue = false;
+                                break;
+                            } else if (Src != null)
+                            {
+                                reporter.Add("Previous source file " + Src + " will be ignored", ErrorCode.Warning);
+                            }
+
+                            Src = value;
+
                             break;
                         default:
                             _canContinue = false;

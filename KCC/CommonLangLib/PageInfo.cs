@@ -8,18 +8,30 @@ namespace CommonLangLib
 {
     public class PageInfo
     {
-        private string [] _rawCode;
-        private string uri;
+        public string [] RawCode { get; private set; }
+        private string _uri;
 
         public PageInfo(string filePath)
         {
-            uri = filePath;
-            _rawCode = File.ReadAllLines(uri);
+            _uri = filePath;
+            RawCode = File.ReadAllLines(_uri);
         }
 
         public string GetUri()
         {
-            return uri;
+            return _uri;
+        }
+
+        public bool ReplaceLine(int idx, string line)
+        {
+            if (idx >= RawCode.Length)
+            {
+                return false;
+            }
+
+            RawCode[idx] = line;
+
+            return true;
         }
     }
 

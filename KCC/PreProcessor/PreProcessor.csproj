@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DEFE481A-12D7-4446-BAFA-48F9119F5963}</ProjectGuid>
+    <ProjectGuid>{57C8529A-0BCA-46D9-9E22-1D6454EDE33C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PreProcessor</RootNamespace>
@@ -40,18 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyTree.cs" />
+    <Compile Include="DependencyManager.cs" />
     <Compile Include="PreProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj">
-      <Project>{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}</Project>
-      <Name>CommonLangLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

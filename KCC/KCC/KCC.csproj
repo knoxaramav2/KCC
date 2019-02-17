@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj" />
+    <ProjectReference Include="..\PreProcessor\PreProcessor.csproj" />
   </ItemGroup>
 
 </Project>

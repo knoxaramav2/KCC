@@ -8,3 +8,4 @@
 
 --exe=<output>	Set output executable	
 --intdbg		Allow internal debug messages
+--src=<file>	Master source file	

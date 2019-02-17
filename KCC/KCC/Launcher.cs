@@ -31,28 +31,15 @@ namespace KCC
                 return -1;
             }
 
-            //Load initial files
-            InitFiles(cliOptions);
-
-            if (errorReporter.ValidateAndFlush()){return -1;}
-
-            //Begin parsing files
-            while (pageDistro.GetNextPage() != null)
+            if (cliOptions.Src == null)
             {
-                
+                return -1;
             }
+
+            var preProcessor = new PreProcessor.PreProcessor();
+            preProcessor.PreCompileProject(cliOptions.Src);
 
             return 0;
-        }
-
-        private static void InitFiles(CliOptions cliOptions)
-        {
-            var pageDistro = PageDistro.GetInstance();
-
-            foreach (var file in cliOptions.InputFiles)
-            {
-                pageDistro.LoadFile(file);
-            }
         }
     }
 }
