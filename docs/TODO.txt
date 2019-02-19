@@ -1,21 +1,28 @@
+ 	todo
+-	in development
++	well in progress
+!	debated
+x	stable
+
 Misc.
-[] auto.conf
-[] symbolic links in (debug/release)/(libs/projects)
+[ ] auto.conf
+[ ] symbolic links in (debug/release)/(libs/projects)
 
 CommonLangLib
-[] redistribute responsibilities
+[ ] redistribute responsibilities
 
 Compiler Main
 	CliOptions
 	[] optimize levels
-[] integrate lexer
+[ ] integrate lexer
 
 Precompiler
-[] single line comment removal
-[] multi line comment removal
-[] escape character code swap
-[] dependency graphing
+[ ] single line comment removal
+[ ] multi line comment removal
+[ ] escape character code swap
+[ ] dependency graphing
 [-] complete https://www.draw.io/#G1nctLGQpJDMApPaHkyLvRrb1DVkGDKCuL
+[ ] scoped macros
 
 Lexer
-[] Antlr or port shunting yard KNX implementation
+[ ] Antlr or port shunting yard KNX implementation
