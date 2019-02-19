@@ -7,11 +7,14 @@ namespace CommonLangLib
     {
         public string [] RawCode { get; }
         public string Uri { get; }
+        public string RelativeUri { get; }
         public List<string> DependencyList;
 
         public PageInfo(string filePath)
         {
-            Uri = filePath;
+            filePath.Replace('\\', '/');
+            RelativeUri = filePath;
+            Uri = PageDistro.NormalizeUri(filePath) ;
             RawCode = File.ReadAllLines(Uri);
             DependencyList = new List<string>();
         }
@@ -27,7 +30,7 @@ namespace CommonLangLib
 
             return true;
         }
-
+        
         public void AddDependency(string uri)
         {
             if (string.IsNullOrEmpty(uri)) return;
@@ -39,6 +42,8 @@ namespace CommonLangLib
 
             ErrorReporter.GetInstance().Add("Import redefinition of " + uri + " in " + Uri, ErrorCode.ImportRedefine);
         }
+
+
     }
 
     public class PageDistro
@@ -68,11 +73,10 @@ namespace CommonLangLib
 
             PageInfo page = null;
 
-            path = NormalizeUri(path);
-
             try
             {
                 page = new PageInfo(path);
+
                 _pages.Add(page);
             }
             catch (FileNotFoundException e)
@@ -105,13 +109,13 @@ namespace CommonLangLib
         }
 
 
-        private static string NormalizeUri(string uri)
+        public static string NormalizeUri(string uri)
         {
             if (uri == null) return null;
 
             if (uri.Length > 1 && uri[1] != ':')
             {
-                uri = KCCEnv.BaseUri + '\\' + uri;
+                uri = KCCEnv.BaseUri + '/' + uri;
             }
 
             return uri;

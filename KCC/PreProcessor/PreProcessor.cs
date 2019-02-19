@@ -42,13 +42,30 @@ namespace PreProcessor
 
         public PageInfo Execute(PageInfo input)
         {
+            const int stateNormal = 0;
+            const int stateLineComment = 1;
+            const int stateMultiLineComment = 2;
+            const int statepreProcDirective = 3;
+
             var macroTable = new HashSet<string>();
 
             Debug.PrintDbg("PreCompile " + input.Uri);
 
+            var fSlash = input.RelativeUri.LastIndexOf('/') + 1;
+            var bSlash = input.RelativeUri.LastIndexOf('\\') + 1;
+
+            var baseFile = input.RelativeUri.Substring(fSlash>bSlash?fSlash:bSlash);
+            var i = 0;
+            var mode = 0;
+
+            //TODO Update to more c# friendly code
             foreach (var line in input.RawCode)
             {
-                Console.WriteLine(line);
+                Debug.PrintDbg(i.ToString().PadLeft(3, '0') + " | " + baseFile + ": " +line);
+
+                //check for special characters, state
+
+                ++i;
             }
 
             return null;
