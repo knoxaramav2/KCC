@@ -43,7 +43,7 @@ namespace Lexer
         {
             TokenStream stream = null;
 
-            var lexPage = new LexPage(pageInfo.GetUri());
+            var lexPage = new LexPage(pageInfo.Uri);
 
             return true;
         }

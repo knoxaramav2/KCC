@@ -35,7 +35,7 @@ namespace PreProcessor
             return true;
         }
 
-        public PageInfo Execute(PageInfo input, List<string> queue)
+        public PageInfo Execute(PageInfo input)
         {
             var macroTable = new HashSet<string>();
 

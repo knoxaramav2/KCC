@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "KCC": {
-      "commandName": "Project",
-      "commandLineArgs": "Test\\main.kcc Test\\dep.kcc -h --intdbg --exe=test"
-    }
-  }
-}

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using CommonLangLib;
 
-namespace KCC
+namespace Compiler
 {
     static class Debug
     {
@@ -16,7 +14,7 @@ namespace KCC
 
         public static void PrintDbg(string msg)
         {
-            if (!_enabled) { return ;}
+            if (!_enabled) { return; }
 
             ColorIO.WriteLineClr(msg, ConsoleColor.DarkMagenta);
         }

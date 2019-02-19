@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using CommonLangLib;
+using PreProcessor;
+using KCC;
 
-using CommonLangLib;
-
-namespace KCC
+namespace Compiler
 {
     internal class Launcher
     {
@@ -18,7 +15,6 @@ namespace KCC
             //Initialize
             Debug.Init(cliOptions.EnableDebugMessages);
             KCCEnv.Init();
-
             var errorReporter = ErrorReporter.GetInstance();
             var pageDistro = PageDistro.GetInstance();
 

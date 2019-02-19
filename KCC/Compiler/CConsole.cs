@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace KCC
+namespace Compiler
 {
     class CConsole
     {
-        public static void PrintC(string msg, ConsoleColor fg, ConsoleColor bg=ConsoleColor.Black)
+        public static void PrintC(string msg, ConsoleColor fg, ConsoleColor bg = ConsoleColor.Black)
         {
             Console.ForegroundColor = fg;
             Console.BackgroundColor = bg;
@@ -16,7 +18,7 @@ namespace KCC
 
         public static void PrintlC(string msg, ConsoleColor fg, ConsoleColor bg = ConsoleColor.Black)
         {
-            PrintC(msg+Environment.NewLine, fg, bg);
+            PrintC(msg + Environment.NewLine, fg, bg);
         }
     }
 }

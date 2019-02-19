@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCC", "KCC\KCC.csproj", "{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84} = {EF3BF85C-5C5F-448C-BA74-8FA25C311A84}
-		{CBBB4C81-267B-4D9B-96CC-F36E4654B408} = {CBBB4C81-267B-4D9B-96CC-F36E4654B408}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLangLib", "CommonLangLib\CommonLangLib.csproj", "{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lexer", "Lexer\Lexer.csproj", "{CBBB4C81-267B-4D9B-96CC-F36E4654B408}"
@@ -20,7 +14,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreProcessor", "PreProcesso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KccTest", "KccTest\KccTest.csproj", "{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}"
 	ProjectSection(ProjectDependencies) = postProject
-		{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7} = {08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}
+		{3DDF6B2C-3ADE-444C-999B-4061860C4E9D} = {3DDF6B2C-3ADE-444C-999B-4061860C4E9D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compiler.csproj", "{3DDF6B2C-3ADE-444C-999B-4061860C4E9D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84} = {EF3BF85C-5C5F-448C-BA74-8FA25C311A84}
+		{CBBB4C81-267B-4D9B-96CC-F36E4654B408} = {CBBB4C81-267B-4D9B-96CC-F36E4654B408}
+		{57C8529A-0BCA-46D9-9E22-1D6454EDE33C} = {57C8529A-0BCA-46D9-9E22-1D6454EDE33C}
 	EndProjectSection
 EndProject
 Global
@@ -29,10 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +46,10 @@ Global
 		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DDF6B2C-3ADE-444C-999B-4061860C4E9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DDF6B2C-3ADE-444C-999B-4061860C4E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DDF6B2C-3ADE-444C-999B-4061860C4E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DDF6B2C-3ADE-444C-999B-4061860C4E9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
