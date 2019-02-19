@@ -1,1 +1,20 @@
-add bin path to project for data file discovery
+Misc.
+[] auto.conf
+[] symbolic links in (debug/release)/(libs/projects)
+
+CommonLangLib
+[] redistribute responsibilities
+
+Compiler Main
+	CliOptions
+	[] optimize levels
+[] integrate lexer
+
+Precompiler
+[] single line comment removal
+[] multi line comment removal
+[] escape character code swap
+[] dependency graphing
+
+Lexer
+[] Antlr or port shunting yard KNX implementation

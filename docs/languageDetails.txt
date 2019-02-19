@@ -47,6 +47,20 @@ Bitwise Operators
 !       Invert (Logical and Bitwise)
 ^       Invert
 
+Escape Characteristics
+\'	Single quote
+\"	Double quote
+\\	Backslash
+\n	Newline
+\t	Horizontal tab
+\0	0
+\a	BEL
+\b	Backspace
+\r	Carriage Return
+\oFF	Octal literal
+\xFF	Hex literal
+\b11	Binary literal
+
 Control Operators
 if (condition){code}    Test condition and execute instructions if passed
 else {code}             Catch failed if test and continue
