@@ -18,6 +18,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PreProcessor", "PreProcesso
 		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84} = {EF3BF85C-5C5F-448C-BA74-8FA25C311A84}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KccTest", "KccTest\KccTest.csproj", "{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}"
+	ProjectSection(ProjectDependencies) = postProject
+		{08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7} = {08CF7B9E-AEA7-47B2-83A4-8D8569C26BE7}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +45,10 @@ Global
 		{57C8529A-0BCA-46D9-9E22-1D6454EDE33C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57C8529A-0BCA-46D9-9E22-1D6454EDE33C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57C8529A-0BCA-46D9-9E22-1D6454EDE33C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E8CDF47-EBDB-4ABE-B6DE-E0179798F902}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

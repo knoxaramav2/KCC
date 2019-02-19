@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace KccTest
 {
     [TestClass]
-    public class UnitTest1
+    public class PreCompilerTests
     {
         [TestMethod]
         public void TestMethod1()
