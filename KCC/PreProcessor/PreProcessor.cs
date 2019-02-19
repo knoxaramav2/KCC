@@ -24,14 +24,21 @@ namespace PreProcessor
 
         public bool PreCompileProject(string uri)
         {
-            _distro.LoadFile(uri);
+            var page =_distro.LoadFile(uri);
+            var queue = new List<string> {page.Uri};
+
+            while (queue.Count > 0)
+            {
+                
+            }
 
             return true;
         }
 
-        public PageInfo Execute(PageInfo input)
+        public PageInfo Execute(PageInfo input, List<string> queue)
         {
             var macroTable = new HashSet<string>();
+
 
             foreach (var line in input.RawCode)
             {

@@ -2,24 +2,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace CommonLangLib
 {
     public class PageInfo
     {
-        public string [] RawCode { get; private set; }
-        private string _uri;
+        public string [] RawCode { get; }
+        public string Uri { get; }
 
         public PageInfo(string filePath)
         {
-            _uri = filePath;
-            RawCode = File.ReadAllLines(_uri);
-        }
-
-        public string GetUri()
-        {
-            return _uri;
+            Uri = filePath;
+            RawCode = File.ReadAllLines(Uri);
         }
 
         public bool ReplaceLine(int idx, string line)
@@ -38,13 +34,13 @@ namespace CommonLangLib
     public class PageDistro
     {
         private static PageDistro _self;
-        private ArrayList _pages;
+        private List<PageInfo> _pages;
 
         private int _index;
 
         private PageDistro()
         {
-            _pages = new ArrayList();
+            _pages = new List<PageInfo>();
             _index = 0;
         }
 
@@ -53,28 +49,29 @@ namespace CommonLangLib
             return _self ?? (_self = new PageDistro());
         }
 
-        public void LoadFile(string path)
+        public PageInfo LoadFile(string path)
         {
             if (path.Length == 0)
             {
-                return;
+                return null;
             }
 
-            //Relative path
-            if (path[1] != ':')
-            {
-                path = KCCEnv.SrcUri + '\\' + path;
-            }
+            PageInfo page = null;
+
+            path = NormalizeUri(path);
 
             try
             {
-                _pages.Add(new PageInfo(path));
+                page = new PageInfo(path);
+                _pages.Add(page);
             }
             catch (FileNotFoundException e)
             {
                 ErrorReporter.GetInstance().Add(
                     e.ToString(), ErrorCode.FileNotFound);
             }
+
+            return page;
         }
 
         public PageInfo GetNextPage()
@@ -85,6 +82,34 @@ namespace CommonLangLib
             }
 
             return (PageInfo) _pages[_index++];
+        }
+
+        public bool IsFileLoaded(string uri)
+        {
+            uri = NormalizeUri(uri);
+
+            foreach (var page in _pages)
+            {
+                if (uri == page.Uri)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        private string NormalizeUri(string uri)
+        {
+            if (uri == null) return null;
+
+            if (uri.Length > 1 && uri[1] != ':')
+            {
+                uri = KCCEnv.SrcUri = '\\' + uri;
+            }
+
+            return uri;
         }
     }
 }

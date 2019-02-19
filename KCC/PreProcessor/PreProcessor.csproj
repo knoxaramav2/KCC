@@ -44,5 +44,11 @@
     <Compile Include="PreProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj">
+      <Project>{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}</Project>
+      <Name>CommonLangLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
