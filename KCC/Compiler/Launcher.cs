@@ -1,5 +1,4 @@
 ﻿using CommonLangLib;
-using PreProcessor;
 using KCC;
 
 namespace Compiler
@@ -8,13 +7,15 @@ namespace Compiler
     {
         private static int Main(string[] args)
         {
+            KCCEnv.Init();
+
             //Parse CLI options
             var cliOptions = CliOptions.GetInstance();
             cliOptions.ParseCli(args);
+            cliOptions.ReadHelpFile();
 
             //Initialize
             Debug.Init(cliOptions.EnableDebugMessages);
-            KCCEnv.Init();
             var errorReporter = ErrorReporter.GetInstance();
             var pageDistro = PageDistro.GetInstance();
 

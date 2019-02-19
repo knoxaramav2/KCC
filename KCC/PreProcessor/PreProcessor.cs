@@ -10,11 +10,14 @@ namespace PreProcessor
         private ErrorReporter _reporter;
         private PageDistro _distro;
 
+        private Queue<string> queue;
+
         public PreProcessor()
         {
             _dependencyManager = new DependencyManager();
             _reporter = ErrorReporter.GetInstance();
             _distro = PageDistro.GetInstance();
+            queue = new Queue<string>();
         }
 
         private void updateProcessedFile()
@@ -22,14 +25,16 @@ namespace PreProcessor
 
         }
 
-        public bool PreCompileProject(string uri)
+        public bool PreCompileProject(string masterUri)
         {
-            var page =_distro.LoadFile(uri);
-            var queue = new List<string> {page.Uri};
+            Debug.PrintDbg("PreCompile master file " + masterUri);
+
+            queue.Enqueue(masterUri);
 
             while (queue.Count > 0)
             {
-                
+                var uri = queue.Dequeue();
+                Execute(_distro.LoadFile(uri));
             }
 
             return true;
@@ -39,10 +44,11 @@ namespace PreProcessor
         {
             var macroTable = new HashSet<string>();
 
+            Debug.PrintDbg("PreCompile " + input.Uri);
 
             foreach (var line in input.RawCode)
             {
-                
+                Console.WriteLine(line);
             }
 
             return null;

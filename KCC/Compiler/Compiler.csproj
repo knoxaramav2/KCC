@@ -43,12 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CConsole.cs" />
-    <Compile Include="Debug.cs" />
     <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="config\auto.conf" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj">
@@ -59,6 +60,10 @@
       <Project>{57C8529A-0BCA-46D9-9E22-1D6454EDE33C}</Project>
       <Name>PreProcessor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="libs\" />
+    <Folder Include="src\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

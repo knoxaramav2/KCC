@@ -13,6 +13,9 @@ namespace CommonLangLib
         //Macro Warnings
         MacroRedefine,
 
+        //Dependency Warnings
+        ImportRedefine,
+
         Error,
         //File Errors
         FileNotFound

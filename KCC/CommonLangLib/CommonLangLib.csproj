@@ -43,6 +43,7 @@
     <Compile Include="CliOptions.cs" />
     <Compile Include="ColorIO.cs" />
     <Compile Include="ConfigContext.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="ErrorReporter.cs" />
     <Compile Include="FileProcessor.cs" />
     <Compile Include="KCCEnv.cs" />

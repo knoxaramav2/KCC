@@ -9,15 +9,12 @@ namespace CommonLangLib
     public static class KCCEnv
     {
         public static string BaseUri { get; internal set; }
-        public static string SrcUri { get; internal set; }
+        public static string ExeUri { get; internal set; }
 
         public static void Init()
         {
             BaseUri = Directory.GetCurrentDirectory();
-            BaseUri = BaseUri.Substring(0 ,BaseUri.LastIndexOf('\\'));
-            //BaseUri += '\\';
-
-            SrcUri = BaseUri + "\\src";
+            ExeUri = System.Reflection.Assembly.GetEntryAssembly().Location;
         }
     }
 }

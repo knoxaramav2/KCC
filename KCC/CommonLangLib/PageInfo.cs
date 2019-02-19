@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace CommonLangLib
 {
@@ -11,11 +7,13 @@ namespace CommonLangLib
     {
         public string [] RawCode { get; }
         public string Uri { get; }
+        public List<string> DependencyList;
 
         public PageInfo(string filePath)
         {
             Uri = filePath;
             RawCode = File.ReadAllLines(Uri);
+            DependencyList = new List<string>();
         }
 
         public bool ReplaceLine(int idx, string line)
@@ -28,6 +26,18 @@ namespace CommonLangLib
             RawCode[idx] = line;
 
             return true;
+        }
+
+        public void AddDependency(string uri)
+        {
+            if (string.IsNullOrEmpty(uri)) return;
+
+            if (!DependencyList.Contains(uri))
+            {
+                DependencyList.Add(uri);
+            }
+
+            ErrorReporter.GetInstance().Add("Import redefinition of " + uri + " in " + Uri, ErrorCode.ImportRedefine);
         }
     }
 
@@ -76,12 +86,7 @@ namespace CommonLangLib
 
         public PageInfo GetNextPage()
         {
-            if (_index >= _pages.Count)
-            {
-                return null;
-            }
-
-            return (PageInfo) _pages[_index++];
+            return _index >= _pages.Count ? null : _pages[_index++];
         }
 
         public bool IsFileLoaded(string uri)
@@ -100,13 +105,13 @@ namespace CommonLangLib
         }
 
 
-        private string NormalizeUri(string uri)
+        private static string NormalizeUri(string uri)
         {
             if (uri == null) return null;
 
             if (uri.Length > 1 && uri[1] != ':')
             {
-                uri = KCCEnv.SrcUri = '\\' + uri;
+                uri = KCCEnv.BaseUri + '\\' + uri;
             }
 
             return uri;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CommonLangLib;
@@ -13,7 +14,7 @@ namespace KCC
         private bool _canContinue;
 
         //Start Switches
-        public bool ReadHelpDoc;
+        private bool ReadHelpDoc { get; set; }
         public bool EnableDebugMessages;
 
         //Function Switches
@@ -95,6 +96,10 @@ namespace KCC
                                     j = arg.Length;
                                 }
                                 break;
+                            case 'd':
+                                EnableDebugMessages = true;
+                                break;
+                            
 
                             default:
                                 reporter.Add("Unrecognized option '"+arg[j]+"'", ErrorCode.Error);
@@ -160,6 +165,19 @@ namespace KCC
         {
             var idx = item.IndexOf('=', start);
             return idx == -1 ? null : item.Substring(idx + 1);
+        }
+
+        public void ReadHelpFile()
+        {
+            if (!ReadHelpDoc) return;
+
+            var lines = File.ReadAllLines(KCCEnv.BaseUri+"//cli.txt");
+            foreach (var line in lines)
+            {
+                ColorIO.WriteLineClr(line, ConsoleColor.Yellow);
+            }
+
+            Console.Out.Flush();
         }
     }
 

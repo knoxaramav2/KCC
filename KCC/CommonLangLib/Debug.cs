@@ -1,9 +1,12 @@
 ﻿using System;
-using CommonLangLib;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Compiler
+namespace CommonLangLib
 {
-    static class Debug
+    public static class Debug
     {
         private static bool _enabled = false;
 
