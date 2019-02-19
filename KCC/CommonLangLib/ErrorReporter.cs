@@ -18,7 +18,10 @@ namespace CommonLangLib
 
         Error,
         //File Errors
-        FileNotFound
+        FileNotFound,
+
+        //Macro Errors
+        MacroUndefined
     }
 
     public class ErrorReporter

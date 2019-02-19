@@ -5,7 +5,7 @@ namespace CommonLangLib
 {
     public class PageInfo
     {
-        public string [] RawCode { get; }
+        public string [] RawCode { get; set; }
         public string Uri { get; }
         public string RelativeUri { get; }
         public List<string> DependencyList;
