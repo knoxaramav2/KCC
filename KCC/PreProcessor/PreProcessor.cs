@@ -64,6 +64,27 @@ namespace PreProcessor
                 Debug.PrintDbg(i.ToString().PadLeft(3, '0') + " | " + baseFile + ": " +line);
 
                 //check for special characters, state
+                for (var x = 0; x < line.Length; ++x)
+                {
+                    var nonSpecialStart = false;
+
+                    switch (line[x])
+                    {
+                        case '#':
+
+                            break;
+                        case '@':
+                            if (nonSpecialStart) continue;
+
+                            break;
+                        case '\\':
+                            ++x;
+                            break;
+                        default:
+                            nonSpecialStart = true;
+                            continue;
+                    }
+                }
 
                 ++i;
             }

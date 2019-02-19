@@ -15,6 +15,7 @@ Precompiler
 [] multi line comment removal
 [] escape character code swap
 [] dependency graphing
+[-] complete https://www.draw.io/#G1nctLGQpJDMApPaHkyLvRrb1DVkGDKCuL
 
 Lexer
 [] Antlr or port shunting yard KNX implementation

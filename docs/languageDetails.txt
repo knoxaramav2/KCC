@@ -57,7 +57,7 @@ Escape Characteristics
 \a	BEL
 \b	Backspace
 \r	Carriage Return
-\oFF	Octal literal
+\o77	Octal literal
 \xFF	Hex literal
 \b11	Binary literal
 
