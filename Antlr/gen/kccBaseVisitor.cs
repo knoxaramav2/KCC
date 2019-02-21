@@ -34,7 +34,7 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CLSCompliant(false)]
 public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IkccVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.rule_set"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.rules"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -42,92 +42,7 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRule_set([NotNull] kccParser.Rule_setContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.single_rule"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitSingle_rule([NotNull] kccParser.Single_ruleContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.condition"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitCondition([NotNull] kccParser.ConditionContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.conclusion"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitConclusion([NotNull] kccParser.ConclusionContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LogicalEntity</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalEntity([NotNull] kccParser.LogicalEntityContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>ComparisonExpression</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitComparisonExpression([NotNull] kccParser.ComparisonExpressionContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LogicalExpressionInParen</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalExpressionInParen([NotNull] kccParser.LogicalExpressionInParenContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LogicalExpressionAnd</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalExpressionAnd([NotNull] kccParser.LogicalExpressionAndContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LogicalExpressionOr</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalExpressionOr([NotNull] kccParser.LogicalExpressionOrContext context) { return VisitChildren(context); }
+	public virtual Result VisitRules([NotNull] kccParser.RulesContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="kccParser.body_expr"/>.
 	/// <para>
@@ -139,8 +54,7 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// <return>The visitor result.</return>
 	public virtual Result VisitBody_expr([NotNull] kccParser.Body_exprContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ComparisonExpressionWithOperator</c>
-	/// labeled alternative in <see cref="kccParser.comparison_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.group"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -148,10 +62,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitComparisonExpressionWithOperator([NotNull] kccParser.ComparisonExpressionWithOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitGroup([NotNull] kccParser.GroupContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ComparisonExpressionParens</c>
-	/// labeled alternative in <see cref="kccParser.comparison_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -159,9 +72,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitComparisonExpressionParens([NotNull] kccParser.ComparisonExpressionParensContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpression([NotNull] kccParser.ExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.comparison_operand"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.control_block"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -169,9 +82,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitComparison_operand([NotNull] kccParser.Comparison_operandContext context) { return VisitChildren(context); }
+	public virtual Result VisitControl_block([NotNull] kccParser.Control_blockContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.comp_operator"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.control_id"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -179,10 +92,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitComp_operator([NotNull] kccParser.Comp_operatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitControl_id([NotNull] kccParser.Control_idContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionMult</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -190,10 +102,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionMult([NotNull] kccParser.ArithmeticExpressionMultContext context) { return VisitChildren(context); }
+	public virtual Result VisitBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionMinus</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.binary_logic_ops"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -201,10 +112,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionMinus([NotNull] kccParser.ArithmeticExpressionMinusContext context) { return VisitChildren(context); }
+	public virtual Result VisitBinary_logic_ops([NotNull] kccParser.Binary_logic_opsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionParens</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.unary_ops"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -212,10 +122,9 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionParens([NotNull] kccParser.ArithmeticExpressionParensContext context) { return VisitChildren(context); }
+	public virtual Result VisitUnary_ops([NotNull] kccParser.Unary_opsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionNumericEntity</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.entity"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -223,82 +132,5 @@ public partial class kccBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, 
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionNumericEntity([NotNull] kccParser.ArithmeticExpressionNumericEntityContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionDiv</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionDiv([NotNull] kccParser.ArithmeticExpressionDivContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionPlus</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionPlus([NotNull] kccParser.ArithmeticExpressionPlusContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>ArithmeticExpressionNegation</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitArithmeticExpressionNegation([NotNull] kccParser.ArithmeticExpressionNegationContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LogicalConst</c>
-	/// labeled alternative in <see cref="kccParser.logical_entity"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalConst([NotNull] kccParser.LogicalConstContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>LogicalVariable</c>
-	/// labeled alternative in <see cref="kccParser.logical_entity"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitLogicalVariable([NotNull] kccParser.LogicalVariableContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>NumericConst</c>
-	/// labeled alternative in <see cref="kccParser.numeric_entity"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitNumericConst([NotNull] kccParser.NumericConstContext context) { return VisitChildren(context); }
-	/// <summary>
-	/// Visit a parse tree produced by the <c>NumericVariable</c>
-	/// labeled alternative in <see cref="kccParser.numeric_entity"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitNumericVariable([NotNull] kccParser.NumericVariableContext context) { return VisitChildren(context); }
+	public virtual Result VisitEntity([NotNull] kccParser.EntityContext context) { return VisitChildren(context); }
 }

@@ -35,123 +35,17 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CLSCompliant(false)]
 public partial class kccBaseListener : IkccListener {
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.rule_set"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.rules"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRule_set([NotNull] kccParser.Rule_setContext context) { }
+	public virtual void EnterRules([NotNull] kccParser.RulesContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.rule_set"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.rules"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRule_set([NotNull] kccParser.Rule_setContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.single_rule"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSingle_rule([NotNull] kccParser.Single_ruleContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.single_rule"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSingle_rule([NotNull] kccParser.Single_ruleContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.condition"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCondition([NotNull] kccParser.ConditionContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.condition"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCondition([NotNull] kccParser.ConditionContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.conclusion"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterConclusion([NotNull] kccParser.ConclusionContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.conclusion"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitConclusion([NotNull] kccParser.ConclusionContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>LogicalEntity</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalEntity([NotNull] kccParser.LogicalEntityContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>LogicalEntity</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalEntity([NotNull] kccParser.LogicalEntityContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>ComparisonExpression</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterComparisonExpression([NotNull] kccParser.ComparisonExpressionContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>ComparisonExpression</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitComparisonExpression([NotNull] kccParser.ComparisonExpressionContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>LogicalExpressionInParen</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalExpressionInParen([NotNull] kccParser.LogicalExpressionInParenContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>LogicalExpressionInParen</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalExpressionInParen([NotNull] kccParser.LogicalExpressionInParenContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>LogicalExpressionAnd</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalExpressionAnd([NotNull] kccParser.LogicalExpressionAndContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>LogicalExpressionAnd</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalExpressionAnd([NotNull] kccParser.LogicalExpressionAndContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>LogicalExpressionOr</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalExpressionOr([NotNull] kccParser.LogicalExpressionOrContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>LogicalExpressionOr</c>
-	/// labeled alternative in <see cref="kccParser.logical_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalExpressionOr([NotNull] kccParser.LogicalExpressionOrContext context) { }
+	public virtual void ExitRules([NotNull] kccParser.RulesContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="kccParser.body_expr"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -165,211 +59,101 @@ public partial class kccBaseListener : IkccListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitBody_expr([NotNull] kccParser.Body_exprContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>ComparisonExpressionWithOperator</c>
-	/// labeled alternative in <see cref="kccParser.comparison_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.group"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterComparisonExpressionWithOperator([NotNull] kccParser.ComparisonExpressionWithOperatorContext context) { }
+	public virtual void EnterGroup([NotNull] kccParser.GroupContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>ComparisonExpressionWithOperator</c>
-	/// labeled alternative in <see cref="kccParser.comparison_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.group"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitComparisonExpressionWithOperator([NotNull] kccParser.ComparisonExpressionWithOperatorContext context) { }
+	public virtual void ExitGroup([NotNull] kccParser.GroupContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>ComparisonExpressionParens</c>
-	/// labeled alternative in <see cref="kccParser.comparison_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterComparisonExpressionParens([NotNull] kccParser.ComparisonExpressionParensContext context) { }
+	public virtual void EnterExpression([NotNull] kccParser.ExpressionContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>ComparisonExpressionParens</c>
-	/// labeled alternative in <see cref="kccParser.comparison_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitComparisonExpressionParens([NotNull] kccParser.ComparisonExpressionParensContext context) { }
+	public virtual void ExitExpression([NotNull] kccParser.ExpressionContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.comparison_operand"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.control_block"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterComparison_operand([NotNull] kccParser.Comparison_operandContext context) { }
+	public virtual void EnterControl_block([NotNull] kccParser.Control_blockContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.comparison_operand"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.control_block"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitComparison_operand([NotNull] kccParser.Comparison_operandContext context) { }
+	public virtual void ExitControl_block([NotNull] kccParser.Control_blockContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.comp_operator"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.control_id"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterComp_operator([NotNull] kccParser.Comp_operatorContext context) { }
+	public virtual void EnterControl_id([NotNull] kccParser.Control_idContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.comp_operator"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.control_id"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitComp_operator([NotNull] kccParser.Comp_operatorContext context) { }
+	public virtual void ExitControl_id([NotNull] kccParser.Control_idContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionMult</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionMult([NotNull] kccParser.ArithmeticExpressionMultContext context) { }
+	public virtual void EnterBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionMult</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionMult([NotNull] kccParser.ArithmeticExpressionMultContext context) { }
+	public virtual void ExitBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionMinus</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.binary_logic_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionMinus([NotNull] kccParser.ArithmeticExpressionMinusContext context) { }
+	public virtual void EnterBinary_logic_ops([NotNull] kccParser.Binary_logic_opsContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionMinus</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.binary_logic_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionMinus([NotNull] kccParser.ArithmeticExpressionMinusContext context) { }
+	public virtual void ExitBinary_logic_ops([NotNull] kccParser.Binary_logic_opsContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionParens</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.unary_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionParens([NotNull] kccParser.ArithmeticExpressionParensContext context) { }
+	public virtual void EnterUnary_ops([NotNull] kccParser.Unary_opsContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionParens</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.unary_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionParens([NotNull] kccParser.ArithmeticExpressionParensContext context) { }
+	public virtual void ExitUnary_ops([NotNull] kccParser.Unary_opsContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionNumericEntity</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.entity"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionNumericEntity([NotNull] kccParser.ArithmeticExpressionNumericEntityContext context) { }
+	public virtual void EnterEntity([NotNull] kccParser.EntityContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionNumericEntity</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.entity"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionNumericEntity([NotNull] kccParser.ArithmeticExpressionNumericEntityContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionDiv</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionDiv([NotNull] kccParser.ArithmeticExpressionDivContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionDiv</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionDiv([NotNull] kccParser.ArithmeticExpressionDivContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionPlus</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionPlus([NotNull] kccParser.ArithmeticExpressionPlusContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionPlus</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionPlus([NotNull] kccParser.ArithmeticExpressionPlusContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>ArithmeticExpressionNegation</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArithmeticExpressionNegation([NotNull] kccParser.ArithmeticExpressionNegationContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>ArithmeticExpressionNegation</c>
-	/// labeled alternative in <see cref="kccParser.arithmetic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArithmeticExpressionNegation([NotNull] kccParser.ArithmeticExpressionNegationContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>LogicalConst</c>
-	/// labeled alternative in <see cref="kccParser.logical_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalConst([NotNull] kccParser.LogicalConstContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>LogicalConst</c>
-	/// labeled alternative in <see cref="kccParser.logical_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalConst([NotNull] kccParser.LogicalConstContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>LogicalVariable</c>
-	/// labeled alternative in <see cref="kccParser.logical_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogicalVariable([NotNull] kccParser.LogicalVariableContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>LogicalVariable</c>
-	/// labeled alternative in <see cref="kccParser.logical_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogicalVariable([NotNull] kccParser.LogicalVariableContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>NumericConst</c>
-	/// labeled alternative in <see cref="kccParser.numeric_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumericConst([NotNull] kccParser.NumericConstContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>NumericConst</c>
-	/// labeled alternative in <see cref="kccParser.numeric_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumericConst([NotNull] kccParser.NumericConstContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by the <c>NumericVariable</c>
-	/// labeled alternative in <see cref="kccParser.numeric_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumericVariable([NotNull] kccParser.NumericVariableContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by the <c>NumericVariable</c>
-	/// labeled alternative in <see cref="kccParser.numeric_entity"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumericVariable([NotNull] kccParser.NumericVariableContext context) { }
+	public virtual void ExitEntity([NotNull] kccParser.EntityContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

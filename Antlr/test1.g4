@@ -3,7 +3,7 @@ grammar test1;
 /*
  * Lexer Rules
  */
-
+/*
 IF   : 'if' ;
 THEN : 'then';
 
@@ -97,4 +97,4 @@ logical_entity : (TRUE | FALSE) # LogicalConst
 
 numeric_entity : DECIMAL              # NumericConst
                | IDENTIFIER           # NumericVariable
-               ;
+               ;*/
