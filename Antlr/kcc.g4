@@ -1,5 +1,10 @@
 grammar kcc;
 
+options{
+    language = CSharp;
+}
+
+
 /***Lexer Rules***/
 
 //control operators
@@ -49,12 +54,18 @@ BITWISE_AND     : '&';
 BITWISE_OR      : '|';
 BITWISE_INVERT  : '^' ;
 
-//special declaratives
+//special
 CLASS           : 'class';
+THIS            : 'this';
+TRUE            : 'true';
+FALSE           : 'false';
+
+//binary other
+JOINT           : ':';
 
 //enclosures
-L_BRACKET       : '{';
-R_BRACKET       : '}';
+L_BRACKET       : '[';
+R_BRACKET       : ']';
 L_PARANTH       : '(';
 R_PARANTH       : ')';
 L_BRACE         : '{';
@@ -73,11 +84,18 @@ WS              : [ \r\t\u000C\n]+ -> skip ;
 
 /***Parser Rules***/
 
-rules           : body_expr* EOF;
 
-body_expr       : (entity group)?L_BRACKET . R_BRACKET;
-group           : L_PARANTH expression R_PARANTH;
-expression      : unary_ops?entity binary_arith_ops unary_ops?entity;
+//rules           : class * EOF;
+trules          : cmpnd_expr * EOF;
+
+block           : L_BRACE (~R_BRACE|class|block)* R_BRACE;
+class           : CLASS id class|block;
+
+cmpnd_expr      : (smpl_expr) (binary_logic_ops|binary_arith_ops) (smpl_expr|cmpnd_expr) SEMI;
+smpl_expr       : unary_ops?IDENTIFIER unary_ops?;
+
+id              : DECIMAL | IDENTIFIER | logic_id;
+logic_id        : (TRUE | FALSE);
 
 control_block   : IF
                 | ELSE
@@ -103,6 +121,11 @@ binary_arith_ops: SET
                 | SET_QUOTIENT
                 ;
 
+unary_ops       : INCREMENT
+                | DECRIMENT
+                | LOGIC_NOT
+                ;
+
 binary_logic_ops: LOGIC_OR
                 | LOGIC_AND
                 | LOGIC_NOT
@@ -110,12 +133,17 @@ binary_logic_ops: LOGIC_OR
                 | LOGIC_NOR
                 | LOGIC_XOR
                 | LOGIC_XNOR
+                | GTR
+                | LSS
+                | EQU
+                | GTR_EQU
+                | LSS_EQU
                 ;
 
-unary_ops       : INCREMENT
-                | DECRIMENT
-                | LOGIC_NOT
-                ;
-
-entity          : DECIMAL | IDENTIFIER;
+arith_expr      :arith_expr binary_arith_ops arith_expr
+                | L_PARANTH arith_expr R_PARANTH
+                | id
+                | SUBTRACT id
+                | (INCREMENT|DECRIMENT) id;
+logic_expr      :;
 
