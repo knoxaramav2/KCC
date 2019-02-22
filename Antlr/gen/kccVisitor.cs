@@ -32,11 +32,11 @@ using IToken = Antlr4.Runtime.IToken;
 [System.CLSCompliant(false)]
 public interface IkccVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.trules"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.rules"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTrules([NotNull] kccParser.TrulesContext context);
+	Result VisitRules([NotNull] kccParser.RulesContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="kccParser.block"/>.
 	/// </summary>
@@ -50,17 +50,23 @@ public interface IkccVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitClass([NotNull] kccParser.ClassContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.cmpnd_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCmpnd_expr([NotNull] kccParser.Cmpnd_exprContext context);
+	Result VisitStatement([NotNull] kccParser.StatementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.smpl_expr"/>.
+	/// Visit a parse tree produced by <see cref="kccParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSmpl_expr([NotNull] kccParser.Smpl_exprContext context);
+	Result VisitExpression([NotNull] kccParser.ExpressionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="kccParser.group"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitGroup([NotNull] kccParser.GroupContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="kccParser.id"/>.
 	/// </summary>
@@ -86,17 +92,17 @@ public interface IkccVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitControl_id([NotNull] kccParser.Control_idContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="kccParser.unary_ops"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitUnary_ops([NotNull] kccParser.Unary_opsContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="kccParser.binary_logic_ops"/>.
 	/// </summary>
@@ -104,15 +110,21 @@ public interface IkccVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitBinary_logic_ops([NotNull] kccParser.Binary_logic_opsContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="kccParser.binary"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBinary([NotNull] kccParser.BinaryContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="kccParser.bool"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitBool([NotNull] kccParser.BoolContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="kccParser.arith_expr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitArith_expr([NotNull] kccParser.Arith_exprContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="kccParser.logic_expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLogic_expr([NotNull] kccParser.Logic_exprContext context);
 }

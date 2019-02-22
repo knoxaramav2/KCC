@@ -35,17 +35,17 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CLSCompliant(false)]
 public partial class kccBaseListener : IkccListener {
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.trules"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.rules"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTrules([NotNull] kccParser.TrulesContext context) { }
+	public virtual void EnterRules([NotNull] kccParser.RulesContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.trules"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.rules"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTrules([NotNull] kccParser.TrulesContext context) { }
+	public virtual void ExitRules([NotNull] kccParser.RulesContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="kccParser.block"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -71,29 +71,41 @@ public partial class kccBaseListener : IkccListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitClass([NotNull] kccParser.ClassContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.cmpnd_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.statement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterCmpnd_expr([NotNull] kccParser.Cmpnd_exprContext context) { }
+	public virtual void EnterStatement([NotNull] kccParser.StatementContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.cmpnd_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.statement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitCmpnd_expr([NotNull] kccParser.Cmpnd_exprContext context) { }
+	public virtual void ExitStatement([NotNull] kccParser.StatementContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.smpl_expr"/>.
+	/// Enter a parse tree produced by <see cref="kccParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterSmpl_expr([NotNull] kccParser.Smpl_exprContext context) { }
+	public virtual void EnterExpression([NotNull] kccParser.ExpressionContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.smpl_expr"/>.
+	/// Exit a parse tree produced by <see cref="kccParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitSmpl_expr([NotNull] kccParser.Smpl_exprContext context) { }
+	public virtual void ExitExpression([NotNull] kccParser.ExpressionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="kccParser.group"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGroup([NotNull] kccParser.GroupContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="kccParser.group"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGroup([NotNull] kccParser.GroupContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="kccParser.id"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -143,18 +155,6 @@ public partial class kccBaseListener : IkccListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitControl_id([NotNull] kccParser.Control_idContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="kccParser.unary_ops"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -166,6 +166,18 @@ public partial class kccBaseListener : IkccListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitUnary_ops([NotNull] kccParser.Unary_opsContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="kccParser.binary_arith_ops"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBinary_arith_ops([NotNull] kccParser.Binary_arith_opsContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="kccParser.binary_logic_ops"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -179,6 +191,30 @@ public partial class kccBaseListener : IkccListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitBinary_logic_ops([NotNull] kccParser.Binary_logic_opsContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="kccParser.binary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBinary([NotNull] kccParser.BinaryContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="kccParser.binary"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBinary([NotNull] kccParser.BinaryContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="kccParser.bool"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBool([NotNull] kccParser.BoolContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="kccParser.bool"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBool([NotNull] kccParser.BoolContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="kccParser.arith_expr"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -190,18 +226,6 @@ public partial class kccBaseListener : IkccListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArith_expr([NotNull] kccParser.Arith_exprContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="kccParser.logic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLogic_expr([NotNull] kccParser.Logic_exprContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="kccParser.logic_expr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLogic_expr([NotNull] kccParser.Logic_exprContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

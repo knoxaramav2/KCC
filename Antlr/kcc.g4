@@ -52,16 +52,18 @@ LSS_EQU         : '<=';
 //bitwise operators
 BITWISE_AND     : '&';
 BITWISE_OR      : '|';
-BITWISE_INVERT  : '^' ;
+BITWISE_INVERT  : '~' ;
 
 //special
 CLASS           : 'class';
 THIS            : 'this';
 TRUE            : 'true';
 FALSE           : 'false';
+ASSEMBLY        : 'assembly';
 
 //binary other
 JOINT           : ':';
+DOT             : '.';
 
 //enclosures
 L_BRACKET       : '[';
@@ -85,16 +87,38 @@ WS              : [ \r\t\u000C\n]+ -> skip ;
 /***Parser Rules***/
 
 
-//rules           : class * EOF;
-trules          : cmpnd_expr * EOF;
+rules           : asm * EOF;
+//trules          : statement * EOF;
 
-block           : L_BRACE (~R_BRACE|class|block)* R_BRACE;
-class           : CLASS id class|block;
+asm             : ASSEMBLY IDENTIFIER block;
+block           : L_BRACE (function|statement|block|~R_BRACE)* R_BRACE;
+class           : CLASS IDENTIFIER block
+                | statement
+                ;
 
-cmpnd_expr      : (smpl_expr) (binary_logic_ops|binary_arith_ops) (smpl_expr|cmpnd_expr) SEMI;
-smpl_expr       : unary_ops?IDENTIFIER unary_ops?;
+statement       : call
+                | expression* SEMI
+                | IDENTIFIER IDENTIFIER group block SEMI
+                ;
+expression      : symbol_id
+                | group
+                | unary_ops expression
+                | left=expression op=binary right=expression
+                | bool
+                | id
+                ;
 
+call            : expression group SEMI;
+function        : IDENTIFIER IDENTIFIER group block;
+group           : L_PARANTH (expression|~R_PARANTH)? R_PARANTH;
+
+
+
+
+
+asm_id          : (IDENTIFIER DOT)*?IDENTIFIER;
 id              : DECIMAL | IDENTIFIER | logic_id;
+symbol_id       : IDENTIFIER (DOT IDENTIFIER)*?;
 logic_id        : (TRUE | FALSE);
 
 control_block   : IF
@@ -108,6 +132,11 @@ control_id      : CONTINUE
                 | RETURN
                 | GOTO;
 
+unary_ops       : INCREMENT
+                | DECRIMENT
+                | LOGIC_NOT
+                ;
+
 binary_arith_ops: SET
                 | ADD
                 | SUBTRACT
@@ -119,11 +148,6 @@ binary_arith_ops: SET
                 | SET_DIFFERENCE
                 | SET_PRODUCT
                 | SET_QUOTIENT
-                ;
-
-unary_ops       : INCREMENT
-                | DECRIMENT
-                | LOGIC_NOT
                 ;
 
 binary_logic_ops: LOGIC_OR
@@ -140,10 +164,12 @@ binary_logic_ops: LOGIC_OR
                 | LSS_EQU
                 ;
 
+binary          : binary_arith_ops | binary_logic_ops;
+
+bool            : TRUE | FALSE;
+
 arith_expr      :arith_expr binary_arith_ops arith_expr
                 | L_PARANTH arith_expr R_PARANTH
                 | id
                 | SUBTRACT id
                 | (INCREMENT|DECRIMENT) id;
-logic_expr      :;
-
