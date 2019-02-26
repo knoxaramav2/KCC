@@ -100,7 +100,8 @@ statement       : call
                 | expression* SEMI
                 | IDENTIFIER IDENTIFIER group block SEMI
                 ;
-expression      : symbol_id
+expression      : IDENTIFIER expression
+                | symbol_id
                 | group
                 | unary_ops expression
                 | left=expression op=binary right=expression
@@ -173,3 +174,15 @@ arith_expr      :arith_expr binary_arith_ops arith_expr
                 | id
                 | SUBTRACT id
                 | (INCREMENT|DECRIMENT) id;
+
+typeSpecifier   : ('int'
+                | 'sint'
+                | 'double'
+                | 'char'
+                | 'byte'
+                | 'string'
+                | 'class'
+                | 'bool')
+                | typeSpecifier array;
+
+array           : L_BRACKET id? R_BRACKET;
