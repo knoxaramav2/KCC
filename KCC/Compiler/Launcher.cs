@@ -36,6 +36,8 @@ namespace Compiler
             var preProcessor = new PreProcessor.PreProcessor();
             preProcessor.PreCompileProject(cliOptions.Src);
 
+            Parser.Parser.ParseStream();
+
             return 0;
         }
     }

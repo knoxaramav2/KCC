@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CBBB4C81-267B-4D9B-96CC-F36E4654B408}</ProjectGuid>
+    <ProjectGuid>{BC47EE85-43D6-4DD3-B0D4-EF3FC75AC8C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lexer</RootNamespace>
-    <AssemblyName>Lexer</AssemblyName>
+    <RootNamespace>Parser</RootNamespace>
+    <AssemblyName>Parser</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="Antlr4.Runtime, Version=4.6.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr4.Runtime.4.6.6\lib\net45\Antlr4.Runtime.dll</HintPath>
     </Reference>
@@ -52,12 +49,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj">
-      <Project>{ef3bf85c-5c5f-448c-ba74-8fa25c311a84}</Project>
-      <Name>CommonLangLib</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Antlr4 Include="KCC.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>Parser</CustomToolNamespace>
+    </Antlr4>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
