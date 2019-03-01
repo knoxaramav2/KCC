@@ -310,6 +310,18 @@ public partial class KCCBaseListener : IKCCListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitArray([NotNull] KCCParser.ArrayContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.assembly"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAssembly([NotNull] KCCParser.AssemblyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.assembly"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAssembly([NotNull] KCCParser.AssemblyContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

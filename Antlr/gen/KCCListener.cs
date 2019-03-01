@@ -260,4 +260,14 @@ public interface IKCCListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitArray([NotNull] KCCParser.ArrayContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.assembly"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAssembly([NotNull] KCCParser.AssemblyContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.assembly"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAssembly([NotNull] KCCParser.AssemblyContext context);
 }
