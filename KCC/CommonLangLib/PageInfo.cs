@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CommonLangLib
 {
@@ -91,6 +92,11 @@ namespace CommonLangLib
         public PageInfo GetNextPage()
         {
             return _index >= _pages.Count ? null : _pages[_index++];
+        }
+
+        public PageInfo GetByUri(string uri)
+        {
+            return _pages.FirstOrDefault(page => page.Uri == NormalizeUri(uri));
         }
 
         public bool IsFileLoaded(string uri)

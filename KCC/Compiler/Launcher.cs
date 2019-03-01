@@ -36,7 +36,12 @@ namespace Compiler
             var preProcessor = new PreProcessor.PreProcessor();
             preProcessor.PreCompileProject(cliOptions.Src);
 
-            Parser.Parser.ParseStream();
+            PageInfo pageInfo;
+            while ((pageInfo=pageDistro.GetNextPage()) != null)
+            {
+                //Parser.Parser.ParseStream(pageInfo.RawCode.ToString());
+            }
+            
 
             return 0;
         }

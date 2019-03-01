@@ -16,6 +16,8 @@ namespace PreProcessor
 
         private Queue<string> queue;
 
+        public List<string> preCompiledStrings { get; }
+
         public PreProcessor()
         {
             _dependencyManager = new DependencyManager();
@@ -163,7 +165,7 @@ namespace PreProcessor
 
             input.RawCode = input.RawCode.Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
-            return null;
+            return input;
         }
     }
 }
