@@ -52,6 +52,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeTranslator\CodeTranslator.csproj">
+      <Project>{0760DCC4-0DA9-416A-A369-51F00A24A10D}</Project>
+      <Name>CodeTranslator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj">
       <Project>{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}</Project>
       <Name>CommonLangLib</Name>

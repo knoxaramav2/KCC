@@ -9,8 +9,8 @@ options{
 /***Parser Rules***/
 
 
-rules           : asm * EOF;
-//trules          : statement * EOF;
+rules           : asm+ EOF;
+//rules          : statement * EOF;
 
 asm             : assembly symbol_id block;
 block           : L_BRACE (class|function|block|expression|~R_BRACE)* R_BRACE;

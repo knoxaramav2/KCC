@@ -45,6 +45,11 @@ namespace CommonLangLib
         }
 
 
+        public override string ToString()
+        {
+            return RawCode.Aggregate("", (current, line) => current + line);
+        }
+
     }
 
     public class PageDistro

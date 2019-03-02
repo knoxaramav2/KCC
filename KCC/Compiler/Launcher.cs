@@ -1,4 +1,5 @@
-﻿using CommonLangLib;
+﻿using CodeTranslator;
+using CommonLangLib;
 using KCC;
 
 namespace Compiler
@@ -36,10 +37,13 @@ namespace Compiler
             var preProcessor = new PreProcessor.PreProcessor();
             preProcessor.PreCompileProject(cliOptions.Src);
 
+            var translator = new Translator();
+
             PageInfo pageInfo;
             while ((pageInfo=pageDistro.GetNextPage()) != null)
             {
                 //Parser.Parser.ParseStream(pageInfo.RawCode.ToString());
+                translator.Translate(pageInfo.ToString());
             }
             
 
