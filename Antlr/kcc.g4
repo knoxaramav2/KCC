@@ -13,35 +13,51 @@ rules           : asm * EOF;
 //trules          : statement * EOF;
 
 asm             : assembly symbol_id block;
-block           : L_BRACE (function|statement|block|~R_BRACE)* R_BRACE;
-class           : CLASS IDENTIFIER block
+block           : L_BRACE (class|function|block|expression|~R_BRACE)* R_BRACE;
+class           : CLASS symbol_id block
                 | statement
                 ;
 
 
 
 statement       : call
-                | expression* SEMI
-                | IDENTIFIER IDENTIFIER group block SEMI
+                | expression* semi
+                | IDENTIFIER IDENTIFIER group block semi
                 ;
-expression      : IDENTIFIER expression
+expression      : var_decl
+                | symbol_id expression
                 | symbol_id
                 | group
                 | unary_ops expression
                 | left=expression op=binary right=expression
                 | bool
-                | id
+                | type_specifier symbol_id
                 ;
 
-call            : expression group SEMI;
-function        : typeSpecifier symbol_id group block;
+call            : symbol_id group;
+function        : function_decl
+                | function_call
+                ;
+function_decl   : identifier function_call block;
+function_call   : identifier group;
+assign_expr     : identifier assign_ops (value_id|expression);
+var_decl        : identifier assign_expr expression
+                | identifier symbol_id
+                ;
 group           : L_PARANTH (expression|~R_PARANTH)? R_PARANTH;
 
-
-asm_id          : (IDENTIFIER DOT)*?IDENTIFIER;
-id              : DECIMAL | IDENTIFIER | logic_id;
-symbol_id       : IDENTIFIER (DOT IDENTIFIER)*?;
+asm_id          : (identifier DOT)*?IDENTIFIER;
+value_id        : DECIMAL | IDENTIFIER | logic_id;
+symbol_id       : (IDENTIFIER)(DOT IDENTIFIER)*?;//x or x.y.z
 logic_id        : (TRUE | FALSE);
+identifier      : type_specifier
+                | symbol_id
+                | control_block
+                | RETURN
+                | control_id
+                ;
+
+
 
 control_block   : IF
                 | ELSE
@@ -51,8 +67,9 @@ control_block   : IF
 
 control_id      : CONTINUE
                 | BREAK
+                | GOTO
                 | RETURN
-                | GOTO;
+                ;
 
 unary_ops       : INCREMENT
                 | DECRIMENT
@@ -66,6 +83,13 @@ binary_arith_ops: SET
                 | DIVIDE
                 | EXPONENT
                 | MODULO
+                | SET_SUM
+                | SET_DIFFERENCE
+                | SET_PRODUCT
+                | SET_QUOTIENT
+                ;
+
+assign_ops      : SET
                 | SET_SUM
                 | SET_DIFFERENCE
                 | SET_PRODUCT
@@ -92,11 +116,11 @@ bool            : TRUE | FALSE;
 
 arith_expr      :arith_expr binary_arith_ops arith_expr
                 | L_PARANTH arith_expr R_PARANTH
-                | id
-                | SUBTRACT id
-                | (INCREMENT|DECRIMENT) id;
+                | value_id
+                | SUBTRACT value_id
+                | (INCREMENT|DECRIMENT) value_id;
 
-typeSpecifier   : ('int'
+type_specifier   : ('int'
                 | 'sint'
                 | 'double'
                 | 'char'
@@ -104,11 +128,13 @@ typeSpecifier   : ('int'
                 | 'string'
                 | 'class'
                 | 'bool')
-                | typeSpecifier array;
+                | type_specifier array;
 
-array           : L_BRACKET id? R_BRACKET;
+array           : L_BRACKET value_id? R_BRACKET;
 
-assembly        : 'asm' | ASSEMBLY;
+assembly        : 'asm' | 'assembly';
+
+semi            : SEMI;
 
 /***Lexer Rules***/
 
@@ -183,9 +209,12 @@ R_BRACE         : '}';
 LINE_COMMENT    : '#' ~[\r\n]* ->channel(HIDDEN);
 BLOCK_COMMENT   : '#*' .*? '*#'->channel(HIDDEN);
 
+fragment ALPHA  : [a-zA-Z_]
+                ;
+
 //general identifies
 DECIMAL         : '-'?[0-9]+('.'[0-9])?;
-IDENTIFIER      : [a-zA-Z_][a-zA-Z_0-9]*;
+IDENTIFIER      : ALPHA+ (DECIMAL+)?;//[a-zA-Z_]([a-zA-Z_0-9])+;
 SEMI            : ';';
 WS              : [ \r\t\u000C\n]+ -> skip ;
 

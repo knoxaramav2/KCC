@@ -111,6 +111,46 @@ public interface IKCCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitFunction([NotNull] KCCParser.FunctionContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.function_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunction_decl([NotNull] KCCParser.Function_declContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.function_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunction_decl([NotNull] KCCParser.Function_declContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.function_call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunction_call([NotNull] KCCParser.Function_callContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.function_call"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunction_call([NotNull] KCCParser.Function_callContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.assign_expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAssign_expr([NotNull] KCCParser.Assign_exprContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.assign_expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAssign_expr([NotNull] KCCParser.Assign_exprContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.var_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVar_decl([NotNull] KCCParser.Var_declContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.var_decl"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVar_decl([NotNull] KCCParser.Var_declContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="KCCParser.group"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -131,15 +171,15 @@ public interface IKCCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAsm_id([NotNull] KCCParser.Asm_idContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="KCCParser.id"/>.
+	/// Enter a parse tree produced by <see cref="KCCParser.value_id"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterId([NotNull] KCCParser.IdContext context);
+	void EnterValue_id([NotNull] KCCParser.Value_idContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="KCCParser.id"/>.
+	/// Exit a parse tree produced by <see cref="KCCParser.value_id"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitId([NotNull] KCCParser.IdContext context);
+	void ExitValue_id([NotNull] KCCParser.Value_idContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="KCCParser.symbol_id"/>.
 	/// </summary>
@@ -160,6 +200,16 @@ public interface IKCCListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitLogic_id([NotNull] KCCParser.Logic_idContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.identifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterIdentifier([NotNull] KCCParser.IdentifierContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.identifier"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitIdentifier([NotNull] KCCParser.IdentifierContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="KCCParser.control_block"/>.
 	/// </summary>
@@ -201,6 +251,16 @@ public interface IKCCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitBinary_arith_ops([NotNull] KCCParser.Binary_arith_opsContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.assign_ops"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAssign_ops([NotNull] KCCParser.Assign_opsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.assign_ops"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAssign_ops([NotNull] KCCParser.Assign_opsContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="KCCParser.binary_logic_ops"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -241,15 +301,15 @@ public interface IKCCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitArith_expr([NotNull] KCCParser.Arith_exprContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="KCCParser.typeSpecifier"/>.
+	/// Enter a parse tree produced by <see cref="KCCParser.type_specifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterTypeSpecifier([NotNull] KCCParser.TypeSpecifierContext context);
+	void EnterType_specifier([NotNull] KCCParser.Type_specifierContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="KCCParser.typeSpecifier"/>.
+	/// Exit a parse tree produced by <see cref="KCCParser.type_specifier"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitTypeSpecifier([NotNull] KCCParser.TypeSpecifierContext context);
+	void ExitType_specifier([NotNull] KCCParser.Type_specifierContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="KCCParser.array"/>.
 	/// </summary>
@@ -270,4 +330,14 @@ public interface IKCCListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitAssembly([NotNull] KCCParser.AssemblyContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="KCCParser.semi"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterSemi([NotNull] KCCParser.SemiContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="KCCParser.semi"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitSemi([NotNull] KCCParser.SemiContext context);
 }
