@@ -24,16 +24,14 @@ namespace CodeTranslator
 
             var asmContext = kccParser.rules();
             var visitor = new Visitor();
-            visitor.Visit(asmContext);
 
-            foreach (var asm in visitor.Assemblies)
+            //Get all assembly definitions in file
+            var fileAsms = (KCCParser.AsmContext[]) visitor.Visit(asmContext);
+
+            foreach (var asm in fileAsms)
             {
-                Console.WriteLine("Assembly " + asm.Id);
-                visitor.VisitBlock(asm.BlockContext);
-                foreach (var block in visitor.Blocks)
-                {
-                    Console.WriteLine(block.ToString());
-                }
+                var asmModel = (Asm) visitor.VisitAsm(asm);
+                Console.WriteLine("Assembly " + asmModel.Id + " visited");
             }
 
             return;

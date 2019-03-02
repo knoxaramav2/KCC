@@ -48,7 +48,7 @@ namespace CodeTranslator
 
         public override object VisitRules(KCCParser.RulesContext context)
         {
-            return null;
+            return context.asm();
         }
 
         public override object VisitAsm(KCCParser.AsmContext context)
