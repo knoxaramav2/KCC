@@ -1,0 +1,9 @@
+SECTIONS
+
+Instruction Body
+* Used for function bodies, and may contain executable instructions.
+* Declarations such as classes and non-anonymous functions are not allowed here.
+
+
+Property Body
+*Defines properties such as variables and named function declarations within a class or assembly.

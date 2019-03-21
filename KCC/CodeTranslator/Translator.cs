@@ -15,26 +15,40 @@ namespace CodeTranslator
             
         }
 
-        public void Translate(string raw)
+        public object Translate(string raw)
         {
             var inputStream = new AntlrInputStream(raw);
             var lexer = new KCCLexer(inputStream);
             var ctStream = new CommonTokenStream(lexer);
             var kccParser = new KCCParser(ctStream);
-
             var asmContext = kccParser.rules();
-            var visitor = new Visitor();
 
-            //Get all assembly definitions in file
-            var fileAsms = (KCCParser.AsmContext[]) visitor.Visit(asmContext);
+            //Create visitors
+            //var visitor = new Visitor();
+            var asmVisitor = new AsmVisitor();
 
-            foreach (var asm in fileAsms)
+            foreach (var a in asmContext.asm())
             {
-                var asmModel = (Asm) visitor.VisitAsm(asm);
-                Console.WriteLine("Assembly " + asmModel.Id + " visited");
+                asmVisitor.VisitAsm(a);
             }
 
-            return;
+            var asms = asmVisitor.GetAssemblies();
+
+            foreach (var a in asms)
+            {
+                Console.WriteLine(a.Id);
+                foreach (var expr in a.Block.Expressions)
+                {
+                    Console.WriteLine(expr.ToString());
+                }
+                
+                //read blocks
+
+            }
+
+            //var results = asmVisitor.Visit(kccParser.asm());
+
+            return null;
         }
     }
 }

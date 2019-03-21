@@ -13,9 +13,17 @@ rules           : asm+ EOF;
 //rules          : statement * EOF;
 
 asm             : assembly symbol_id block;
-block           : L_BRACE (class|function|block|expression|~R_BRACE)* R_BRACE;
+block           : L_BRACE (class|~R_BRACE)+ R_BRACE//L_BRACE (block|expression|~R_BRACE)+ R_BRACE
+
+                | L_BRACE (class|function|block|expression|~R_BRACE)+ R_BRACE
+                //: L_BRACE (class|~R_BRACE)+ R_BRACE
+                //| L_BRACE (function|~R_BRACE)+ R_BRACE
+                //| L_BRACE (block|~R_BRACE)+ R_BRACE
+                //| L_BRACE (expression|~R_BRACE)+ R_BRACE
+                ;
+
 class           : CLASS symbol_id block
-                | statement
+                //| statement
                 ;
 
 
@@ -24,8 +32,9 @@ statement       : call
                 | expression* semi
                 | IDENTIFIER IDENTIFIER group block semi
                 ;
-expression      : var_decl
-                | symbol_id expression
+expression      : assign_expr
+                //| symbol_id expression
+                | var_decl
                 | symbol_id
                 | group
                 | unary_ops expression
@@ -41,7 +50,7 @@ function        : function_decl
 function_decl   : identifier function_call block;
 function_call   : identifier group;
 assign_expr     : identifier assign_ops (value_id|expression);
-var_decl        : identifier assign_expr expression
+var_decl        : identifier assign_expr
                 | identifier symbol_id
                 ;
 group           : L_PARANTH (expression|~R_PARANTH)? R_PARANTH;
