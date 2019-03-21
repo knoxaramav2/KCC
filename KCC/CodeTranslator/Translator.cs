@@ -21,15 +21,22 @@ namespace CodeTranslator
             var lexer = new KCCLexer(inputStream);
             var ctStream = new CommonTokenStream(lexer);
             var kccParser = new KCCParser(ctStream);
+            kccParser.BuildParseTree = true;
+            
+
+            var result = new AssemblyVisitor().Visit(kccParser.assembly());
+
+            return null;
+            /*
             var asmContext = kccParser.rules();
 
             //Create visitors
-            //var visitor = new Visitor();
-            var asmVisitor = new AsmVisitor();
+            var asmVisitor = new AssemblyVisitor();
+            
 
-            foreach (var a in asmContext.asm())
+            foreach (var a in asmContext.assembly())
             {
-                asmVisitor.VisitAsm(a);
+                asmVisitor.VisitAssembly(a);
             }
 
             var asms = asmVisitor.GetAssemblies();
@@ -37,18 +44,11 @@ namespace CodeTranslator
             foreach (var a in asms)
             {
                 Console.WriteLine(a.Id);
-                foreach (var expr in a.Block.Expressions)
-                {
-                    Console.WriteLine(expr.ToString());
-                }
-                
-                //read blocks
-
             }
 
             //var results = asmVisitor.Visit(kccParser.asm());
 
-            return null;
+            return null;*/
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,221 +7,179 @@ using System.Threading.Tasks;
 
 namespace CodeTranslator
 {
-    class Expression
+    class SyntaxErrors
     {
-        private string type;
+        private static SyntaxErrors _this;
+
+        public static SyntaxErrors GetInstance()
+        {
+            return _this ?? (_this = new SyntaxErrors());
+        }
+
+        private readonly Hashtable _errors = new Hashtable();
+        private int _errs = 0;
+
+        public void Add(Error err)
+        {
+            _errors.Add(_errs++, err.ToString());
+        }
+
+        public int Size()
+        {
+            return _errs;
+        }
+
+        public string GetErrors(int index)
+        {
+            if (index < 0 || index >= _errs) return "";
+            return (string) _errors[index];
+        }
+    }
+
+    class Error
+    {
+        private readonly String _msg;
+        private readonly int _line;
+
+        public Error(String msg, int lineNumber)
+        {
+            this._msg = msg;
+            this._line = lineNumber;
+        }
+
+        public override String ToString()
+        {
+            return _line + " : " + _msg;
+        } 
+    }
+
+    class Instruction
+    {
 
     }
 
-    class Class
+    class FunctionPrototype
+    {
+        public List<Instruction> arguments;
+        public string Id;
+        public string Type;
+    }
+
+    class BlockExec
+    {
+        private List<Instruction> instructions;
+    }
+
+    class FunctionDeclaration
+    {
+        public FunctionPrototype Prototype;
+        public BlockExec BlockExec;
+    }
+
+    class Assembly
     {
         public string Id;
-        public Block Block;
-        public List<Group> ArgList;
-
-        public Class()
-        {
-            Id = "";
-            Block = new Block();
-            ArgList = new List<Group>();
-        }
+        public BlockStruct BlockStruct;
     }
 
-    class Group
+    class BlockStruct
     {
-        
+
     }
 
-    //for classes and assemblies
-    class BlockContainer : Block
+    class ExecBlock
     {
-        //List<>
 
-        public BlockContainer()
-        {
-            Type = BlockBodyType.Container;
-        }
     }
 
-    //for functions
-    class BlockScope : Block
+    internal class AssemblyVisitor : KCCBaseVisitor<Assembly>
     {
-        public BlockScope()
+        private List<Assembly> _assemblies = new List<Assembly>();
+
+        public override Assembly VisitAssembly(KCCParser.AssemblyContext context)
         {
-            Type = BlockBodyType.Scope;
-        }
-    }
+            var asm = new Assembly {Id = context.symbol_id().GetText()};
 
-    class Block
-    {
-        public List<Expression> Expressions;
-        public BlockBodyType Type;
+            Console.WriteLine("Found asm " + asm.Id);
 
-        public enum BlockBodyType
-        {
-            Basic,
-            Scope,
-            Container
-        }
-
-        public Block()
-        {
-            Type = BlockBodyType.Basic;
-            Expressions = new List<Expression>();
-        }
-    }
-
-    class Asm
-    {
-        public string Id;
-        public BlockContainer Block;
-    }
-
-    internal class Visitor : KCCBaseVisitor<object>
-    {
-        public List<Asm> Assemblies = new List<Asm>();
-        public List<Block> Blocks = new List<Block>();
-
-        public override object VisitRules(KCCParser.RulesContext context)
-        {
-            return context.asm();
-        }
-
-
-        public override object VisitBlock(KCCParser.BlockContext context)
-        {
-            
-            var block = new Block();
-            
-
-            return null;
-        }
-
-        public override object VisitClass(KCCParser.ClassContext classContext)
-        {
-
-            return null;
-        }
-    }
-
-    internal class AsmVisitor : KCCBaseVisitor<object>
-    {
-        private readonly List<Asm> _assemblies = new List<Asm>();
-
-        public override object VisitAsm(KCCParser.AsmContext context)
-        {
-            var asm = new Asm
+            if (context.block_struct() == null)
             {
-                Id = context.symbol_id().GetText(),
-                Block =(BlockContainer) (new BlockVisitor().VisitBlock(context.block()))
-            };
+                SyntaxErrors.GetInstance().Add(new Error("Invalid or missing assembly body : " + context.GetText(), -1));
+                return null;
+            }
+
+            var bsListener = new BlockStructVisitor();
+            bsListener.VisitBlock_struct(context.block_struct());
+            asm.BlockStruct = bsListener.GetBlockStructs()[0];
 
             _assemblies.Add(asm);
-
-            return asm;
+            return base.VisitAssembly(context);
         }
 
-        public List<Asm> GetAssemblies()
+        public override Assembly VisitReturn(KCCParser.ReturnContext context)
+        {
+            return base.VisitReturn(context);
+        }
+
+        public List<Assembly> GetAssemblies()
         {
             return _assemblies;
         }
     }
 
-    internal class ClassVisitor : KCCBaseVisitor<object>
+    internal class BlockStructVisitor : KCCBaseVisitor<BlockStruct>
     {
-        public override object VisitClass(KCCParser.ClassContext context)
+        private readonly List<BlockStruct> _blockStructs = new List<BlockStruct>();
+
+        public override BlockStruct VisitBlock_struct(KCCParser.Block_structContext context)
         {
+            var blockStruct = new BlockStruct();
 
-            var blockContext = context.block();
+            Console.WriteLine("Found blockstruct");
 
-            var blockVisitor = new BlockVisitor();
-            var exprVisitor = new ExpressionVisitor();
-
-            
-
-            var kClass = new Class
+            var instBody = context.inst_body();
+            foreach(var inst in instBody)
             {
-                Id = context.symbol_id().GetText()
-            };
+                if (inst.instruction() != null)
+                {
 
-            return kClass;
+                } else if (inst.fnc_proto() != null)
+                {
+
+                }
+                else if(inst.fnc_decl() != null)
+                {
+
+                } else if (inst.@class() != null)
+                {
+
+                }
+                else
+                {
+                    //ERROR
+                }
+            }
+
+            return base.VisitBlock_struct(context);
+        }
+
+        public List<BlockStruct> GetBlockStructs()
+        {
+            return _blockStructs;
         }
     }
 
-    internal class BlockVisitor : KCCBaseVisitor<Block>
+    internal class ExecBlockVisitor : KCCBaseVisitor<ExecBlock>
     {
-        private readonly List<Block> _blocks = new List<Block>();
-
-        public BlockScope VisitBlockScope(KCCParser.BlockContext context)
+        public override ExecBlock VisitBlock_exec(KCCParser.Block_execContext context)
         {
-            var blockScope = new BlockScope();
-
-            var exprVisitor = new ExpressionVisitor();
-            var expressions = context.expression();
-
-            //visitor expressions
-            foreach (var expr in expressions)
-            {
-                var expression = (Expression)exprVisitor.VisitExpression(expr);
-                blockScope.Expressions.Add(expression);
-            }
-
-            return blockScope;
-        }
-
-        public Block VisitBlockContainer(KCCParser.BlockContext context)
-        {
-            var blockContainer = new BlockContainer();
-
-            var exprVisitor = new ExpressionVisitor();
-            var expressions = context.expression();
-
-            //visitor expressions
-            foreach (var expr in expressions)
-            {
-                var expression = (Expression)exprVisitor.VisitExpression(expr);
-                blockContainer.Expressions.Add(expression);
-            }
-
-            return blockContainer;
-        }
-
-        public override Block VisitBlock(KCCParser.BlockContext context)
-        {
-            switch (context.RuleIndex)
-            {
-                case 1: return VisitBlockScope(context);
-                case 2: return VisitBlockContainer(context);
-                default:
-                    return null;
-            }
-        }
-
-        public List<Block> GetBlocks()
-        {
-            return _blocks;
+            return base.VisitBlock_exec(context);
         }
     }
 
-    internal class ExpressionVisitor : KCCBaseVisitor<object>
+    internal class FncDeclVisitor : KCCBaseVisitor<>
     {
-        private readonly List<Expression> _expressions = new List<Expression>();
 
-        public override object VisitExpression(KCCParser.ExpressionContext context)
-        {
-            var expression = new Expression();
-
-            var a = context.assign_expr();
-            var b = context.var_decl();
-
-            _expressions.Add(expression);
-            return expression;
-        }
-
-        public List<Expression> GetExpressions()
-        {
-            return _expressions;
-        }
     }
 
 }

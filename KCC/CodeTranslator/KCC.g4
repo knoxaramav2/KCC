@@ -1,162 +1,91 @@
 grammar KCC;
 
+
 options{
-    language = CSharp;
+    language= CSharp;
 }
 
 
+rules               : assembly +;
 
-/***Parser Rules***/
+assembly            : ASSEMBLY symbol_id block_struct;
+class               : 'class' symbol_id block_struct;
 
+//enclosures
+group               : L_PARANTH (instruction|~R_PARANTH)? R_PARANTH;
 
-rules           : asm+ EOF;
-//rules          : statement * EOF;
+//defines properties of a body
+block_struct        : L_BRACE ((inst_body|~R_BRACE)+)? R_BRACE
+                    ;
+//contains executable instructions
+block_exec          : L_BRACE ((inst_exec|~R_BRACE)+)? R_BRACE
+                    ;
 
-asm             : assembly symbol_id block;
-block           : L_BRACE (block|expression|~R_BRACE)+ R_BRACE
+block               : L_BRACE ((.|~R_BRACE)+)? R_BRACE;
 
-                | L_BRACE (class|function|block|expression|~R_BRACE)+ R_BRACE
-                //: L_BRACE (class|~R_BRACE)+ R_BRACE
-                //| L_BRACE (function|~R_BRACE)+ R_BRACE
-                //| L_BRACE (block|~R_BRACE)+ R_BRACE
-                //| L_BRACE (expression|~R_BRACE)+ R_BRACE
-                ;
+//allowed in definition
+inst_body           : instruction
+                    | fnc_proto
+                    | fnc_decl
+                    | class;
+//allowed in function body
+inst_exec           : var_decl
+                    | keywords;
 
-class           : CLASS symbol_id block
-                | statement
-                ;
+instruction         : var_decl SEMI?
+                    ;
 
+//keywords
+keywords            : return;
+return              : RETURN expression? SEMI;
 
+//declarations
+var_decl            :symbol_id symbol_id (assignment)?
+                    ;
+fnc_decl            : fnc_proto block_exec;
+fnc_proto           : symbol_id restric_id group SEMI?;
 
-statement       : call
-                | expression* semi
-                | IDENTIFIER IDENTIFIER group block semi
-                ;
-expression      : assign_expr
-                //| symbol_id expression
-                | var_decl
-                | symbol_id
-                | group
-                | unary_ops expression
-                | left=expression op=binary right=expression
-                | bool
-                | type_specifier symbol_id
-                ;
+//basic
+assignment          : assign_ops value_id;
 
-call            : symbol_id group;
-function        : function_decl
-                | function_call
-                ;
-function_decl   : identifier function_call block;
-function_call   : identifier group;
-assign_expr     : identifier assign_ops (value_id|expression);
-var_decl        : identifier assign_expr
-                | identifier symbol_id
-                ;
-group           : L_PARANTH (expression|~R_PARANTH)? R_PARANTH;
+unary_expr          : unary_ops symbol_id
+                    | symbol_id unary_ops
+                    ;
 
-asm_id          : (identifier DOT)*?IDENTIFIER;
-value_id        : DECIMAL | IDENTIFIER | logic_id;
-symbol_id       : (IDENTIFIER)(DOT IDENTIFIER)*?;//x or x.y.z
-logic_id        : (TRUE | FALSE);
-identifier      : type_specifier
-                | symbol_id
-                | control_block
-                | RETURN
-                | control_id
-                ;
+//resolution
+unary_ops           :INCREMENT
+                    |DECRIMENT
+                    ;
+
+binary_ops          : ADD
+                    | SUBTRACT
+                    | MULTIPLY
+                    | DIVIDE
+                    | EXPONENT
+                    | MODULO
+                    ;
 
 
+assign_ops          : SET
+                    | SET_SUM
+                    | SET_DIFFERENCE
+                    | SET_PRODUCT
+                    | SET_QUOTIENT
+                    ;
 
-control_block   : IF
-                | ELSE
-                | WHILE
-                | FOREACH
-                ;
+symbol_id           : IDENTIFIER (('.'IDENTIFIER)+)?;
+restric_id          : IDENTIFIER;
+value_id            : DECIMAL | IDENTIFIER;
 
-control_id      : CONTINUE
-                | BREAK
-                | GOTO
-                | RETURN
-                ;
+expression          : unary_expr
+                    | IDENTIFIER;
 
-unary_ops       : INCREMENT
-                | DECRIMENT
-                | LOGIC_NOT
-                ;
+/*
+ * Lexer Rules
+ */
 
-binary_arith_ops: SET
-                | ADD
-                | SUBTRACT
-                | MULTIPLY
-                | DIVIDE
-                | EXPONENT
-                | MODULO
-                | SET_SUM
-                | SET_DIFFERENCE
-                | SET_PRODUCT
-                | SET_QUOTIENT
-                ;
-
-assign_ops      : SET
-                | SET_SUM
-                | SET_DIFFERENCE
-                | SET_PRODUCT
-                | SET_QUOTIENT
-                ;
-
-binary_logic_ops: LOGIC_OR
-                | LOGIC_AND
-                | LOGIC_NOT
-                | LOGIC_NAND
-                | LOGIC_NOR
-                | LOGIC_XOR
-                | LOGIC_XNOR
-                | GTR
-                | LSS
-                | EQU
-                | GTR_EQU
-                | LSS_EQU
-                ;
-
-binary          : binary_arith_ops | binary_logic_ops;
-
-bool            : TRUE | FALSE;
-
-arith_expr      :arith_expr binary_arith_ops arith_expr
-                | L_PARANTH arith_expr R_PARANTH
-                | value_id
-                | SUBTRACT value_id
-                | (INCREMENT|DECRIMENT) value_id;
-
-type_specifier   : ('int'
-                | 'sint'
-                | 'double'
-                | 'char'
-                | 'byte'
-                | 'string'
-                | 'class'
-                | 'bool')
-                | type_specifier array;
-
-array           : L_BRACKET value_id? R_BRACKET;
-
-assembly        : 'asm' | 'assembly';
-
-semi            : SEMI;
-
-/***Lexer Rules***/
-
-//control operators
-
-IF          : 'if';
-ELSE        : 'else';
-WHILE       : 'while';
-FOREACH     : 'foreach';
-CONTINUE    : 'continue';
-BREAK       : 'break';
-RETURN      : 'return';
-GOTO        : 'goto';
+//keywords
+RETURN              : 'return';
 
 //arithmetic operators
 SET             : '=';
@@ -173,37 +102,15 @@ SET_QUOTIENT    : '/=';
 INCREMENT       : '++';
 DECRIMENT       : '--';
 
-//logical operators
-LOGIC_OR        : '||';
-LOGIC_AND       : '&&';
-LOGIC_NOT       : '!';
-LOGIC_NAND      : '!&';
-LOGIC_NOR       : '!|';
-LOGIC_XOR       : '^|';
-LOGIC_XNOR      : '^!';
+fragment A          : ('A'|'a') ;
+fragment S          : ('S'|'s') ;
+fragment Y          : ('Y'|'y') ;
 
-//comparisons
-GTR             : '>';
-LSS             : '<';
-EQU             : '==';
-GTR_EQU         : '>=';
-LSS_EQU         : '<=';
+fragment LOWERCASE  : [a-z] ;
+fragment UPPERCASE  : [A-Z] ;
 
-//bitwise operators
-BITWISE_AND     : '&';
-BITWISE_OR      : '|';
-BITWISE_INVERT  : '~' ;
+fragment ALPHA  : [a-zA-Z_];
 
-//special
-CLASS           : 'class';
-THIS            : 'this';
-TRUE            : 'true';
-FALSE           : 'false';
-ASSEMBLY        : 'assembly';
-
-//binary other
-JOINT           : ':';
-DOT             : '.';
 
 //enclosures
 L_BRACKET       : '[';
@@ -213,13 +120,7 @@ R_PARANTH       : ')';
 L_BRACE         : '{';
 R_BRACE         : '}';
 
-//other operators
-//REFERENCE       : '\@'; TODO FIX
-LINE_COMMENT    : '#' ~[\r\n]* ->channel(HIDDEN);
-BLOCK_COMMENT   : '#*' .*? '*#'->channel(HIDDEN);
-
-fragment ALPHA  : [a-zA-Z_]
-                ;
+ASSEMBLY            : 'asm' | 'assembly';
 
 //general identifies
 DECIMAL         : '-'?[0-9]+('.'[0-9])?;
