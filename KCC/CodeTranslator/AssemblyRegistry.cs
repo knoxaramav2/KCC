@@ -13,6 +13,7 @@ namespace CodeTranslator
     {
         private static AssemblyRegistry _this;
         private List<Assembly> _assemblies;
+
         public Assembly TargetAssembly { get; internal set; }
         public static void Init()
         {
@@ -26,7 +27,12 @@ namespace CodeTranslator
             _this.TargetAssembly = asm;
             _this._assemblies.Add(asm);
         }
+        public static AssemblyRegistry GetInstance()
+        {
+            if (_this==null) { Init();}
 
+            return _this;
+        }
     }
 
     class Assembly : Scope

@@ -19,6 +19,7 @@ namespace CodeTranslator
         }
         public SymbolTable SymbolTable { get; internal set; }
         public DataTypeTable DataTypeTable { get; internal set; }
+        public MethodTable MethodTable { get; internal set; }
 
         public string ScopeSymbol { get; internal set; }
     }

@@ -5,25 +5,32 @@
     /// </summary>
     public class SymbolTable : RecordController<SymbolRecord>
     {
-        
+        private AssemblyRegistry _assemblyRegistry;
+
+        public SymbolTable()
+        {
+            _assemblyRegistry = AssemblyRegistry.GetInstance();
+        }
+
+        public RecordOperationResult Add(string key, SymbolRecord value)
+        {
+            base.Add(key, value);
+            RegPrinter.PrintRegUpdate(_assemblyRegistry.TargetAssembly.ScopeSymbol,
+                key, value.ToString(), "Add");
+            return RecordOperationResult.Ok;
+        }
+
+
     }
 
     /// <summary>
     /// Records an instance declaration of a variable
+    /// Contains a 'foreign' reference to its respective data type id and name
     /// </summary>
-    public class SymbolRecord
+    public class SymbolRecord : Record
     {
-        public string RecordName { get; }
-        public long DataTypeId { get; }
-        public Partition [] Partition { get; }
+        public TypeForeignReference ForeignReference { get; internal set; }
     }
 
-    /// <summary>
-    /// Used in class declarations, or other memory compact structures
-    /// </summary>
-    public class Partition
-    {
-        public string PartitionName { get; internal set; }
-        public string ParitionSize { get; internal set; }
-    }
+
 }

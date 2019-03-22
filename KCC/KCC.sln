@@ -23,6 +23,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compil
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTranslator", "CodeTranslator\CodeTranslator.csproj", "{0760DCC4-0DA9-416A-A369-51F00A24A10D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EF3BF85C-5C5F-448C-BA74-8FA25C311A84} = {EF3BF85C-5C5F-448C-BA74-8FA25C311A84}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

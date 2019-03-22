@@ -10,6 +10,11 @@ namespace CommonLangLib
     {
         private static bool _enabled = false;
 
+        public static bool DebugEnabled()
+        {
+            return _enabled;
+        }
+
         public static void Init(bool enable)
         {
             _enabled = enable;

@@ -47,6 +47,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyRegistry.cs" />
+    <Compile Include="DataTypeTable.cs" />
+    <Compile Include="MethodTable.cs" />
+    <Compile Include="RecordController.cs" />
+    <Compile Include="RegPrinter.cs" />
+    <Compile Include="Scope.cs" />
+    <Compile Include="SymbolTable.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="KCC.g4.lexer.cs">
       <DependentUpon>KCC.g4</DependentUpon>

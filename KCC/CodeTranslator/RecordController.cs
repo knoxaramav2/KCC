@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace CodeTranslator
 {
-    public class RecordController <T>
+    public abstract class RecordController <T>
     {
         public enum RecordOperationResult
         {
@@ -14,25 +13,26 @@ namespace CodeTranslator
             RecordSaveError
         }
 
-        private Dictionary<string,T> records;
+        private readonly Dictionary<string,T> _records;
+        
 
-        public RecordController ()
+        protected RecordController ()
         {
-            records = new Dictionary<string, T>();
+            _records = new Dictionary<string, T>();
         }
 
-        public RecordOperationResult Add(string key, T value)
+        public virtual RecordOperationResult Add(string key, T value)
         {
-            if (records.ContainsKey(key) == false)
+            if (_records.ContainsKey(key) == false)
             {
                 return RecordOperationResult.RecordDuplicate;
             }
 
             try
             {
-                records.Add(key, value);
+                _records.Add(key, value);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return RecordOperationResult.RecordSaveError;
             }
@@ -41,13 +41,13 @@ namespace CodeTranslator
             return RecordOperationResult.Ok;
         }
 
-        public T GetRecord(string recordName)
+        public virtual T GetRecord(string recordName)
         {
             T ret;
 
             try
             {
-                ret = records[recordName];
+                ret = _records[recordName];
             }
             catch (Exception)
             {
@@ -57,5 +57,15 @@ namespace CodeTranslator
 
             return ret;
         }
+    }
+
+    /// <summary>
+    /// Basic Record
+    /// Contains a (string) name and a (long) RecordId
+    /// </summary>
+    public class Record
+    {
+        public string Name { get; internal set; }
+        public long RecordId { get; internal set; }
     }
 }
