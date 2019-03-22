@@ -116,17 +116,14 @@ namespace CodeTranslator
         public override Assembly VisitAssembly(KCCParser.AssemblyContext context)
         {
            
+            AssemblyRegistry.CreateAssembly(context.symbol_id().GetText());
+
             return base.VisitAssembly(context);
         }
 
         public override Assembly VisitReturn(KCCParser.ReturnContext context)
         {
             return base.VisitReturn(context);
-        }
-
-        public List<Assembly> GetAssemblies()
-        {
-            return _assemblies;
         }
     }
 

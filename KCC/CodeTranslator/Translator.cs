@@ -17,6 +17,8 @@ namespace CodeTranslator
 
         public object Translate(string raw)
         {
+            AssemblyRegistry.Init();
+
             var inputStream = new AntlrInputStream(raw);
             var lexer = new KCCLexer(inputStream);
             var ctStream = new CommonTokenStream(lexer);
