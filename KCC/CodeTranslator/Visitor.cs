@@ -35,7 +35,7 @@ namespace CodeTranslator
             return (string) _errors[index];
         }
     }
-
+    
     class Error
     {
         private readonly String _msg;
@@ -52,7 +52,7 @@ namespace CodeTranslator
             return _line + " : " + _msg;
         } 
     }
-
+    /*
     class Instruction
     {
 
@@ -108,28 +108,14 @@ namespace CodeTranslator
     {
         public List<Instruction> Instructionsl;
     }
-
+    */
     internal class AssemblyVisitor : KCCBaseVisitor<Assembly>
     {
         private List<Assembly> _assemblies = new List<Assembly>();
 
         public override Assembly VisitAssembly(KCCParser.AssemblyContext context)
         {
-            var asm = new Assembly {Id = context.symbol_id().GetText()};
-
-            Console.WriteLine("Found asm " + asm.Id);
-
-            if (context.block_struct() == null)
-            {
-                SyntaxErrors.GetInstance().Add(new Error("Invalid or missing assembly body : " + context.GetText(), -1));
-                return null;
-            }
-
-            var bsListener = new BlockStructVisitor();
-            bsListener.VisitBlock_struct(context.block_struct());
-            asm.BlockStruct = bsListener.GetBlockStructs()[0];
-
-            _assemblies.Add(asm);
+           
             return base.VisitAssembly(context);
         }
 
@@ -144,72 +130,31 @@ namespace CodeTranslator
         }
     }
 
-    internal class BlockStructVisitor : KCCBaseVisitor<BlockStruct>
+    internal class BlockStructVisitor : KCCBaseVisitor<object>
     {
-        private readonly List<BlockStruct> _blockStructs = new List<BlockStruct>();
 
-        public override BlockStruct VisitBlock_struct(KCCParser.Block_structContext context)
+        public override object VisitBlock_struct(KCCParser.Block_structContext context)
         {
-            var blockStruct = new BlockStruct();
-
-            Console.WriteLine("Found blockstruct");
-
-            var instBody = context.inst_body();
-            foreach(var inst in instBody)
-            {
-                if (inst.var_decl() != null)
-                {
-
-                } else if (inst.fnc_proto() != null)
-                {
-
-                }
-                else if(inst.fnc_decl() != null)
-                {
-
-                } else if (inst.@class() != null)
-                {
-
-                }
-                else
-                {
-                    //ERROR
-                }
-            }
 
             return base.VisitBlock_struct(context);
         }
-
-        public List<BlockStruct> GetBlockStructs()
-        {
-            return _blockStructs;
-        }
     }
 
-    internal class ExecBlockVisitor : KCCBaseVisitor<ExecBlock>
+    internal class ExecBlockVisitor : KCCBaseVisitor<object>
     {
-        public override ExecBlock VisitBlock_exec(KCCParser.Block_execContext context)
+        public override object VisitBlock_exec(KCCParser.Block_execContext context)
         {
-            Console.WriteLine("Found exec struct");
-
             return base.VisitBlock_exec(context);
         }
     }
 
     internal class FunctionPrototypeVisitor : KCCBaseVisitor<KCCParser.Fnc_protoContext>
     {
-        private readonly List<FunctionPrototype> _prototypes = new List<FunctionPrototype>();
+        private readonly List<object> _prototypes = new List<object>();
 
         public override KCCParser.Fnc_protoContext VisitFnc_proto(KCCParser.Fnc_protoContext context)
         {
-            Console.WriteLine("Found Fnc Proto");
 
-            var prototype = new FunctionPrototype();
-
-            prototype.Id = context.symbol_id().GetText();
-            prototype.Type = context.restric_id().GetText();
-
-            _prototypes.Add(prototype);
 
             return base.VisitFnc_proto(context);
         }

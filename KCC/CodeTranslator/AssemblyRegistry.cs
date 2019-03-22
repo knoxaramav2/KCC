@@ -13,8 +13,8 @@ namespace CodeTranslator
     {
     }
 
-    //class Assembly
-    //{
+    class Assembly
+    {
 
-    //}
+    }
 }
