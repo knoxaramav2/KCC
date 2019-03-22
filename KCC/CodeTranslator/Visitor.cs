@@ -60,7 +60,7 @@ namespace CodeTranslator
 
     class FunctionPrototype
     {
-        public List<Instruction> arguments;
+        public Group ArgGroup;
         public string Id;
         public string Type;
     }
@@ -84,12 +84,29 @@ namespace CodeTranslator
 
     class BlockStruct
     {
-
+        public List<VarDecl> Members;
     }
 
     class ExecBlock
     {
+        
+    }
 
+    class VarDecl
+    {
+        public string Type;
+        public string Symbol;
+        public Assignment Assignment;
+    }
+
+    class Assignment
+    {
+
+    }
+
+    class Group
+    {
+        public List<Instruction> Instructionsl;
     }
 
     internal class AssemblyVisitor : KCCBaseVisitor<Assembly>
@@ -140,7 +157,7 @@ namespace CodeTranslator
             var instBody = context.inst_body();
             foreach(var inst in instBody)
             {
-                if (inst.instruction() != null)
+                if (inst.var_decl() != null)
                 {
 
                 } else if (inst.fnc_proto() != null)
@@ -173,13 +190,38 @@ namespace CodeTranslator
     {
         public override ExecBlock VisitBlock_exec(KCCParser.Block_execContext context)
         {
+            Console.WriteLine("Found exec struct");
+
             return base.VisitBlock_exec(context);
         }
     }
 
-    internal class FncDeclVisitor : KCCBaseVisitor<>
+    internal class FunctionPrototypeVisitor : KCCBaseVisitor<KCCParser.Fnc_protoContext>
     {
+        private readonly List<FunctionPrototype> _prototypes = new List<FunctionPrototype>();
 
+        public override KCCParser.Fnc_protoContext VisitFnc_proto(KCCParser.Fnc_protoContext context)
+        {
+            Console.WriteLine("Found Fnc Proto");
+
+            var prototype = new FunctionPrototype();
+
+            prototype.Id = context.symbol_id().GetText();
+            prototype.Type = context.restric_id().GetText();
+
+            _prototypes.Add(prototype);
+
+            return base.VisitFnc_proto(context);
+        }
     }
 
+    internal class FunctionDeclareVisitor : KCCBaseVisitor<KCCParser.Fnc_declContext>
+    {
+        public override KCCParser.Fnc_declContext VisitFnc_decl(KCCParser.Fnc_declContext context)
+        {
+            Console.WriteLine("Found Fnc Proto");
+
+            return base.VisitFnc_decl(context);
+        }
+    }
 }

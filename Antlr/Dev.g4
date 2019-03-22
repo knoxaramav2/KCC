@@ -23,7 +23,7 @@ block_exec          : L_BRACE ((inst_exec|~R_BRACE)+)? R_BRACE
 block               : L_BRACE ((.|~R_BRACE)+)? R_BRACE;
 
 //allowed in definition
-inst_body           : instruction
+inst_body           : var_decl
                     | fnc_proto
                     | fnc_decl
                     | class;
