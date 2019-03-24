@@ -51,6 +51,7 @@
     <Compile Include="DataTypeTable.cs" />
     <Compile Include="MethodTable.cs" />
     <Compile Include="RecordController.cs" />
+    <Compile Include="RecordQuery.cs" />
     <Compile Include="RegPrinter.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="SymbolTable.cs" />
@@ -70,6 +71,12 @@
       <CustomToolNamespace>CodeTranslator</CustomToolNamespace>
     </Antlr4>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj">
+      <Project>{ef3bf85c-5c5f-448c-ba74-8fa25c311a84}</Project>
+      <Name>CommonLangLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

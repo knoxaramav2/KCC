@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommonLangLib;
 
 namespace CodeTranslator
 {
@@ -115,8 +116,14 @@ namespace CodeTranslator
 
         public override Assembly VisitAssembly(KCCParser.AssemblyContext context)
         {
-           
+            if (context.block_struct() == null)
+            {
+                ErrorReporter.GetInstance().Add("Missing Assembly Block", ErrorCode.AbsentAssemblyBlock);
+                return null;
+            }
             AssemblyRegistry.CreateAssembly(context.symbol_id().GetText());
+
+            new BlockStructVisitor().VisitBlock_struct(context.block_struct());
 
             return base.VisitAssembly(context);
         }
@@ -132,6 +139,30 @@ namespace CodeTranslator
 
         public override object VisitBlock_struct(KCCParser.Block_structContext context)
         {
+            var body = context.inst_body();
+            foreach (var b in body)
+            {
+                if (b.var_decl() != null)
+                {
+                    Console.WriteLine("Var decl found");
+                } else if (b.fnc_proto() != null)
+                {
+                    Console.WriteLine("FncProto found");
+
+                }
+                else if (b.fnc_decl() != null)
+                {
+                    Console.WriteLine("FncDcl found");
+
+                } else if (b.@class() != null)
+                {
+                    Console.WriteLine("Class found");
+                }
+                else
+                {
+                    //EMPTY
+                }
+            }
 
             return base.VisitBlock_struct(context);
         }

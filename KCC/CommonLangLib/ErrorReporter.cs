@@ -16,12 +16,19 @@ namespace CommonLangLib
         //Dependency Warnings
         ImportRedefine,
 
+        //AST Validation Warnings
+        
+
         Error,
         //File Errors
         FileNotFound,
 
         //Macro Errors
-        MacroUndefined
+        MacroUndefined,
+
+        //AST Validation Errors
+        AbsentAssemblyBlock
+
     }
 
     public class ErrorReporter
