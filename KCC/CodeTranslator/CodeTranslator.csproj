@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyRegistry.cs" />
+    <Compile Include="Block.cs" />
+    <Compile Include="ClassTable.cs" />
     <Compile Include="DataTypeTable.cs" />
     <Compile Include="MethodTable.cs" />
     <Compile Include="RecordController.cs" />

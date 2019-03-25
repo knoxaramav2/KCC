@@ -12,7 +12,7 @@
             _assemblyRegistry = AssemblyRegistry.GetInstance();
         }
 
-        public RecordOperationResult Add(string key, MethodRecord value)
+        public override RecordOperationResult Add(string key, MethodRecord value)
         {
             base.Add(key, value);
             RegPrinter.PrintRegUpdate(_assemblyRegistry.TargetAssembly.ScopeSymbol,

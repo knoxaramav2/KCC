@@ -149,16 +149,14 @@ namespace CodeTranslator
                 {
                     Console.WriteLine("FncProto found");
 
-                }
-                else if (b.fnc_decl() != null)
+                } else if (b.fnc_decl() != null)
                 {
                     Console.WriteLine("FncDcl found");
 
                 } else if (b.@class() != null)
                 {
                     Console.WriteLine("Class found");
-                }
-                else
+                } else
                 {
                     //EMPTY
                 }
@@ -166,6 +164,8 @@ namespace CodeTranslator
 
             return base.VisitBlock_struct(context);
         }
+
+        
     }
 
     internal class ExecBlockVisitor : KCCBaseVisitor<object>

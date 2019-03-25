@@ -3,17 +3,25 @@ using System.Collections.Generic;
 
 namespace CodeTranslator
 {
-    public abstract class RecordController <T>
+    public enum RecordOperationResult
     {
-        public enum RecordOperationResult
-        {
-            Ok,
-            RecordDoesNotExist,
-            RecordDuplicate,
-            RecordSaveError
-        }
+        Ok,
+        RecordDoesNotExist,
+        RecordDuplicate,
+        RecordSaveError
+    }
 
-        private readonly Dictionary<string,T> _records;
+    public interface IRecordController
+    {
+        RecordOperationResult Add(String key, object value);
+        object GetRecord(string recordName);
+    }
+
+    public abstract class RecordController <T> : IRecordController
+    {
+        
+
+        private readonly Dictionary<string, T> _records;
         
 
         protected RecordController ()
@@ -21,7 +29,7 @@ namespace CodeTranslator
             _records = new Dictionary<string, T>();
         }
 
-        public virtual RecordOperationResult Add(string key, T value)
+        public virtual RecordOperationResult Add(string key, object value)
         {
             if (_records.ContainsKey(key) == false)
             {
@@ -30,7 +38,7 @@ namespace CodeTranslator
 
             try
             {
-                _records.Add(key, value);
+                _records.Add(key, (T)value);
             }
             catch (Exception)
             {
@@ -41,7 +49,7 @@ namespace CodeTranslator
             return RecordOperationResult.Ok;
         }
 
-        public virtual T GetRecord(string recordName)
+        public virtual object GetRecord(string recordName)
         {
             T ret;
 
@@ -59,13 +67,32 @@ namespace CodeTranslator
         }
     }
 
+    public enum RecordType
+    {
+        Class,
+        Method,
+        Variable,
+        Type,
+        Instruction
+    }
+
     /// <summary>
     /// Basic Record
     /// Contains a (string) name and a (long) RecordId
     /// </summary>
     public class Record
     {
+        public RecordType Type { get; internal set; }
         public string Name { get; internal set; }
         public long RecordId { get; internal set; }
+    }
+
+    /// <summary>
+    /// Stores data required to resolve a reference
+    /// </summary>
+    public class TypeForeignReference
+    {
+        public string DataTypeName { get; internal set; }
+        public long DataTypeId { get; internal set; }
     }
 }

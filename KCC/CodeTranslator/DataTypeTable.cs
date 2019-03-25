@@ -14,9 +14,10 @@ namespace CodeTranslator
             _assemblyRegistry = AssemblyRegistry.GetInstance();
         }
 
-        public RecordOperationResult Add(string key, DataTypeRecord value)
+        public override RecordOperationResult Add(string key, object value)
         {
-            base.Add(key, value);
+
+            base.Add(key, (DataTypeRecord) value);
             RegPrinter.PrintRegUpdate(_assemblyRegistry.TargetAssembly.ScopeSymbol,
                 key, value.ToString(), "Add");
             return RecordOperationResult.Ok;
@@ -42,12 +43,5 @@ namespace CodeTranslator
         public string ParitionSize { get; internal set; }
     }
 
-    /// <summary>
-    /// Stores data required to resolve a reference
-    /// </summary>
-    public class TypeForeignReference
-    {
-        public string DataTypeName { get; internal set; }
-        public long DataTypeId { get; internal set; }
-    }
+    
 }

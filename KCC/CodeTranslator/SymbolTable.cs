@@ -12,15 +12,13 @@
             _assemblyRegistry = AssemblyRegistry.GetInstance();
         }
 
-        public RecordOperationResult Add(string key, SymbolRecord value)
+        public override RecordOperationResult Add(string key, object value)
         {
-            base.Add(key, value);
+            base.Add(key, (SymbolRecord)value);
             RegPrinter.PrintRegUpdate(_assemblyRegistry.TargetAssembly.ScopeSymbol,
                 key, value.ToString(), "Add");
             return RecordOperationResult.Ok;
         }
-
-
     }
 
     /// <summary>
