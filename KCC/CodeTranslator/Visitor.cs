@@ -54,25 +54,24 @@ namespace CodeTranslator
         } 
     }
     
-    internal class AssemblyVisitor : KCCBaseVisitor<Assembly>
+    internal class AssemblyVisitor : KCCBaseVisitor<object>
     {
-        private List<Assembly> _assemblies = new List<Assembly>();
+        private List<object> _assemblies = new List<object>();
 
-        public override Assembly VisitAssembly(KCCParser.AssemblyContext context)
+        public override object VisitAssembly(KCCParser.AssemblyContext context)
         {
             if (context.block_struct() == null)
             {
-                ErrorReporter.GetInstance().Add("Missing Assembly Block", ErrorCode.AbsentAssemblyBlock);
+                ErrorReporter.GetInstance().Add("Missing assembly block", ErrorCode.AbsentAssemblyBlock);
                 return null;
             }
-            AssemblyRegistry.CreateAssembly(context.symbol_id().GetText());
 
             new BlockStructVisitor().VisitBlock_struct(context.block_struct());
 
             return base.VisitAssembly(context);
         }
 
-        public override Assembly VisitReturn(KCCParser.ReturnContext context)
+        public override object VisitReturn(KCCParser.ReturnContext context)
         {
             return base.VisitReturn(context);
         }
