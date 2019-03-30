@@ -85,6 +85,7 @@ namespace CodeTranslator
         public RecordType Type { get; internal set; }
         public string Name { get; internal set; }
         public long RecordId { get; internal set; }
+        public TypeForeignReference ForeignReference { get; internal set; }
     }
 
     /// <summary>

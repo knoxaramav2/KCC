@@ -60,44 +60,20 @@ namespace CodeTranslator
 
             return _this;
         }
+
+        //Accessors
+        
     }
 
     class Assembly : Scope
     {
-        private ClassTable _classTable;
-        private MethodTable _methodTable;
-        private SymbolTable _symbolTable;
-        private DataTypeTable _dataTypeTable;
-
-        private IRecordController<T> _recordController;
-
         public Assembly(string scopeSymbol) : base(scopeSymbol)
         {
-            _classTable = new ClassTable();
-            _methodTable = new MethodTable();
-            _symbolTable = new SymbolTable();
-            _dataTypeTable = new DataTypeTable();
-
-            _recordController = null;
         }
 
         public RecordOperationResult Add(Record value)
         {
-            switch (value.Type)
-            {
-                case RecordType.Class:
-                    break;
-                case RecordType.Method:
-                    break;
-                case RecordType.Variable:
-                    break;
-                case RecordType.Type:
-                    break;
-                case RecordType.Instruction:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            
 
             return RecordOperationResult.Ok;
         }

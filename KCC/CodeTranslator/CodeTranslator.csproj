@@ -54,6 +54,7 @@
     <Compile Include="MethodTable.cs" />
     <Compile Include="RecordController.cs" />
     <Compile Include="RecordQuery.cs" />
+    <Compile Include="RegistryGraph.cs" />
     <Compile Include="RegPrinter.cs" />
     <Compile Include="Scope.cs" />
     <Compile Include="SymbolTable.cs" />

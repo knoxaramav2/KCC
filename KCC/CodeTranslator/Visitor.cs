@@ -53,63 +53,7 @@ namespace CodeTranslator
             return _line + " : " + _msg;
         } 
     }
-    /*
-    class Instruction
-    {
-
-    }
-
-    class FunctionPrototype
-    {
-        public Group ArgGroup;
-        public string Id;
-        public string Type;
-    }
-
-    class BlockExec
-    {
-        private List<Instruction> instructions;
-    }
-
-    class FunctionDeclaration
-    {
-        public FunctionPrototype Prototype;
-        public BlockExec BlockExec;
-    }
-
-    class Assembly
-    {
-        public string Id;
-        public BlockStruct BlockStruct;
-    }
-
-    class BlockStruct
-    {
-        public List<VarDecl> Members;
-    }
-
-    class ExecBlock
-    {
-        
-    }
-
-    class VarDecl
-    {
-        public string Type;
-        public string Symbol;
-        public Assignment Assignment;
-    }
-
-    class Assignment
-    {
-
-    }
-
-    class Group
-    {
-        public List<Instruction> Instructionsl;
-    }
-    */
+    
     internal class AssemblyVisitor : KCCBaseVisitor<Assembly>
     {
         private List<Assembly> _assemblies = new List<Assembly>();
