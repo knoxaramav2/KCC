@@ -112,14 +112,14 @@ namespace CodeTranslator
             return ret;
         }
 
-        public ScopeBlock MakeParent(string name)
+        public ScopeBlock MakeChild(string name)
         {
-            var parent = new ScopeBlock(name);
+            var child = new ScopeBlock(name);
 
-            this._parent = parent;
-            _parent._child = this;
+            this._child = child;
+            _child._parent = this;
 
-            return parent;
+            return _child;
         }
 
         public ScopeBlock MakeSibling(string name)
@@ -131,10 +131,23 @@ namespace CodeTranslator
 
             var sibling = new ScopeBlock(name);
 
+            //All siblings share a parent
+            sibling._parent = _parent;
+
             this._next = sibling;
             sibling._previous = this;
 
             return sibling;
+        }
+
+        public ScopeBlock GetParent()
+        {
+            return _parent;
+        }
+
+        public ScopeBlock GetChild()
+        {
+            return _parent;
         }
     }
 
@@ -201,17 +214,41 @@ namespace CodeTranslator
                     var group = fncDcl.fnc_proto().@group();
                     var instructions = group.instruction();
 
-                    var args = instructions.Aggregate("",
-                        delegate(string current, KCCParser.InstructionContext instruction)
-                        {
-                            return current + (string) VisitInstruction(instruction);
-                        });
+                    //var args = instructions.Aggregate("",
+                     //   (current, instruction) => current + (string[]) VisitInstruction(instruction));
 
+                    string args="", defaults="";
+
+                    foreach (var instruction in instructions)
+                    {
+                        var values = (string[]) VisitInstruction(instruction);
+                        if (values == null) continue;
+                        args += values[0] + ",";
+                        defaults += values[1] + ",";
+                    }
+
+                    //clear ending commas
+                    if (args.Length > 0)
+                    {
+                        args = args.Remove(args.Length - 1);
+                        defaults = defaults.Remove(defaults.Length - 1);
+                    }
+                    
                     db.SaveFunction(
                         fncDcl.fnc_proto().restric_id().GetText(),
                         _currentScope.GetScopeString(),
                         fncDcl.fnc_proto().symbol_id().GetText(),
-                        args);
+                        args, defaults);
+
+                    //update scope to function body
+                    _currentScope = _currentScope.MakeChild(fncDcl.fnc_proto().restric_id().GetText());
+
+                    //Process and save executable instructions
+                    VisitBlock_exec(inst.fnc_decl().block_exec());
+
+                    //restore scope
+                    _currentScope = _currentScope.GetChild();
+
                 } else if (fncProto != null)
                 {
 
@@ -229,32 +266,151 @@ namespace CodeTranslator
 
         public override object VisitInstruction(KCCParser.InstructionContext context)
         {
-            Debug.PrintDbg($"Instruction found : {context.var_decl().symbol_id()[0].GetText()} {context.var_decl().symbol_id()[1].GetText()}");
-            var defaultValue = "";
 
-            if (context.var_decl().assignment() != null)
+            var r1 = context.var_decl();
+
+            if (r1 != null)
             {
-                defaultValue = context.var_decl().assignment().value_id().GetText();
+                return VisitVar_decl(r1);
             }
 
-            var ids = context.var_decl().symbol_id();
-            return $"{ids[0].GetText()} {ids[1].GetText()},";
-
-            //return base.VisitInstruction(context);
+            return null;
         }
 
         public override object VisitVar_decl(KCCParser.Var_declContext context)
         {
-            var args = new List<string>();
+            var args = new[] {"", ""};
 
+            var r1 = context;
 
+            Debug.PrintDbg($"Declaration found : {r1.symbol_id()[0].GetText()} {r1.symbol_id()[1].GetText()}");
 
-            return args.ToArray();
+            string defaultValue = null;
+
+            if (r1.assignment() != null)
+            {
+                defaultValue = r1.assignment().value_id().GetText();
+            }
+
+            db.SaveVariable(
+                r1.symbol_id()[1].GetText(),
+                _currentScope.GetScopeString(),
+                r1.symbol_id()[0].GetText(),
+                defaultValue);
+
+            args[0] = r1.symbol_id()[1].GetText();
+            args[1] = defaultValue;
+
+            return args;
+        }
+
+        public override object VisitBlock_exec(KCCParser.Block_execContext context)
+        {
+            var instructions = context.inst_exec();
+
+            foreach (var instruction in instructions)
+            {
+                VisitInst_exec(instruction);
+            }
+
+            return null;
+        }
+
+        public override object VisitInst_exec(KCCParser.Inst_execContext context)
+        {
+            //COMMAND, LVAL (ARG0), RVAL (ARG1)
+            var instruction = new [] {"","",""};
+
+            var r1 = context.instruction();
+            var r2 = context.keywords();
+
+            if (r1 != null)
+            {
+                VisitInstruction(r1);
+            } else if (r2 != null)
+            {
+                var result = (string[]) VisitKeywords(r2);
+                instruction[0] = result[0];
+                instruction[1] = result[1];
+            }
+
+            if (instruction[0] != "")
+            {
+                db.SaveInstruction(_currentScope.GetScopeString(), instruction[0], instruction[1], instruction[2]);
+            }
+
+            return instruction;
+        }
+
+        public override object VisitKeywords(KCCParser.KeywordsContext context)
+        {
+
+            if (context.@return() != null)
+            {
+                return new [] { "return", (string) VisitReturn(context.@return()) };
+            }
+            else
+            {
+                Debug.PrintDbg("Unrecognized keyword");
+            }
+
+            return new[] {"", ""};
         }
 
         public override object VisitReturn(KCCParser.ReturnContext context)
         {
-            return base.VisitReturn(context);
+            var result = "";
+
+            if (context.expression() != null)
+            {
+                result = (string) VisitExpression(context.expression()) ?? "#TBUFF";
+            }
+
+            db.SaveInstruction(_currentScope.GetScopeString(), "return", result);
+
+            return result;
+        }
+
+        //Note: Return reference to final expression result for chaining
+        //if result not saved to variable, return as #TBUFF (temporary result buffer)
+        public override object VisitExpression(KCCParser.ExpressionContext context)
+        {
+
+            if (context.symbol_id() != null)
+            {
+                return context.symbol_id().GetText();
+            } else if (context.unary_expr() != null)
+            {
+                VisitUnary_expr(context.unary_expr());
+            }
+
+            return null;
+        }
+
+        public override object VisitUnary_expr(KCCParser.Unary_exprContext context)
+        {
+            var retObj = context.symbol_id().GetText();
+            var opFirst = true;
+
+            var firstToken = context.start.Text;
+            if (firstToken == retObj)
+            {
+                opFirst = false;
+            }
+
+            switch (context.unary_ops().GetText())
+            {
+                case "++":
+
+                    break;
+                case "--":
+                    break;
+                default:
+                    Debug.PrintDbg("Unrecognized unary operator : " + context.unary_ops().GetText());
+                    break;
+            }
+
+            return retObj;
         }
     }
 }

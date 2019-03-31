@@ -28,8 +28,8 @@ inst_body           : var_decl
                     | fnc_decl
                     | class;
 //allowed in function body
-inst_exec           : var_decl
-                    | keywords;
+inst_exec           : instruction
+                    | keywords symbol_id? SEMI?;
 
 instruction         : var_decl SEMI?
                     ;
@@ -77,7 +77,7 @@ restric_id          : IDENTIFIER;
 value_id            : DECIMAL | IDENTIFIER;
 
 expression          : unary_expr
-                    | IDENTIFIER;
+                    | symbol_id;
 
 /*
  * Lexer Rules

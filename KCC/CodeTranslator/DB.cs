@@ -24,6 +24,7 @@ namespace CodeTranslator
             BuildAssemblyTable();
             BuildVarInstanceTable();
             BuildFunctionTable();
+            BuildInstructionTable();
 
             var tables = _sqLiteConnection.GetSchema("Tables");
             var columns = _sqLiteConnection.GetSchema("Columns");
@@ -42,6 +43,20 @@ namespace CodeTranslator
             }
 
             Debug.PrintDbg("<<<DATABASE>>>");
+        }
+
+        private void BuildInstructionTable()
+        {
+            var sql = new SqlBuilder(_sqLiteConnection);
+
+            //add columns
+            sql.AddColumn("command", SqlBuilder.Types.Varchar);
+            sql.AddColumn("arg0", SqlBuilder.Types.Varchar);
+            sql.AddColumn("arg1", SqlBuilder.Types.Varchar);
+            sql.AddColumn("function_id", SqlBuilder.Types.Varchar);
+
+
+            sql.Build("instructions");
         }
 
         private void BuildFunctionTable()
@@ -66,6 +81,8 @@ namespace CodeTranslator
             sql.AddColumn("id", SqlBuilder.Types.Varchar);
             sql.AddColumn("scope", SqlBuilder.Types.Varchar);
             sql.AddColumn("type", SqlBuilder.Types.Varchar);
+            sql.AddColumn("defvalue", SqlBuilder.Types.Varchar);
+
 
             sql.Build("variables");
         }
@@ -107,7 +124,7 @@ namespace CodeTranslator
             var command = new SQLiteCommand("INSERT INTO assembly (id) VALUES (?)", _sqLiteConnection);
             command.Parameters.AddWithValue("id",id);
             var rows = command.ExecuteNonQuery();
-            Debug.PrintDbg($"Inserted {rows} rows into table 'assembly'");
+            Debug.PrintDbg($"Inserted assembly {id}");
         }
 
         public void SaveFunction(string id, string scope, string type, string args, string defArgs="")
@@ -119,7 +136,30 @@ namespace CodeTranslator
             command.Parameters.AddWithValue("args", args);
             command.Parameters.AddWithValue("defaultval", defArgs);
             var rows = command.ExecuteNonQuery();
-            Debug.PrintDbg($"Inserted {rows} rows into table 'functions'");
+            Debug.PrintDbg($"Inserted {type} {scope}.{id} ({args}) = {defArgs}");
+        }
+
+        public void SaveVariable(string id, string scope, string type, string defValue="")
+        {
+            var command = new SQLiteCommand("INSERT INTO variables (id, scope, type, defvalue) VALUES (?,?,?,?)", _sqLiteConnection);
+            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("scope", scope);
+            command.Parameters.AddWithValue("type", type);
+            command.Parameters.AddWithValue("defvalue", defValue);
+            var rows = command.ExecuteNonQuery();
+            Debug.PrintDbg($"Inserted {scope}.{id} = {defValue}");
+        }
+
+        public void SaveInstruction(string functionScope, string op, string arg0="", string arg1="")
+        {
+            var command = new SQLiteCommand("INSERT INTO instructions (command, arg0, arg1, function_id) VALUES (?,?,?,?)", _sqLiteConnection);
+            command.Parameters.AddWithValue("command", op);
+            command.Parameters.AddWithValue("arg0", arg0);
+            command.Parameters.AddWithValue("arg1", arg1);
+            command.Parameters.AddWithValue("function_id", functionScope);
+
+            var rows = command.ExecuteNonQuery();
+            Debug.PrintDbg($"Inserted {functionScope} {op} {arg0} {arg1}");
         }
 
         public void Close()
