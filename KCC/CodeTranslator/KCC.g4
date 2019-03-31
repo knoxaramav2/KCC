@@ -1,6 +1,5 @@
 grammar KCC;
 
-
 options{
     language= CSharp;
 }
@@ -12,7 +11,7 @@ assembly            : ASSEMBLY symbol_id block_struct;
 class               : 'class' symbol_id block_struct;
 
 //enclosures
-group               : L_PARANTH (instruction|~R_PARANTH)? R_PARANTH;
+group               : L_PARANTH ((instruction|~R_PARANTH)+)? R_PARANTH;
 
 //defines properties of a body
 block_struct        : L_BRACE ((inst_body|~R_BRACE)+)? R_BRACE

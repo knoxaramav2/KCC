@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Data;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.SQLite;
+using CommonLangLib;
 
 namespace CodeTranslator
 {
@@ -10,19 +13,83 @@ namespace CodeTranslator
 
         public Db()
         {
+            //initialize database
             SQLiteConnection.CreateFile("KCC.sqlite");
-            _sqLiteConnection = new SQLiteConnection("Data Source=KCC.sqlite;Version=1;");
+            _sqLiteConnection = new SQLiteConnection("Data Source=KCC.sqlite;Version=3;");
             _sqLiteConnection.Open();
+
+            //generate database
+            BuildScopeTable();
+            BuildClassTable();
+            BuildAssemblyTable();
+            BuildVarInstanceTable();
+            BuildFunctionTable();
+
+            var tables = _sqLiteConnection.GetSchema("Tables");
+            var columns = _sqLiteConnection.GetSchema("Columns");
+            Debug.PrintDbg(">>>DATABASE<<<");
+            if (Debug.DebugEnabled())
+            {
+                var command = new SQLiteCommand("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name", _sqLiteConnection);
+                using (var reader = command.ExecuteReader())
+                {
+                    var i = 0;
+                    while (reader.Read())
+                    {
+                        Debug.PrintDbg((string)reader.GetValue(i));
+                    }
+                }
+            }
+
+            Debug.PrintDbg("<<<DATABASE>>>");
+        }
+
+        private void BuildFunctionTable()
+        {
+            var sql = new SqlBuilder(_sqLiteConnection);
+
+            //add columns
+            sql.AddColumn("id", SqlBuilder.Types.Varchar);
+            sql.AddColumn("scope", SqlBuilder.Types.Varchar);
+            sql.AddColumn("type", SqlBuilder.Types.Varchar);
+            sql.AddColumn("args", SqlBuilder.Types.Varchar);
+            sql.AddColumn("defaultval", SqlBuilder.Types.Varchar);
+
+            sql.Build("functions");
+        }
+
+        private void BuildVarInstanceTable()
+        {
+            var sql = new SqlBuilder(_sqLiteConnection);
+
+            //add columns
+            sql.AddColumn("id", SqlBuilder.Types.Varchar);
+            sql.AddColumn("scope", SqlBuilder.Types.Varchar);
+            sql.AddColumn("type", SqlBuilder.Types.Varchar);
+
+            sql.Build("variables");
         }
 
         private void BuildScopeTable()
         {
+            var sql = new SqlBuilder(_sqLiteConnection);
 
+            //add columns
+            sql.AddColumn("id", SqlBuilder.Types.Varchar);
+            sql.AddColumn("scope", SqlBuilder.Types.Varchar);
+
+            sql.Build("scope");
         }
 
         private void BuildClassTable()
         {
+            var sql = new SqlBuilder(_sqLiteConnection);
 
+            //add columns
+            sql.AddColumn("id", SqlBuilder.Types.Varchar);
+            sql.AddColumn("scope", SqlBuilder.Types.Varchar);
+
+            sql.Build("classes");
         }
 
         private void BuildAssemblyTable()
@@ -35,6 +102,26 @@ namespace CodeTranslator
             sql.Build("assembly");
         }
 
+        public void SaveAssembly(string id)
+        {
+            var command = new SQLiteCommand("INSERT INTO assembly (id) VALUES (?)", _sqLiteConnection);
+            command.Parameters.AddWithValue("id",id);
+            var rows = command.ExecuteNonQuery();
+            Debug.PrintDbg($"Inserted {rows} rows into table 'assembly'");
+        }
+
+        public void SaveFunction(string id, string scope, string type, string args, string defArgs="")
+        {
+            var command = new SQLiteCommand("INSERT INTO functions (id, scope, type, args, defaultval) VALUES (?,?,?,?,?)", _sqLiteConnection);
+            command.Parameters.AddWithValue("id", id);
+            command.Parameters.AddWithValue("scope", scope);
+            command.Parameters.AddWithValue("type", type);
+            command.Parameters.AddWithValue("args", args);
+            command.Parameters.AddWithValue("defaultval", defArgs);
+            var rows = command.ExecuteNonQuery();
+            Debug.PrintDbg($"Inserted {rows} rows into table 'functions'");
+        }
+
         public void Close()
         {
             _sqLiteConnection.Close();
@@ -42,7 +129,7 @@ namespace CodeTranslator
     }
 
     //for laziness
-    internal class SqlBuilder
+    public class SqlBuilder
     {
         public enum Types
         {
@@ -116,7 +203,7 @@ namespace CodeTranslator
                 var c = (Column) _columns[i];
                 var type = GetTypeString(c._type);
 
-                command += string.Format($"{0} {1}", c._name, type);
+                command += $"{c._name} {type}";
 
                 if (i < _columns.Count - 1)
                 {
