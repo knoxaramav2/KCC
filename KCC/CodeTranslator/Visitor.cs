@@ -95,18 +95,14 @@ namespace CodeTranslator
         public string GetScopeString()
         {
             var current = this;
-            var ret = "";
+            var ret = current.Name;
+
+            current = current._parent;
 
             while (current != null)
             {
-                ret += current.Name + ret;
-
-                if (current._child != null)
-                {
-                    ret += "." + ret;
-                }
-
-                current = current._child;
+                current = current._parent;
+                ret = Name + "." + ret;
             }
 
             return ret;
@@ -175,6 +171,9 @@ namespace CodeTranslator
 
         public override object VisitAssembly(KCCParser.AssemblyContext context)
         {
+            Debug.PrintDbg("Visiting Assembly");
+
+
             if (context.block_struct() == null)
             {
                 ErrorReporter.GetInstance().Add("Missing assembly block", ErrorCode.AbsentAssemblyBlock);
@@ -196,6 +195,8 @@ namespace CodeTranslator
 
         public override object VisitBlock_struct(KCCParser.Block_structContext context)
         {
+            Debug.PrintDbg("Visiting Block Struct");
+
 
             foreach (var inst in context.inst_body())
             {
@@ -266,7 +267,7 @@ namespace CodeTranslator
 
         public override object VisitInstruction(KCCParser.InstructionContext context)
         {
-
+            Debug.PrintDbg("Visiting Instruction");
             var r1 = context.var_decl();
 
             if (r1 != null)
@@ -279,6 +280,9 @@ namespace CodeTranslator
 
         public override object VisitVar_decl(KCCParser.Var_declContext context)
         {
+            Debug.PrintDbg("Visiting Var Decl");
+
+
             var args = new[] {"", ""};
 
             var r1 = context;
@@ -306,6 +310,9 @@ namespace CodeTranslator
 
         public override object VisitBlock_exec(KCCParser.Block_execContext context)
         {
+            Debug.PrintDbg("Visiting BlockExec");
+
+
             var instructions = context.inst_exec();
 
             foreach (var instruction in instructions)
@@ -318,6 +325,9 @@ namespace CodeTranslator
 
         public override object VisitInst_exec(KCCParser.Inst_execContext context)
         {
+            Debug.PrintDbg("Visiting InstExec");
+
+
             //COMMAND, LVAL (ARG0), RVAL (ARG1)
             var instruction = new [] {"","",""};
 
@@ -344,6 +354,8 @@ namespace CodeTranslator
 
         public override object VisitKeywords(KCCParser.KeywordsContext context)
         {
+            Debug.PrintDbg("Visiting Keywords");
+
 
             if (context.@return() != null)
             {
@@ -359,6 +371,9 @@ namespace CodeTranslator
 
         public override object VisitReturn(KCCParser.ReturnContext context)
         {
+            Debug.PrintDbg("Visiting Return");
+
+
             var result = "";
 
             if (context.expression() != null)
@@ -366,7 +381,7 @@ namespace CodeTranslator
                 result = (string) VisitExpression(context.expression()) ?? "#TBUFF";
             }
 
-            db.SaveInstruction(_currentScope.GetScopeString(), "return", result);
+            //db.SaveInstruction(_currentScope.GetScopeString(), "return", result);
 
             return result;
         }
@@ -375,6 +390,8 @@ namespace CodeTranslator
         //if result not saved to variable, return as #TBUFF (temporary result buffer)
         public override object VisitExpression(KCCParser.ExpressionContext context)
         {
+            Debug.PrintDbg("Visiting Expression");
+
 
             if (context.symbol_id() != null)
             {
@@ -389,6 +406,9 @@ namespace CodeTranslator
 
         public override object VisitUnary_expr(KCCParser.Unary_exprContext context)
         {
+            Debug.PrintDbg("Visiting Unary");
+
+
             var retObj = context.symbol_id().GetText();
             var opFirst = true;
 
