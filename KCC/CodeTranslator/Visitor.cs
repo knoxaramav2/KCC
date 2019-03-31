@@ -54,9 +54,14 @@ namespace CodeTranslator
         } 
     }
     
-    internal class AssemblyVisitor : KCCBaseVisitor<object>
+    internal class KCC : KCCBaseVisitor<object>
     {
-        private List<object> _assemblies = new List<object>();
+        public Db db { get; private set; }
+
+        public KCC()
+        {
+            db = new Db();
+        }
 
         public override object VisitAssembly(KCCParser.AssemblyContext context)
         {
@@ -66,78 +71,12 @@ namespace CodeTranslator
                 return null;
             }
 
-            new BlockStructVisitor().VisitBlock_struct(context.block_struct());
-
             return base.VisitAssembly(context);
         }
 
         public override object VisitReturn(KCCParser.ReturnContext context)
         {
             return base.VisitReturn(context);
-        }
-    }
-
-    internal class BlockStructVisitor : KCCBaseVisitor<object>
-    {
-
-        public override object VisitBlock_struct(KCCParser.Block_structContext context)
-        {
-            var body = context.inst_body();
-            foreach (var b in body)
-            {
-                if (b.var_decl() != null)
-                {
-                    Console.WriteLine("Var decl found");
-                } else if (b.fnc_proto() != null)
-                {
-                    Console.WriteLine("FncProto found");
-
-                } else if (b.fnc_decl() != null)
-                {
-                    Console.WriteLine("FncDcl found");
-
-                } else if (b.@class() != null)
-                {
-                    Console.WriteLine("Class found");
-                } else
-                {
-                    //EMPTY
-                }
-            }
-
-            return base.VisitBlock_struct(context);
-        }
-
-        
-    }
-
-    internal class ExecBlockVisitor : KCCBaseVisitor<object>
-    {
-        public override object VisitBlock_exec(KCCParser.Block_execContext context)
-        {
-            return base.VisitBlock_exec(context);
-        }
-    }
-
-    internal class FunctionPrototypeVisitor : KCCBaseVisitor<KCCParser.Fnc_protoContext>
-    {
-        private readonly List<object> _prototypes = new List<object>();
-
-        public override KCCParser.Fnc_protoContext VisitFnc_proto(KCCParser.Fnc_protoContext context)
-        {
-
-
-            return base.VisitFnc_proto(context);
-        }
-    }
-
-    internal class FunctionDeclareVisitor : KCCBaseVisitor<KCCParser.Fnc_declContext>
-    {
-        public override KCCParser.Fnc_declContext VisitFnc_decl(KCCParser.Fnc_declContext context)
-        {
-            Console.WriteLine("Found Fnc Proto");
-
-            return base.VisitFnc_decl(context);
         }
     }
 }

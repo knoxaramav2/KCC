@@ -22,9 +22,9 @@ namespace CodeTranslator
             var ctStream = new CommonTokenStream(lexer);
             var kccParser = new KCCParser(ctStream);
             kccParser.BuildParseTree = true;
-            
+            var visitor = new KCCBaseVisitor<Db>();
 
-            var result = new AssemblyVisitor().Visit(kccParser.assembly());
+            var result = visitor.Visit(kccParser.assembly());
 
             return null;
         }
