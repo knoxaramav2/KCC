@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Antlr4.Runtime;
+using CommonLangLib;
 
 namespace CodeTranslator
 {
@@ -20,12 +21,18 @@ namespace CodeTranslator
             var inputStream = new AntlrInputStream(raw);
             var lexer = new KCCLexer(inputStream);
             var ctStream = new CommonTokenStream(lexer);
-            var kccParser = new KCCParser(ctStream);
-            kccParser.BuildParseTree = true;
+            var kccParser = new KCCParser(ctStream) {BuildParseTree = true};
             var visitor = new KccVisitor();
 
             var result = visitor.Visit(kccParser.assembly());
             var db = visitor.db;
+
+            var table = db.Query("select * from functions");
+            //table.Load();
+            foreach (var row in table.Rows)
+            {
+                //Debug.PrintDbg(row[""]);
+            }
 
             return null;
         }

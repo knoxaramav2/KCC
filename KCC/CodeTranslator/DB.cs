@@ -162,6 +162,28 @@ namespace CodeTranslator
             Debug.PrintDbg($"Inserted {functionScope} {op} {arg0} {arg1}");
         }
 
+        public DataTable Query(string query)
+        {
+            SQLiteDataAdapter adapter;
+            var dataTable = new DataTable();
+
+            try
+            {
+                var command = _sqLiteConnection.CreateCommand();
+                command.CommandText = query;
+                adapter = new SQLiteDataAdapter(command);
+                adapter.Fill(dataTable);
+
+            }
+            catch (SQLiteException e)
+            {
+                //ErrorReporter.GetInstance().Add(); TODO
+                return null;
+            }
+
+            return dataTable;
+        }
+
         public void Close()
         {
             _sqLiteConnection.Close();
