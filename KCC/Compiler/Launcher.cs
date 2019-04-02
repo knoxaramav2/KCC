@@ -42,10 +42,10 @@ namespace Compiler
             PageInfo pageInfo;
             while ((pageInfo=pageDistro.GetNextPage()) != null)
             {
-                //Parser.Parser.ParseStream(pageInfo.RawCode.ToString());
-                translator.Translate(pageInfo.ToString());
+                var db = translator.Translate(pageInfo.ToString());
             }
             
+
 
             return 0;
         }

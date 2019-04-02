@@ -16,7 +16,7 @@ namespace CodeTranslator
             
         }
 
-        public object Translate(string raw)
+        public Db Translate(string raw)
         {
             var inputStream = new AntlrInputStream(raw);
             var lexer = new KCCLexer(inputStream);
@@ -26,15 +26,9 @@ namespace CodeTranslator
 
             var result = visitor.Visit(kccParser.assembly());
             var db = visitor.db;
+            db.Close();
 
-            var table = db.Query("select * from functions");
-            //table.Load();
-            foreach (var row in table.Rows)
-            {
-                //Debug.PrintDbg(row[""]);
-            }
-
-            return null;
+            return db;
         }
     }
 }

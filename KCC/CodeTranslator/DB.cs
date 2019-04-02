@@ -9,13 +9,24 @@ namespace CodeTranslator
 {
     public class Db
     {
-        private SQLiteConnection _sqLiteConnection;
+        private const string DbLiteNane = "KCC.sqlite";
+        private const string DbCOnnect = "Data Source=KCC.sqlite;Version=3;";
+        private static SQLiteConnection _sqLiteConnection;
 
         public Db()
         {
             //initialize database
-            SQLiteConnection.CreateFile("KCC.sqlite");
-            _sqLiteConnection = new SQLiteConnection("Data Source=KCC.sqlite;Version=3;");
+            if (_sqLiteConnection == null)
+            {
+                SQLiteConnection.CreateFile(DbLiteNane);
+                _sqLiteConnection = new SQLiteConnection(DbCOnnect);
+            }
+            else
+            {
+                _sqLiteConnection.Open();
+                return;
+            }
+
             _sqLiteConnection.Open();
 
             //generate database
