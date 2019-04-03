@@ -27,7 +27,9 @@ namespace CommonLangLib
         MacroUndefined,
 
         //AST Validation Errors
-        AbsentAssemblyBlock
+        AbsentAssemblyBlock,
+
+        UnexpectedToken
 
     }
 

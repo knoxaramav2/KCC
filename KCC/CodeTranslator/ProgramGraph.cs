@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommonLangLib;
 
 namespace CodeTranslator
@@ -25,12 +26,17 @@ namespace CodeTranslator
             _instructionBase = new InstructionBase();
         }
 
+        public void Rewind()
+        {
+            _current = _root;
+        }
+
         //Scopes
         private ulong AddFieldScope(string name, string meta, bool executable)
         {
             if (_current.Fields == null)
             {
-                _current.Fields = new ScopeNode(name, _refCounter++) { Host = _current };
+                _current.Fields = new ScopeNode(name, _refCounter++, meta, executable) { Host = _current };
                 _current = _current.Fields;
                 Debug.PrintDbg("   => " + GetScopeString() + " exec? " + executable);
                 return _refCounter;
@@ -102,8 +108,9 @@ namespace CodeTranslator
         /// <param name="name">Name of function</param>
         /// <param name="meta">Overload identifier string</param>
         /// <returns></returns>
-        public ulong AddFunction(string name, string meta)
+        public ulong AddFunction(string name, string type, string args, string defArgs)
         {
+            var meta = GetOverloadString(name, type, args, defArgs);
             var refId = AddFieldScope(name, meta, true);
             Debug.PrintDbg($"> Function + {GetScopeString()}");
             _instructionBase.AddFunction(refId);
@@ -111,12 +118,44 @@ namespace CodeTranslator
             return refId;
         }
 
-        //Body fields
-        public ulong AddVariable(string name, string type)
+        public string GetOverloadString(string name, string type, string args, string defArgs)
         {
-            _current.AddBodyField(new BodyField(name, _refCounter++, type));
+            var str = name + type;
+            string [] aList;
+            string[] dList;
 
+            if (args != null)
+            {
+                aList = args.Split(',');
+                dList = defArgs.Split(',');
+                var i = aList.Length;
+
+                for (var j = 0; j < i; ++j)
+                {
+                    str += aList[j] + dList[j];
+                }
+            }
+
+            return str.GetHashCode().ToString();
+        }
+
+        //Body fields
+        public ulong AddVariable(string name, string type, string defVal=null)
+        {
+            _current.AddBodyField(new BodyField(name, _refCounter++, type, defVal));
+            Debug.PrintDbg($"> Variable + {GetScopeString()}.{name} = {defVal}");
             return _refCounter;
+        }
+
+        public void AddParameter(string args, string defArgs)
+        {
+            if (!_instructionBase.AddParameter(args, defArgs))
+            {
+                //TODO Not in function
+                return;
+            }
+
+            Debug.PrintDbg($"    >Params {_instructionBase.GetCurrentFunction().RefId} | {args} {defArgs}");
         }
 
         public void AddInstruction(string op, string arg0 = null, string arg1 = null)
@@ -127,7 +166,7 @@ namespace CodeTranslator
                 return;
             }
 
-            Debug.PrintDbg($"    > {_instructionBase.GetCurrentFunction().RefId} | {op} {arg0} {arg1}");
+            Debug.PrintDbg($"    >Inst {_instructionBase.GetCurrentFunction().RefId} | {op} {arg0} {arg1}");
         }
 
         /// <summary>
@@ -223,6 +262,18 @@ namespace CodeTranslator
             return true;
         }
 
+        public bool AddParameter(string args, string vals)
+        {
+            if (_current == null)
+            {
+                return false;
+            }
+
+            _current.AddParameter(args, vals);
+
+            return true;
+        }
+
         public InstructionUnit GetCurrentFunction()
         {
             return _current;
@@ -232,6 +283,7 @@ namespace CodeTranslator
     internal class InstructionUnit
     {
         public ulong RefId;
+        private List<string[]> _args;
         private List<string[]> _terms;
         private int _termIndex;
 
@@ -239,6 +291,7 @@ namespace CodeTranslator
         {
             RefId = refId;
             _terms = new List<string[]>();
+            _args = new List<string[]>();
             _termIndex = 0;
         }
 
@@ -247,14 +300,21 @@ namespace CodeTranslator
             _terms.Add(new []{ops, arg0, arg1});
         }
 
+        public void AddParameter(string args, string vals)
+        {
+            var aList = args.Trim(',').Split(',');
+            var vList = vals.Trim(',').Split(',');
+
+            var i = aList.Length;
+            for (var j = 0; j < i; ++j)
+            {
+                _args.Add(new[] { aList[j], vList[j] });
+            }
+        }
+
         public string[] GetNextInstruction()
         {
-            if (_termIndex >= _terms.Count)
-            {
-                return null;
-            }
-
-            return _terms[_termIndex++];
+            return _termIndex >= _terms.Count ? null : _terms[_termIndex++];
         }
 
         public void Rewind()
@@ -301,10 +361,12 @@ namespace CodeTranslator
     internal class BodyField : EltNode
     {
         public string Type;
+        public string Data;
 
-        public BodyField(string name, ulong refId, string type) : base(name, refId)
+        public BodyField(string name, ulong refId, string type, string data=null) : base(name, refId)
         {
             Type = type;
+            Data = data;
         }
     }
 }

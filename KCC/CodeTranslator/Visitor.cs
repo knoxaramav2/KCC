@@ -56,7 +56,7 @@ namespace CodeTranslator
 
     internal class KccVisitor : KCCBaseVisitor<object>
     {
-        public Db db { get; private set; }
+        public static Db db { get; private set; }
         private ProgramGraph graph { get; }
         private SqlBuilder _sqlBuilder;
 
@@ -72,8 +72,16 @@ namespace CodeTranslator
 
         public KccVisitor()
         {
-            db = new Db();
-            graph = db.Graph;
+            if (db == null)
+            {
+                db = new Db();
+                graph = db.Graph;
+            }
+        }
+
+        public Db GetDb()
+        {
+            return db;
         }
 
         public override object VisitAssembly(KCCParser.AssemblyContext context)
@@ -107,33 +115,39 @@ namespace CodeTranslator
 
                 } else if (fncDcl != null)
                 {
-                    var group = fncDcl.fnc_proto().@group();
-                    var instructions = group.instruction();
+                    var group = fncDcl.fnc_proto().decl_group();
+                    var param = group.var_decl();
 
-                    //var args = instructions.Aggregate("",
-                     //   (current, instruction) => current + (string[]) VisitInstruction(instruction));
+                    //saved first to fix argument declaration scope
+                    db.SaveFunction(
+                        fncDcl.fnc_proto().restric_id().GetText(),
+                        fncDcl.fnc_proto().symbol_id().GetText());
 
                     string args="", defaults="";
 
-                    foreach (var instruction in instructions)
+                    foreach (var p in param)
                     {
-                        var values = (string[]) VisitInstruction(instruction);
-                        if (values == null) continue;
-                        args += values[0] + ",";
-                        defaults += values[1] + ",";
+                        var values = (string[]) VisitVar_decl(p);
+                        if (values == null)
+                        {
+                            args += ",";
+                            defaults += ",";
+                        }
+                        else
+                        {
+                            args += $"{values[0]} {values[1]},";// values[0] + ",";
+                            defaults += values[2] + ",";
+                        }
+                        
                     }
 
                     //clear ending commas
                     if (args.Length > 0)
                     {
-                        args = args.Remove(args.Length - 1);
-                        defaults = defaults.Remove(defaults.Length - 1);
+                        args = args.Trim(',');
+                        defaults = defaults.Trim(',');
+                        db.UpdateFunctionParams(args, defaults);
                     }
-                    
-                    db.SaveFunction(
-                        fncDcl.fnc_proto().restric_id().GetText(),
-                        fncDcl.fnc_proto().symbol_id().GetText(),
-                        args, defaults);
 
                     //Process and save executable instructions
                     VisitBlock_exec(inst.fnc_decl().block_exec());
@@ -157,11 +171,20 @@ namespace CodeTranslator
 
         public override object VisitInstruction(KCCParser.InstructionContext context)
         {
-            var r1 = context.var_decl();
-
-            if (r1 != null)
+            if (context.var_decl() != null)
             {
-                return VisitVar_decl(r1);
+                VisitVar_decl(context.var_decl());
+            } else if (context.assignment() != null)
+            {
+                VisitAssignment(context.assignment());
+            } else if (context.keywords() != null)
+            {
+                VisitKeywords(context.keywords());
+            }
+            else
+            {
+                Debug.PrintDbg("Instruction not defined");
+                return null;
             }
 
             return null;
@@ -169,38 +192,80 @@ namespace CodeTranslator
 
         public override object VisitVar_decl(KCCParser.Var_declContext context)
         {
-            var args = new[] {"", ""};
-            var r1 = context;
+
+            var type = context.symbol_id()[0].GetText();
+            var id = context.symbol_id()[1].GetText();
             string defaultValue = null;
 
-            if (r1.assignment() != null)
+            if (context.assignment() != null)
             {
-                defaultValue = r1.assignment().value_id().GetText();
+                if (context.assignment().assign_ops().GetText() != "=")
+                {
+                    ErrorReporter.GetInstance().Add($"Unexpected {context.assignment().assign_ops().GetText()}"
+                                                    , ErrorCode.UnexpectedToken);
+                    return null;
+                }
+
+                //Should be #TBUFF if not immediate value 
+                defaultValue = (string) VisitAssignment(context.assignment());
             }
 
-            db.SaveVariable(
-                r1.symbol_id()[1].GetText(),
-                r1.symbol_id()[0].GetText(),
-                defaultValue);
+            //If value is not immediate, declare variable after expression is determined
+            if (defaultValue == ReservedMeta.ResultBuffer)
+            {
+                db.SaveInstruction(ReservedKw.Declare, id, defaultValue);
+                db.SaveVariable(id, type, null);
+            }
+            //If value is immediate, set as default value
+            else
+            {
+                db.SaveInstruction(ReservedKw.Declare, id);
+                //db.SaveInstruction(ReservedKw.Set, id, defaultValue);
+                db.SaveVariable(id, type, defaultValue);
+            }
 
-            args[0] = r1.symbol_id()[1].GetText();
-            args[1] = defaultValue;
-
-            return args;
+            return new [] {type, id, defaultValue};
         }
 
         public override object VisitBlock_exec(KCCParser.Block_execContext context)
         {
-            var instructions = context.inst_exec();
+            var instructions = context.instruction();
 
             foreach (var instruction in instructions)
             {
-                VisitInst_exec(instruction);
+                VisitInstruction(instruction);
             }
 
             return null;
         }
 
+        /// <summary>
+        /// Processes expression steps in an assignment
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns>
+        /// Returns either an immediate value, or saves a set of instructions
+        /// to be stored in #TBUFF
+        /// </returns>
+        public override object VisitAssignment(KCCParser.AssignmentContext context)
+        {
+            string value = null;
+            var expression = context.expression();
+            //check for immediate value
+            if (expression.value_id() != null)
+            {
+                return expression.value_id().GetText();
+            }
+
+            if (expression.unary_expr() != null)
+            {
+                
+            }
+
+            return null;
+        }
+
+        /*
         public override object VisitInst_exec(KCCParser.Inst_execContext context)
         {
             if (context.instruction() != null)
@@ -218,7 +283,7 @@ namespace CodeTranslator
             }
 
             return null;
-        }
+        }*/
 
         public override object VisitKeywords(KCCParser.KeywordsContext context)
         {
@@ -236,7 +301,7 @@ namespace CodeTranslator
 
         public override object VisitReturn(KCCParser.ReturnContext context)
         {
-            string result = null;
+            string result;
 
             if (context.expression() != null)
             {
@@ -244,10 +309,10 @@ namespace CodeTranslator
             }
             else
             {
-                result = "#TBUFF";
+                result = ReservedMeta.ResultBuffer;
             }
 
-            db.SaveInstruction("return", result);
+            db.SaveInstruction(ReservedKw.Return, result);
 
             return null;
         }
@@ -256,21 +321,43 @@ namespace CodeTranslator
         //if result not saved to variable, return as #TBUFF (temporary result buffer)
         public override object VisitExpression(KCCParser.ExpressionContext context)
         {
-            Debug.PrintDbg("Visiting Expression");
 
+            string res = null;
 
-            if (context.symbol_id() != null)
+            if (context.value_id() != null)
             {
-                return context.symbol_id().GetText();
-            } else if (context.unary_expr() != null)
+                res = context.value_id().GetText();
+            }
+            else if (context.unary_expr() != null)
             {
                 VisitUnary_expr(context.unary_expr());
+                res = ReservedMeta.ResultBuffer;
+
+            } else if (context.fnc_call() != null)
+            {
+                VisitFnc_call(context.fnc_call());
+                res = ReservedMeta.ResultBuffer;
             }
             else
             {
                 Debug.PrintDbg("Unimplimented expression");
-                return null;
             }
+
+            return res;
+        }
+
+        public override object VisitFnc_call(KCCParser.Fnc_callContext context)
+        {
+            string args = null;
+            var parameters = context.call_group().value_id();
+
+            if (parameters != null)
+            {
+                args = parameters.Aggregate("", (current, p) => current + (p.GetText() + ","));
+                args = args.TrimEnd(',');
+            }
+
+            db.SaveInstruction(ReservedKw.Invoke, context.symbol_id().GetText(), args);
 
             return null;
         }
@@ -279,29 +366,48 @@ namespace CodeTranslator
         {
             Debug.PrintDbg("Visiting Unary");
 
-
-            var retObj = context.symbol_id().GetText();
-            var opFirst = true;
-
-            var firstToken = context.start.Text;
-            if (firstToken == retObj)
+            if (context.lv_unary_ops() != null)
             {
-                opFirst = false;
+                VisitLv_unary_ops(context.lv_unary_ops());
+                return null;
             }
 
-            switch (context.unary_ops().GetText())
+            if (context.rv_unary_ops() != null)
             {
-                case "++":
+                VisitRv_unary_ops(context.rv_unary_ops());
+                return null;
+            }
 
-                    break;
-                case "--":
+            var op = "";
+            var operand = context.symbol_id().GetText();
+
+            switch (context.unary_symb().GetText())
+            {
+                case "!":
+                    op = ReservedKw.Not;
                     break;
                 default:
-                    Debug.PrintDbg("Unrecognized unary operator : " + context.unary_ops().GetText());
-                    break;
+                    Debug.PrintDbg($"Undefined unary expression {context.unary_symb().GetText()}");
+                    return null;
             }
 
-            return retObj;
+            db.SaveInstruction(op, operand);
+
+            return null;
+        }
+
+        public override object VisitLv_unary_ops(KCCParser.Lv_unary_opsContext context)
+        {
+            db.SaveInstruction(context.increment() != null ? ReservedKw.Pre_Inc : ReservedKw.Pre_Dec,
+                context.symbol_id().GetText());
+            return null;
+        }
+
+        public override object VisitRv_unary_ops(KCCParser.Rv_unary_opsContext context)
+        {
+            db.SaveInstruction(context.increment() != null ? ReservedKw.Post_Inc : ReservedKw.Post_Dec,
+                context.symbol_id().GetText());
+            return null;
         }
     }
 }

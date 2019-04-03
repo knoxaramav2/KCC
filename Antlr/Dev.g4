@@ -11,6 +11,13 @@ assembly            : ASSEMBLY symbol_id block_struct;
 class               : 'class' symbol_id block_struct;
 
 //enclosures
+//restricted group options
+decl_group          : L_PARANTH (var_decl|~R_PARANTH) ((','var_decl|~R_PARANTH)+)? R_PARANTH
+                    | L_PARANTH (var_decl|~R_PARANTH)? R_PARANTH;
+
+call_group          : L_PARANTH (value_id|~R_PARANTH) ((','value_id|~R_PARANTH)+)? R_PARANTH
+                    | L_PARANTH (value_id|~R_PARANTH)? R_PARANTH;
+
 group               : L_PARANTH (instruction|~R_PARANTH) ((','instruction|~R_PARANTH)+)? R_PARANTH
                     | L_PARANTH (instruction|~R_PARANTH)? R_PARANTH;
 
@@ -18,7 +25,7 @@ group               : L_PARANTH (instruction|~R_PARANTH) ((','instruction|~R_PAR
 block_struct        : L_BRACE ((inst_body|~R_BRACE)+)? R_BRACE
                     ;
 //contains executable instructions
-block_exec          : L_BRACE ((inst_exec|~R_BRACE)+)? R_BRACE
+block_exec          : L_BRACE ((instruction|~R_BRACE)+)? R_BRACE
                     ;
 
 block               : L_BRACE ((.|~R_BRACE)+)? R_BRACE;
@@ -30,10 +37,11 @@ inst_body           : var_decl
                     | class;
 //allowed in function body
 inst_exec           : instruction
-                    | keywords symbol_id? SEMI?;
+                    ;
 
 instruction         : var_decl SEMI?
                     | symbol_id assignment
+                    | keywords symbol_id? SEMI?
                     ;
 
 //keywords
@@ -43,21 +51,27 @@ return              : RETURN expression? SEMI;
 //declarations
 var_decl            :symbol_id symbol_id (assignment)?
                     ;
-fnc_call            : symbol_id group;
+fnc_call            : symbol_id call_group;
 fnc_decl            : fnc_proto block_exec;
-fnc_proto           : symbol_id restric_id group SEMI?;
+fnc_proto           : symbol_id restric_id decl_group SEMI?;
 
 //basic
 assignment          : assign_ops expression;
 
-unary_expr          : unary_ops symbol_id
-                    | symbol_id unary_ops
+unary_expr          : lv_unary_ops
+                    | rv_unary_ops
+                    | unary_symb symbol_id
                     ;
 
 //resolution
-unary_ops           :INCREMENT
-                    |DECRIMENT
-                    ;
+rv_unary_ops        : symbol_id increment
+                    | symbol_id decrement;
+
+lv_unary_ops        : increment symbol_id
+                    | decrement symbol_id;
+
+increment           : INCREMENT;
+decrement           : DECRIMENT;
 
 binary_ops          : ADD
                     | SUBTRACT
@@ -67,6 +81,7 @@ binary_ops          : ADD
                     | MODULO
                     ;
 
+unary_symb          : NOT;
 
 assign_ops          : SET
                     | SET_SUM
@@ -75,13 +90,20 @@ assign_ops          : SET
                     | SET_QUOTIENT
                     ;
 
+
+
 symbol_id           : IDENTIFIER (('.'IDENTIFIER)+)?;
 restric_id          : IDENTIFIER;
-value_id            : DECIMAL | IDENTIFIER;
+value_id            : STRINGLIT | DECIMAL | IDENTIFIER;
 
 expression          : unary_expr
                     | fnc_call
                     | value_id;
+
+string              : STRINGLIT;
+char                : '\'' ALPHA '\'';
+
+
 
 /*
  * Lexer Rules
@@ -105,9 +127,9 @@ SET_QUOTIENT    : '/=';
 INCREMENT       : '++';
 DECRIMENT       : '--';
 
-fragment A          : ('A'|'a') ;
-fragment S          : ('S'|'s') ;
-fragment Y          : ('Y'|'y') ;
+//logic operators
+NOT             : '!';
+
 
 fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;
@@ -125,7 +147,10 @@ R_BRACE         : '}';
 
 ASSEMBLY            : 'asm' | 'assembly';
 
-//general identifies
+//general identifiers
+STRINGLIT       : STRINGLITPART '"';
+STRINGLITPART   : '"' (~["\\\n] | '\\' (. | EOF))*;
+
 DECIMAL         : '-'?[0-9]+('.'[0-9])?;
 IDENTIFIER      : ALPHA+ (DECIMAL+)?;//[a-zA-Z_]([a-zA-Z_0-9])+;
 SEMI            : ';';

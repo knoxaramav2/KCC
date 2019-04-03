@@ -116,7 +116,7 @@ namespace CodeTranslator
             Graph.AddAssembly(id);
         }
 
-        public void SaveFunction(string id, string type, string args, string defArgs="")
+        public void SaveFunction(string id, string type, string args=null, string defArgs=null)
         {
             var command = new SQLiteCommand("INSERT INTO functions (id, type, args, defaultval) VALUES (?,?,?,?)", _sqLiteConnection);
             command.Parameters.AddWithValue("id", id);
@@ -127,11 +127,13 @@ namespace CodeTranslator
             //Debug.PrintDbg($"Inserted {type} {scope}.{id} ({args}) = {defArgs}");
 
             //generate overload metadata
-            var list = args.Split(',');
-            var meta = list.Select(l => l.Split(' ')).Aggregate("", (current, sp) => current + sp[0].Trim());
-            var defs = defArgs.Split(',');
-            meta = defs.Aggregate(meta, (current, d) => current + d.Trim());
-            Graph.AddFunction(id, (type+args+meta).GetHashCode().ToString());
+
+            Graph.AddFunction(id, type, args, defArgs);
+        }
+
+        public void UpdateFunctionParams(string args, string defArgs)
+        {
+            Graph.AddParameter(args, defArgs);
         }
 
         public void SaveVariable(string id, string type, string defValue=null)
@@ -142,6 +144,7 @@ namespace CodeTranslator
             command.Parameters.AddWithValue("nullable defvalue", defValue);
             var rows = command.ExecuteNonQuery();
             //Debug.PrintDbg($"Inserted {scope}.{id} = {defValue}");
+            Graph.AddVariable(id, type, defValue);
         }
 
         public void SaveInstruction(string op, string arg0=null, string arg1=null)
