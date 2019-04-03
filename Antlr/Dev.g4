@@ -11,7 +11,8 @@ assembly            : ASSEMBLY symbol_id block_struct;
 class               : 'class' symbol_id block_struct;
 
 //enclosures
-group               : L_PARANTH ((instruction|~R_PARANTH)+)? R_PARANTH;
+group               : L_PARANTH (instruction|~R_PARANTH) ((','instruction|~R_PARANTH)+)? R_PARANTH
+                    | L_PARANTH (instruction|~R_PARANTH)? R_PARANTH;
 
 //defines properties of a body
 block_struct        : L_BRACE ((inst_body|~R_BRACE)+)? R_BRACE
@@ -32,6 +33,7 @@ inst_exec           : instruction
                     | keywords symbol_id? SEMI?;
 
 instruction         : var_decl SEMI?
+                    | symbol_id assignment
                     ;
 
 //keywords
@@ -41,11 +43,12 @@ return              : RETURN expression? SEMI;
 //declarations
 var_decl            :symbol_id symbol_id (assignment)?
                     ;
+fnc_call            : symbol_id group;
 fnc_decl            : fnc_proto block_exec;
 fnc_proto           : symbol_id restric_id group SEMI?;
 
 //basic
-assignment          : assign_ops value_id;
+assignment          : assign_ops expression;
 
 unary_expr          : unary_ops symbol_id
                     | symbol_id unary_ops
@@ -77,7 +80,8 @@ restric_id          : IDENTIFIER;
 value_id            : DECIMAL | IDENTIFIER;
 
 expression          : unary_expr
-                    | symbol_id;
+                    | fnc_call
+                    | value_id;
 
 /*
  * Lexer Rules

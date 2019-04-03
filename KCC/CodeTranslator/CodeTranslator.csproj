@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="DB.cs" />
     <Compile Include="OpCodes.cs" />
+    <Compile Include="ProgramGraph.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="KCC.g4.lexer.cs">
       <DependentUpon>KCC.g4</DependentUpon>

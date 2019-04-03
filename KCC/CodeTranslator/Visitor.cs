@@ -54,105 +54,11 @@ namespace CodeTranslator
         } 
     }
 
-    internal class ScopeBlock
-    {
-        public string Name { get; private set; }
-        private ScopeBlock _parent, _child, _previous, _next;
-
-        private bool HasSameNameSibling(string name)
-        {
-            ScopeBlock left, right;
-            left = this._previous;
-            right = this._next;
-
-            while (left != null && right != null)
-            {
-                if (left != null)
-                {
-                    left = left._previous;
-                }
-
-                if (right != null)
-                {
-                    right = right._next;
-                }
-
-                if ((left.Name == name) || (right.Name == name))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public ScopeBlock(string name)
-        {
-            _parent = _child = _previous = _next = null;
-            this.Name = name;
-        }
-
-        public string GetScopeString()
-        {
-            var current = this;
-            var ret = current.Name;
-
-            current = current._parent;
-
-            while (current != null)
-            {
-                current = current._parent;
-                ret = Name + "." + ret;
-            }
-
-            return ret;
-        }
-
-        public ScopeBlock MakeChild(string name)
-        {
-            var child = new ScopeBlock(name);
-
-            this._child = child;
-            _child._parent = this;
-
-            return _child;
-        }
-
-        public ScopeBlock MakeSibling(string name)
-        {
-            if (HasSameNameSibling(name))
-            {
-                return null;
-            }
-
-            var sibling = new ScopeBlock(name);
-
-            //All siblings share a parent
-            sibling._parent = _parent;
-
-            this._next = sibling;
-            sibling._previous = this;
-
-            return sibling;
-        }
-
-        public ScopeBlock GetParent()
-        {
-            return _parent;
-        }
-
-        public ScopeBlock GetChild()
-        {
-            return _parent;
-        }
-    }
-
     internal class KccVisitor : KCCBaseVisitor<object>
     {
         public Db db { get; private set; }
+        private ProgramGraph graph { get; }
         private SqlBuilder _sqlBuilder;
-
-        private ScopeBlock _currentScope;
 
         private void levelUpScope(string scope)
         {
@@ -167,37 +73,28 @@ namespace CodeTranslator
         public KccVisitor()
         {
             db = new Db();
+            graph = db.Graph;
         }
 
         public override object VisitAssembly(KCCParser.AssemblyContext context)
         {
-            Debug.PrintDbg("Visiting Assembly");
-
-
             if (context.block_struct() == null)
             {
                 ErrorReporter.GetInstance().Add("Missing assembly block", ErrorCode.AbsentAssemblyBlock);
                 return null;
             }
 
-            //first scope should always be an assembly
-            if (_currentScope == null)
-            {
-                _currentScope = new ScopeBlock(context.symbol_id().GetText());
-            }
-
             db.SaveAssembly(context.symbol_id().GetText());
 
             VisitBlock_struct(context.block_struct());
+
+            graph.LeaveScope();
 
             return null;
         }
 
         public override object VisitBlock_struct(KCCParser.Block_structContext context)
         {
-            Debug.PrintDbg("Visiting Block Struct");
-
-
             foreach (var inst in context.inst_body())
             {
                 var varDecl = inst.var_decl();
@@ -210,8 +107,6 @@ namespace CodeTranslator
 
                 } else if (fncDcl != null)
                 {
-                    Debug.PrintDbg("Found " + _currentScope.GetScopeString()+"."+fncDcl.fnc_proto().restric_id().GetText());
-
                     var group = fncDcl.fnc_proto().@group();
                     var instructions = group.instruction();
 
@@ -237,18 +132,13 @@ namespace CodeTranslator
                     
                     db.SaveFunction(
                         fncDcl.fnc_proto().restric_id().GetText(),
-                        _currentScope.GetScopeString(),
                         fncDcl.fnc_proto().symbol_id().GetText(),
                         args, defaults);
-
-                    //update scope to function body
-                    _currentScope = _currentScope.MakeChild(fncDcl.fnc_proto().restric_id().GetText());
 
                     //Process and save executable instructions
                     VisitBlock_exec(inst.fnc_decl().block_exec());
 
-                    //restore scope
-                    _currentScope = _currentScope.GetChild();
+                    graph.LeaveScope();
 
                 } else if (fncProto != null)
                 {
@@ -267,7 +157,6 @@ namespace CodeTranslator
 
         public override object VisitInstruction(KCCParser.InstructionContext context)
         {
-            Debug.PrintDbg("Visiting Instruction");
             var r1 = context.var_decl();
 
             if (r1 != null)
@@ -280,15 +169,8 @@ namespace CodeTranslator
 
         public override object VisitVar_decl(KCCParser.Var_declContext context)
         {
-            Debug.PrintDbg("Visiting Var Decl");
-
-
             var args = new[] {"", ""};
-
             var r1 = context;
-
-            Debug.PrintDbg($"Declaration found : {r1.symbol_id()[0].GetText()} {r1.symbol_id()[1].GetText()}");
-
             string defaultValue = null;
 
             if (r1.assignment() != null)
@@ -298,7 +180,6 @@ namespace CodeTranslator
 
             db.SaveVariable(
                 r1.symbol_id()[1].GetText(),
-                _currentScope.GetScopeString(),
                 r1.symbol_id()[0].GetText(),
                 defaultValue);
 
@@ -310,9 +191,6 @@ namespace CodeTranslator
 
         public override object VisitBlock_exec(KCCParser.Block_execContext context)
         {
-            Debug.PrintDbg("Visiting BlockExec");
-
-
             var instructions = context.inst_exec();
 
             foreach (var instruction in instructions)
@@ -325,65 +203,53 @@ namespace CodeTranslator
 
         public override object VisitInst_exec(KCCParser.Inst_execContext context)
         {
-            Debug.PrintDbg("Visiting InstExec");
-
-
-            //COMMAND, LVAL (ARG0), RVAL (ARG1)
-            var instruction = new [] {"","",""};
-
-            var r1 = context.instruction();
-            var r2 = context.keywords();
-
-            if (r1 != null)
+            if (context.instruction() != null)
             {
-                VisitInstruction(r1);
-            } else if (r2 != null)
+
+            }
+            else if (context.keywords() != null) //keywords
             {
-                var result = (string[]) VisitKeywords(r2);
-                instruction[0] = result[0];
-                instruction[1] = result[1];
+                VisitKeywords(context.keywords());
+            }
+            else
+            {
+                Debug.PrintDbg("Instruction not implemented");
+                return null;
             }
 
-            if (instruction[0] != "")
-            {
-                db.SaveInstruction(_currentScope.GetScopeString(), instruction[0], instruction[1], instruction[2]);
-            }
-
-            return instruction;
+            return null;
         }
 
         public override object VisitKeywords(KCCParser.KeywordsContext context)
         {
-            Debug.PrintDbg("Visiting Keywords");
-
-
             if (context.@return() != null)
             {
-                return new [] { "return", (string) VisitReturn(context.@return()) };
+                VisitReturn(context.@return());
             }
             else
             {
                 Debug.PrintDbg("Unrecognized keyword");
             }
 
-            return new[] {"", ""};
+            return null;
         }
 
         public override object VisitReturn(KCCParser.ReturnContext context)
         {
-            Debug.PrintDbg("Visiting Return");
-
-
-            var result = "";
+            string result = null;
 
             if (context.expression() != null)
             {
-                result = (string) VisitExpression(context.expression()) ?? "#TBUFF";
+                result = (string) VisitExpression(context.expression());
+            }
+            else
+            {
+                result = "#TBUFF";
             }
 
-            //db.SaveInstruction(_currentScope.GetScopeString(), "return", result);
+            db.SaveInstruction("return", result);
 
-            return result;
+            return null;
         }
 
         //Note: Return reference to final expression result for chaining
@@ -399,6 +265,11 @@ namespace CodeTranslator
             } else if (context.unary_expr() != null)
             {
                 VisitUnary_expr(context.unary_expr());
+            }
+            else
+            {
+                Debug.PrintDbg("Unimplimented expression");
+                return null;
             }
 
             return null;
