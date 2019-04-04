@@ -98,7 +98,7 @@ value_id            : STRINGLIT | DECIMAL | IDENTIFIER;
 
 expression          : unary_expr
                     | fnc_call
-                    | value_id;
+                    | value_id; 
 
 string              : STRINGLIT;
 char                : '\'' ALPHA '\'';

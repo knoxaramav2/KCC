@@ -23,7 +23,7 @@ namespace CodeTranslator
             return _db;
         }
 
-        public Db Translate(string raw)
+        public void Translate(string raw)
         {
             var inputStream = new AntlrInputStream(raw);
             var lexer = new KCCLexer(inputStream);
@@ -40,8 +40,16 @@ namespace CodeTranslator
             {
                 _db = db;
             }
+        }
 
-            return db;
+        public void DumpGraph()
+        {
+            _db.Graph.WalkthroughPrint();
+        }
+
+        public void ResolveSymbols()
+        {
+            _db.Graph.Rewind();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CommonLangLib;
 
@@ -39,7 +40,7 @@ namespace CodeTranslator
                 _current.Fields = new ScopeNode(name, _refCounter++, meta, executable) { Host = _current };
                 _current = _current.Fields;
                 Debug.PrintDbg("   => " + GetScopeString() + " exec? " + executable);
-                return _refCounter;
+                return _current.RefId;
             }
 
             _current = _current.Fields;
@@ -58,7 +59,7 @@ namespace CodeTranslator
 
             Debug.PrintDbg("   => " + GetScopeString() + " exec? " + executable);
 
-            return _refCounter;
+            return _current.RefId;
         }
 
         public ulong AddAssembly(string name)
@@ -75,7 +76,7 @@ namespace CodeTranslator
                 _current = _current.Fields;
                 _current.Host = _root;
                 Debug.PrintDbg($"> Asm + {GetScopeString()}");
-                return _refCounter;
+                return _current.RefId;
             }
 
             while (_current.Next != null)
@@ -91,7 +92,7 @@ namespace CodeTranslator
 
             Debug.PrintDbg($"> Asm + {GetScopeString()}");
 
-            return _refCounter;
+            return _current.RefId;
         }
 
         public ulong AddClass(string name)
@@ -210,6 +211,64 @@ namespace CodeTranslator
         {
             return _current.RefId;
         }
+
+        public void WalkthroughPrint()
+        {
+            WalkthroughPrintRec(_root, 0);
+        }
+
+        private void WalkthroughPrintRec(ScopeNode n, int tab)
+        {
+            _current = n;
+            if (n == null)
+            {
+                return;
+            }
+
+            //print this object
+            var pad = new String('\t', tab);
+            Debug.PrintDbg($"{pad}{GetScopeString()}".PadLeft(tab));
+            Debug.PrintDbg(pad+n.Meta);
+
+            if (_instructionBase.SelectFunction(n.RefId))
+            {
+                var unit = _instructionBase.GetCurrentFunction();
+                unit.Rewind();
+                Debug.PrintDbg($"{pad}::{unit.GetArgumentList()}");
+                var inst = unit.GetNextInstruction();
+                while (inst != null)
+                {
+                    Debug.PrintDbg($"{pad}::{inst[0]} {inst[1]} {inst[2]}");
+                    inst = unit.GetNextInstruction();
+                }
+            }
+
+            //print fields
+            WalkthroughPrintRec(n.Fields, tab+1);
+            //Walk through neighbors
+            WalkthroughPrintRec(n.Next, tab);
+
+            LeaveScope();
+        }
+
+        public bool ResolveSymbols()
+        {
+            if (_root.Fields == null)
+            {
+                return true;
+            }
+
+            _current = _root.Fields;
+
+            return ResolveSymbolRec(_current);
+        }
+
+        private bool ResolveSymbolRec(ScopeNode n)
+        {
+
+            return true;
+        }
+
     }
 
     internal class InstructionBase
@@ -283,8 +342,8 @@ namespace CodeTranslator
     internal class InstructionUnit
     {
         public ulong RefId;
-        private List<string[]> _args;
-        private List<string[]> _terms;
+        private List<string[]> _args;  //[type, name]
+        private List<string[]> _terms; //[ops, arg0, arg1]
         private int _termIndex;
 
         public InstructionUnit(ulong refId)
@@ -310,6 +369,18 @@ namespace CodeTranslator
             {
                 _args.Add(new[] { aList[j], vList[j] });
             }
+        }
+
+        public string GetArgumentList()
+        {
+            var ret = "[";
+            foreach (var arg in _args)
+            {
+                ret += $"{arg[0]} {arg[1]},";
+            }
+
+            ret = ret.Trim(',');
+            return ret + "]";
         }
 
         public string[] GetNextInstruction()

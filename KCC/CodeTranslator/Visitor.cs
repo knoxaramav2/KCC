@@ -265,26 +265,6 @@ namespace CodeTranslator
             return null;
         }
 
-        /*
-        public override object VisitInst_exec(KCCParser.Inst_execContext context)
-        {
-            if (context.instruction() != null)
-            {
-
-            }
-            else if (context.keywords() != null) //keywords
-            {
-                VisitKeywords(context.keywords());
-            }
-            else
-            {
-                Debug.PrintDbg("Instruction not implemented");
-                return null;
-            }
-
-            return null;
-        }*/
-
         public override object VisitKeywords(KCCParser.KeywordsContext context)
         {
             if (context.@return() != null)

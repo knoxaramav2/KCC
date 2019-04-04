@@ -45,6 +45,9 @@ namespace Compiler
                 translator.Translate(pageInfo.ToString());
             }
 
+            translator.DumpGraph();
+            translator.ResolveSymbols();
+
             if (errorReporter.ValidateAndFlush())
             {
                 return -1;
@@ -52,6 +55,13 @@ namespace Compiler
 
             var converter = new Converter();
             converter.CreateAssembly(translator.GetDb());
+
+            if (errorReporter.ValidateAndFlush())
+            {
+                return -2;
+            }
+
+            converter.Build();
 
             return 0;
         }
