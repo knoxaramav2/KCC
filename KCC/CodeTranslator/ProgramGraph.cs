@@ -115,7 +115,7 @@ namespace CodeTranslator
             var refId = AddFieldScope(name, meta, true);
             Debug.PrintDbg($"> Function + {GetScopeString()}");
             _instructionBase.AddFunction(refId);
-
+            _instructionBase.AddParameter(args, defArgs);
             return refId;
         }
 
@@ -146,6 +146,11 @@ namespace CodeTranslator
             _current.AddBodyField(new BodyField(name, _refCounter++, type, defVal));
             Debug.PrintDbg($"> Variable + {GetScopeString()}.{name} = {defVal}");
             return _refCounter;
+        }
+
+        public string GetLastDeclared()
+        {
+            return _current?.GetLastField();
         }
 
         public void AddParameter(string args, string defArgs)
@@ -226,7 +231,7 @@ namespace CodeTranslator
             }
 
             //print this object
-            var pad = new String('\t', tab);
+            var pad = new string('\t', tab);
             Debug.PrintDbg($"{pad}{GetScopeString()}".PadLeft(tab));
             Debug.PrintDbg(pad+n.Meta);
 
@@ -427,6 +432,16 @@ namespace CodeTranslator
         }
 
         private List<BodyField> _fields;
+
+        public string GetLastField()
+        {
+            if (_fields.Count == 0)
+            {
+                return null;
+            }
+
+            return _fields[_fields.Count-1].Name;
+        }
     }
 
     internal class BodyField : EltNode
@@ -436,6 +451,8 @@ namespace CodeTranslator
 
         public BodyField(string name, ulong refId, string type, string data=null) : base(name, refId)
         {
+            RefId = refId;
+            Name = name;
             Type = type;
             Data = data;
         }

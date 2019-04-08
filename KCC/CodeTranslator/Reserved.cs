@@ -18,6 +18,10 @@ namespace CodeTranslator
 
         //Operators
         public static string Set = "#SET";
+        public static string SetDiff = "#SETDIFF";
+        public static string SetSum = "#SETSUM";
+        public static string SetProduct = "#SETPROD";
+        public static string SetQuotient = "#SETQUOT";
 
         public static string Not = "#NOT";
 

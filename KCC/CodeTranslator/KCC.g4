@@ -12,8 +12,8 @@ class               : 'class' symbol_id block_struct;
 
 //enclosures
 //restricted group options
-decl_group          : L_PARANTH (var_decl|~R_PARANTH) ((','var_decl|~R_PARANTH)+)? R_PARANTH
-                    | L_PARANTH (var_decl|~R_PARANTH)? R_PARANTH;
+decl_group          : L_PARANTH (var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)? R_PARANTH
+                    | L_PARANTH (var_proto_decl|~R_PARANTH)? R_PARANTH;
 
 call_group          : L_PARANTH (value_id|~R_PARANTH) ((','value_id|~R_PARANTH)+)? R_PARANTH
                     | L_PARANTH (value_id|~R_PARANTH)? R_PARANTH;
@@ -49,6 +49,8 @@ keywords            : return;
 return              : RETURN expression? SEMI;
 
 //declarations
+var_proto_decl      :symbol_id symbol_id (SET (value_id | symbol_id))?
+                    ;
 var_decl            :symbol_id symbol_id (assignment)?
                     ;
 fnc_call            : symbol_id call_group;
@@ -56,7 +58,8 @@ fnc_decl            : fnc_proto block_exec;
 fnc_proto           : symbol_id restric_id decl_group SEMI?;
 
 //basic
-assignment          : assign_ops expression;
+assignment          : assign_ops expression
+                    | symbol_id assign_ops expression;
 
 unary_expr          : lv_unary_ops
                     | rv_unary_ops
@@ -98,7 +101,7 @@ value_id            : STRINGLIT | DECIMAL | IDENTIFIER;
 
 expression          : unary_expr
                     | fnc_call
-                    | value_id;
+                    | value_id; 
 
 string              : STRINGLIT;
 char                : '\'' ALPHA '\'';

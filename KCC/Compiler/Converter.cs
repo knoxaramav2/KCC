@@ -32,7 +32,7 @@ namespace Compiler
 
         public void CreateAssembly(Db db)
         {
-            this._db = db;
+            _db = db;
 
             //TODO Choose target architect/OS
             TargetWin10AMD();

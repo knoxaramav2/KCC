@@ -28,7 +28,7 @@ namespace CommonLangLib
 
         //AST Validation Errors
         AbsentAssemblyBlock,
-
+        AbsertFunctionBody,
         UnexpectedToken
 
     }
