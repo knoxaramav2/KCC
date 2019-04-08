@@ -115,7 +115,7 @@ namespace CodeTranslator
             var refId = AddFieldScope(name, meta, true);
             Debug.PrintDbg($"> Function + {GetScopeString()}");
             _instructionBase.AddFunction(refId);
-            _instructionBase.AddParameter(args, defArgs);
+            _instructionBase.AddParameter(args, defArgs, ref _refCounter);
             return refId;
         }
 
@@ -148,6 +148,27 @@ namespace CodeTranslator
             return _refCounter;
         }
 
+        private string DumpCurrentSymbols(int tab)
+        {
+            if (_current == null)
+            {
+                return null;
+            }
+
+           var pad = new string('\t', tab);
+           var ret = $"{pad}<" + Environment.NewLine;
+
+           foreach (var field in _current.GetInstanceFields())
+           {
+               ret += $"{pad}{field.Type} {field.Name} 0x{field.RefId:X}{Environment.NewLine}";
+           }
+
+
+            ret += $"{pad}>";
+
+            return ret;
+        }
+
         public string GetLastDeclared()
         {
             return _current?.GetLastField();
@@ -155,7 +176,7 @@ namespace CodeTranslator
 
         public void AddParameter(string args, string defArgs)
         {
-            if (!_instructionBase.AddParameter(args, defArgs))
+            if (!_instructionBase.AddParameter(args, defArgs, ref _refCounter))
             {
                 //TODO Not in function
                 return;
@@ -240,6 +261,7 @@ namespace CodeTranslator
                 var unit = _instructionBase.GetCurrentFunction();
                 unit.Rewind();
                 Debug.PrintDbg($"{pad}::{unit.GetArgumentList()}");
+                Debug.PrintDbg(DumpCurrentSymbols(tab));
                 var inst = unit.GetNextInstruction();
                 while (inst != null)
                 {
@@ -326,14 +348,14 @@ namespace CodeTranslator
             return true;
         }
 
-        public bool AddParameter(string args, string vals)
+        public bool AddParameter(string args, string vals, ref ulong refId)
         {
             if (_current == null)
             {
                 return false;
             }
 
-            _current.AddParameter(args, vals);
+            _current.AddParameter(args, vals, ref refId);
 
             return true;
         }
@@ -347,7 +369,7 @@ namespace CodeTranslator
     internal class InstructionUnit
     {
         public ulong RefId;
-        private List<string[]> _args;  //[type, name]
+        private List<string[]> _args;  //[type, name,refId]
         private List<string[]> _terms; //[ops, arg0, arg1]
         private int _termIndex;
 
@@ -364,7 +386,7 @@ namespace CodeTranslator
             _terms.Add(new []{ops, arg0, arg1});
         }
 
-        public void AddParameter(string args, string vals)
+        public void AddParameter(string args, string vals, ref ulong refId)
         {
             var aList = args.Trim(',').Split(',');
             var vList = vals.Trim(',').Split(',');
@@ -372,7 +394,7 @@ namespace CodeTranslator
             var i = aList.Length;
             for (var j = 0; j < i; ++j)
             {
-                _args.Add(new[] { aList[j], vList[j] });
+                _args.Add(new[] { aList[j], vList[j], (refId++).ToString()});
             }
         }
 
@@ -381,7 +403,7 @@ namespace CodeTranslator
             var ret = "[";
             foreach (var arg in _args)
             {
-                ret += $"{arg[0]} {arg[1]},";
+                ret += $"{arg[0]}:{arg[1]} [0x{ulong.Parse(arg[2]):X}]";
             }
 
             ret = ret.Trim(',');
@@ -432,6 +454,11 @@ namespace CodeTranslator
         }
 
         private List<BodyField> _fields;
+
+        public List<BodyField> GetInstanceFields()
+        {
+            return _fields;
+        }
 
         public string GetLastField()
         {

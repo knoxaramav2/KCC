@@ -124,9 +124,6 @@ namespace CodeTranslator
             command.Parameters.AddWithValue("args", args);
             command.Parameters.AddWithValue("defaultval", defArgs);
             var rows = command.ExecuteNonQuery();
-            //Debug.PrintDbg($"Inserted {type} {scope}.{id} ({args}) = {defArgs}");
-
-            //generate overload metadata
 
             Graph.AddFunction(id, type, args, defArgs);
         }
