@@ -179,19 +179,29 @@ namespace CodeTranslator
             var def = "";
             var ret = new string[2];
 
-            decl = $"{context.symbol_id()[0].GetText()} {context.symbol_id()[1].GetText()}";
-            def = null;
+            if (context.symbol_id().Length != 0)
+            {
+                decl = $"{context.symbol_id()[0].GetText()} {context.symbol_id()[1].GetText()}";
+                def = null;
 
-            if (context.value_id() != null)
-            {
-                def = context.value_id().GetText();
-            } else if (context.symbol_id().Length == 3)
-            {
-                def = context.symbol_id()[2].GetText();
+                if (context.value_id() != null)
+                {
+                    def = context.value_id().GetText();
+                }
+                else if (context.symbol_id().Length == 3)
+                {
+                    def = context.symbol_id()[2].GetText();
+                }
+
+                ret[0] = decl;
+                ret[1] = def;
+
+                //TODO check for multiple parameters
+                db.Graph.AddVariable(
+                    context.symbol_id()[1].GetText(),
+                    context.symbol_id()[0].GetText(),
+                    def);
             }
-
-            ret[0] = decl;
-            ret[1] = def;
 
             return ret;
         }

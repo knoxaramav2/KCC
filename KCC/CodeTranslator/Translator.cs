@@ -49,7 +49,7 @@ namespace CodeTranslator
 
         public void ResolveSymbols()
         {
-            _db.Graph.Rewind();
+            _db.Graph.ResolveSymbols();
         }
     }
 }

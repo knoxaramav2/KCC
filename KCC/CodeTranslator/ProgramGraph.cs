@@ -16,6 +16,7 @@ namespace CodeTranslator
         private ScopeNode _current;
         private ScopeNode _root;
         private InstructionBase _instructionBase;
+        private GlobalSymbolTable _symbolTable;
 
         public ProgramGraph()
         {
@@ -25,6 +26,7 @@ namespace CodeTranslator
             _current = _root;
             ProgramInit = false;
             _instructionBase = new InstructionBase();
+            _symbolTable = GlobalSymbolTable.GetInstance();
         }
 
         public void Rewind()
@@ -35,9 +37,12 @@ namespace CodeTranslator
         //Scopes
         private ulong AddFieldScope(string name, string meta, bool executable)
         {
+            _refCounter++;
+            _symbolTable.AddTable(_refCounter, GetCurrentReferenceId());
+
             if (_current.Fields == null)
             {
-                _current.Fields = new ScopeNode(name, _refCounter++, meta, executable) { Host = _current };
+                _current.Fields = new ScopeNode(name, _refCounter, meta, executable) { Host = _current };
                 _current = _current.Fields;
                 Debug.PrintDbg("   => " + GetScopeString() + " exec? " + executable);
                 return _current.RefId;
@@ -50,7 +55,7 @@ namespace CodeTranslator
                 _current = _current.Next;
             }
 
-            _current.Next = new ScopeNode(name, _refCounter++, meta, executable)
+            _current.Next = new ScopeNode(name, _refCounter, meta, executable)
             {
                 Previous = _current,
                 Host = _current.Host
@@ -66,13 +71,16 @@ namespace CodeTranslator
         {
             ProgramInit = true;
 
+            _refCounter++;
+            _symbolTable.AddTable(_refCounter, GetCurrentReferenceId());
+
             //reset head to assembly level
             _current = _root;
 
             //create first assembly if needed
             if (_current.Fields == null)
             {
-                _current.Fields = new ScopeNode(name, _refCounter++);
+                _current.Fields = new ScopeNode(name, _refCounter);
                 _current = _current.Fields;
                 _current.Host = _root;
                 Debug.PrintDbg($"> Asm + {GetScopeString()}");
@@ -84,7 +92,7 @@ namespace CodeTranslator
                 _current = _current.Next;
             }
 
-            _current.Next = new ScopeNode(name, _refCounter++);
+            _current.Next = new ScopeNode(name, _refCounter);
             var tmp = _current;
             _current = _current.Next;
             _current.Previous = tmp;
@@ -293,7 +301,21 @@ namespace CodeTranslator
         private bool ResolveSymbolRec(ScopeNode n)
         {
 
+
+
             return true;
+        }
+
+        /// <summary>
+        /// Recursively solve the reference id of a symbol relative to a base point
+        /// </summary>
+        /// <returns></returns>
+        private long ResolveSymbol(ScopeNode n, string sym)
+        {
+
+
+
+            return -1;
         }
 
     }

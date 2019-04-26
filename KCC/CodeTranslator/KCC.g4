@@ -49,7 +49,7 @@ keywords            : return;
 return              : RETURN expression? SEMI;
 
 //declarations
-var_proto_decl      :symbol_id symbol_id (SET (value_id | symbol_id))?
+var_proto_decl      :(symbol_id symbol_id (SET (value_id | symbol_id)))?
                     ;
 var_decl            :symbol_id symbol_id (assignment)?
                     ;

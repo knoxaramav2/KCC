@@ -12,7 +12,7 @@ class               : 'class' symbol_id block_struct;
 
 //enclosures
 //restricted group options
-decl_group          : L_PARANTH (var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)? R_PARANTH
+decl_group          : L_PARANTH ((var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)?)? R_PARANTH
                     | L_PARANTH (var_proto_decl|~R_PARANTH)? R_PARANTH;
 
 call_group          : L_PARANTH (value_id|~R_PARANTH) ((','value_id|~R_PARANTH)+)? R_PARANTH
@@ -49,7 +49,7 @@ keywords            : return;
 return              : RETURN expression? SEMI;
 
 //declarations
-var_proto_decl      :symbol_id symbol_id (SET (value_id | symbol_id))?
+var_proto_decl      :(symbol_id symbol_id (SET (value_id | symbol_id)))?
                     ;
 var_decl            :symbol_id symbol_id (assignment)?
                     ;
