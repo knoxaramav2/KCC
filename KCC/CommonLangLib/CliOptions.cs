@@ -10,6 +10,7 @@ namespace KCC
     public class CliOptions
     {
         private static CliOptions _self;
+        public static AutoArch Arch { get; internal set; }
 
         private bool _canContinue;
 
@@ -42,6 +43,8 @@ namespace KCC
             VerboseLevel = Verbosity.Basic;
 
             OutputName = "out.exe";
+
+            Arch = new AutoArch();
         }
 
         public static CliOptions GetInstance()

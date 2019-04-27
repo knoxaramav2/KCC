@@ -58,6 +58,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArchId.cs" />
+    <Compile Include="AutoArch.cs" />
     <Compile Include="CliOptions.cs" />
     <Compile Include="ColorIO.cs" />
     <Compile Include="ConfigContext.cs" />

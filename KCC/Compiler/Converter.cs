@@ -13,7 +13,7 @@ namespace Compiler
         private List<string> _asm;
         private ProgramGraph _graph;
         private CliOptions _cli;
-
+        private LocaleArchFrags _fragments;
 
 
         public Converter()
@@ -38,7 +38,9 @@ namespace Compiler
 
         public void TargetWin10AMD()
         {
-
+            _asm.Add(_fragments.GetLocaleDataHeader());
+            _asm.Add(_fragments.GetGlobalData());
+            _asm.Add(_fragments.GetFunctionDefs());
         }
     }
 

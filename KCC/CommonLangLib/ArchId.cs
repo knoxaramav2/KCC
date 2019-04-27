@@ -1,4 +1,4 @@
-﻿namespace CodeTranslator
+﻿namespace CommonLangLib
 {
     /// <summary>
     /// Defines current target architectures

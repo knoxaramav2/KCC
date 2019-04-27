@@ -83,6 +83,8 @@
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
     <Compile Include="DB.cs" />
+    <Compile Include="InstOp.cs" />
+    <Compile Include="LocaleArchFrags.cs" />
     <Compile Include="OpCodes.cs" />
     <Compile Include="ProgramGraph.cs" />
     <Compile Include="Reserved.cs" />
