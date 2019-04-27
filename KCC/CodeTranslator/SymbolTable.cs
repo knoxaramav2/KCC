@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeTranslator
 {
@@ -19,9 +20,9 @@ namespace CodeTranslator
             return _self ?? (_self = new GlobalSymbolTable());
         }
 
-        public void AddTable(ulong scopeId, ulong parentScopeID)
+        public void AddTable(ulong scopeId, ulong parentScopeId)
         {
-            _tables.Add(scopeId, new SymbolTable(parentScopeID));
+            _tables.Add(scopeId, new SymbolTable(parentScopeId));
         }
 
         public SymbolRecord GetSymbol(ulong scopeId, ulong record)
@@ -29,17 +30,59 @@ namespace CodeTranslator
             var table = _tables[scopeId];
             return table?.GetRecord(record);
         }
+
+        public SymbolRecord GetDeepRecord(ulong scopeId, ulong record)
+        {
+            SymbolRecord ret = null;
+            var table = _tables[scopeId];
+
+            while (table != null)
+            {
+                ret = table.GetRecord(record);
+                if (ret == null)
+                {
+                    table = _tables[table.ParentId];
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return ret;
+        }
+
+        public bool AddRecord(ulong scopeId, ulong record, string symbol, uint typeId)
+        {
+            var table = _tables[scopeId];
+
+            if (table == null || table.GetRecord(record) != null)
+            {
+                return false;
+            }
+
+            table.AddRecord(record, typeId, symbol);
+
+            return true;
+        }
+
+        public bool AddRecord(ulong scopeId, ulong record, string symbol, string typeString)
+        {
+
+
+            return true;
+        }
     }
 
     public class SymbolTable
     {
         private Dictionary<ulong, SymbolRecord> _records;
-        private ulong _parentId;
+        internal ulong ParentId { get; }
 
         internal SymbolTable(ulong parentScopeId)
         {
             _records = new Dictionary<ulong, SymbolRecord>();
-            _parentId = parentScopeId;
+            ParentId = parentScopeId;
         }
 
         internal SymbolRecord GetRecord(ulong refId)
@@ -47,14 +90,29 @@ namespace CodeTranslator
             return _records[refId];
         }
 
+        //Slow, cache results (refId) to avoid frequent use
+        internal SymbolRecord GetRecord(string symbol)
+        {
+            return (from r in _records.Select((entry, index) => new {entry, index})
+                where r.entry.Value.Symbol == symbol
+                select r.entry.Value).FirstOrDefault();
+        }
+
+        internal void AddRecord(ulong refId, uint typeId, string symbol)
+        {
+            _records.Add(refId, new SymbolRecord(refId, typeId, symbol));
+        }
+
     }
 
     public class SymbolRecord
     {
-        internal SymbolRecord(ulong refId, uint typeId)
+        internal SymbolRecord(ulong refId, uint typeId, string symbol)
         {
             RefId = refId;
             TypeId = typeId;
+            Symbol = symbol;
+
             Defined = false;
         }
 
@@ -66,5 +124,6 @@ namespace CodeTranslator
         public ulong RefId { get; }
         public uint TypeId { get; }
         public bool Defined { get; private set; }
+        public string Symbol { get; }
     }
 }

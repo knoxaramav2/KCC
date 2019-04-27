@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractRecordMaster.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="OpCodes.cs" />
     <Compile Include="ProgramGraph.cs" />

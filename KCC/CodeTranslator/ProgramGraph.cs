@@ -18,15 +18,16 @@ namespace CodeTranslator
         private InstructionBase _instructionBase;
         private GlobalSymbolTable _symbolTable;
 
+
         public ProgramGraph()
         {
             _refCounter = 1;
             _current = null;
             _root = new ScopeNode("#ROOT#", ulong.MaxValue);
+            _symbolTable = GlobalSymbolTable.GetInstance();
             _current = _root;
             ProgramInit = false;
             _instructionBase = new InstructionBase();
-            _symbolTable = GlobalSymbolTable.GetInstance();
         }
 
         public void Rewind()
@@ -318,6 +319,7 @@ namespace CodeTranslator
             return -1;
         }
 
+        //Conversion
     }
 
     internal class InstructionBase
