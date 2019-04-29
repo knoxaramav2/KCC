@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.IO;
 using CodeTranslator;
+using CodeTranslator.Targets;
 using KCC;
 
 namespace Compiler
@@ -33,9 +34,32 @@ namespace Compiler
         public void CreateAssembly(Db db)
         {
             _graph = db.Graph;
+            _graph.Rewind();
+            //_graph.NextAssembly();
 
-            //TODO Choose target architect/OS
-            TargetWin10AMD();
+            //TODO Choose from list
+
+            IArchAgent agent = new Nasm32();
+            agent.Init(_graph);
+
+
+            while (_graph.NextAssembly())
+            {
+                _asm.Add(agent.GetHeader());
+                _asm.Add(agent.GetGlobals());
+                _asm.Add(agent.GetConstData());
+                _asm.Add(agent.GetFunctionDefs());
+                
+                using (var file = new StreamWriter($@"{_graph.GetCurrentAsmName()}.s", false))
+                {
+                    foreach (var line in _asm)
+                    {
+                        file.WriteLine(line);
+                    }
+
+                    
+                }
+            }
         }
 
         public void TargetWin10AMD()

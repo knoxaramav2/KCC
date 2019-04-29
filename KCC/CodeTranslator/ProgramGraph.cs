@@ -15,9 +15,9 @@ namespace CodeTranslator
         private ulong _refCounter;
         private ScopeNode _current;
         private ScopeNode _root;
+        private ScopeNode _viewAsm;
         private InstructionBase _instructionBase;
         private GlobalSymbolTable _symbolTable;
-
 
         public ProgramGraph()
         {
@@ -33,6 +33,7 @@ namespace CodeTranslator
         public void Rewind()
         {
             _current = _root;
+            _viewAsm = _root;
         }
 
         //Scopes
@@ -307,6 +308,35 @@ namespace CodeTranslator
             return true;
         }
 
+        public bool NextAssembly()
+        {
+            if (_viewAsm == null)
+            {
+                _viewAsm = _root;
+            }
+
+            if (_viewAsm == _root)
+            {
+                _viewAsm = _viewAsm.Fields;
+            }
+            else
+            {
+                _viewAsm = _viewAsm.Next;
+            }
+
+            if (_viewAsm == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public string GetCurrentAsmName()
+        {
+            return _current?.Name;
+        }
+
         /// <summary>
         /// Recursively solve the reference id of a symbol relative to a base point
         /// </summary>
@@ -320,6 +350,10 @@ namespace CodeTranslator
         }
 
         //Conversion
+        public List<uint> GetVariables()
+        {
+            return null;
+        }
     }
 
     internal class InstructionBase

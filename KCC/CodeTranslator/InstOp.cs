@@ -52,6 +52,11 @@
         Div,                    //Numeric Div W Overflow
         DivI,                   //Numeric Div Immediate
 
+        Set,                    //Set byte
+        SetI,                   //Set byte immediate
+        SetW,                   //Set word
+        SetWI,                  //Set word immediate
+
         #endregion
 
         #region MEM_SWAP

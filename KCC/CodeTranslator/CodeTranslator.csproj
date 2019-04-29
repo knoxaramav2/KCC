@@ -83,12 +83,14 @@
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
     <Compile Include="DB.cs" />
+    <Compile Include="IArchAgent.cs" />
     <Compile Include="InstOp.cs" />
     <Compile Include="LocaleArchFrags.cs" />
     <Compile Include="OpCodes.cs" />
     <Compile Include="ProgramGraph.cs" />
     <Compile Include="Reserved.cs" />
     <Compile Include="SymbolTable.cs" />
+    <Compile Include="Targets\Nasm32.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="KCC.g4.lexer.cs">
       <DependentUpon>KCC.g4</DependentUpon>

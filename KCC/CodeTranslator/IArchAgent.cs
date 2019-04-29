@@ -5,6 +5,8 @@
     /// </summary>
     public interface IArchAgent
     {
+        void Init(ProgramGraph graph);
+
         /// <summary>
         /// Generates assembly header
         /// </summary>
