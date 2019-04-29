@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using CodeTranslator;
 using KCC;
@@ -14,18 +15,19 @@ namespace Compiler
         private ProgramGraph _graph;
         private CliOptions _cli;
         private LocaleArchFrags _fragments;
+        private Db _db;
 
-
-        public Converter()
+        public Converter(Db db)
         {
             _asm = new List<string>();
             _cli = CliOptions.GetInstance();
+            _db = db;
         }
 
         public void Build()
         {
             //TODO Support other architectures than x86-x64
-            
+            CreateAssembly(_db);
         }
 
         public void CreateAssembly(Db db)

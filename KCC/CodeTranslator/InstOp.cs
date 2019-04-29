@@ -45,13 +45,29 @@
 
         Add,                    //Numeric Add W Overflow
         AddI,                   //Numeric Immediate Add W Overflow
-
+        Sub,                    //Numeric Subtract W Overflow
+        SubI,                   //Numeric Subtract Immediate
+        Mult,                   //Numeric Mult W Overflow
+        MultI,                  //Numeric Mult Immediate
+        Div,                    //Numeric Div W Overflow
+        DivI,                   //Numeric Div Immediate
 
         #endregion
 
         #region MEM_SWAP
         RgMemSwap = 300,
+        
+        Ld,                     //Load byte
+        LdU,                    //Load upper immediate
+        LdW,                    //Load word
+        MfH,                    //Move from HI
+        MfL,                    //Move from LOW
 
+        StB,                    //Store byte
+        StW,                    //Store word
+
+        ShL,                    //Shift Left
+        ShR,                    //Shift Right
 
         #endregion
 
@@ -63,6 +79,10 @@
 
         BOr,                    //Bitwise OR
         BAnd,                   //Bitwise AND
+        BNot,                   //Bitwise NOT
+        BInv,                   //Bitwise Invert
+        BXor,                   //Bitwise Xor
+        BXorI,                  //Bitwise Xor Immediate
 
         #endregion
 
@@ -70,9 +90,27 @@
         RgControl = 800,
 
         Beq,                    //Branch if registers equal
+        Blt,                    //Branch less than
+        Bgt,                    //Branch greater than
+        Bneq,                   //Branch not equal
 
+        Jmp,                    //Jump to
 
         #endregion
 
+        #region SYSTEM
+        RgSystem,
+
+        SysCall,                //Generate software interrupt
+        
+
+        #endregion
+
+    }
+
+    public enum OpModifier
+    {
+        None,
+        Immediate
     }
 }

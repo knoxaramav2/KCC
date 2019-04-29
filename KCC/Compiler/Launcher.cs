@@ -53,7 +53,7 @@ namespace Compiler
                 return -1;
             }
 
-            var converter = new Converter();
+            var converter = new Converter(translator.GetDb());
             converter.CreateAssembly(translator.GetDb());
 
             if (errorReporter.ValidateAndFlush())
