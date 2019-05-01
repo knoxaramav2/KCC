@@ -56,10 +56,6 @@ namespace CodeTranslator
 
     internal class KccVisitor : KCCBaseVisitor<object>
     {
-        public static Db db { get; private set; }
-        private ProgramGraph graph { get; }
-        private SqlBuilder _sqlBuilder;
-
         private void levelUpScope(string scope)
         {
 
@@ -72,16 +68,7 @@ namespace CodeTranslator
 
         public KccVisitor()
         {
-            if (db == null)
-            {
-                db = new Db();
-                graph = db.Graph;
-            }
-        }
-
-        public Db GetDb()
-        {
-            return db;
+           
         }
 
         public override object VisitAssembly(KCCParser.AssemblyContext context)
@@ -92,11 +79,9 @@ namespace CodeTranslator
                 return null;
             }
 
-            db.SaveAssembly(context.symbol_id().GetText());
 
             VisitBlock_struct(context.block_struct());
 
-            graph.LeaveScope();
 
             return null;
         }
@@ -136,7 +121,6 @@ namespace CodeTranslator
         {
             VisitFnc_proto(context.fnc_proto());
             VisitBlock_exec(context.block_exec());
-            graph.LeaveScope();
             return null;
         }
 
@@ -156,7 +140,6 @@ namespace CodeTranslator
             args = args.Trim(',');
             defs = defs.Trim(',');
 
-            db.SaveFunction(context.restric_id().GetText(), context.symbol_id().GetText(), args, defs);
             return null;
         }
 
@@ -197,10 +180,7 @@ namespace CodeTranslator
                 ret[1] = def;
 
                 //TODO check for multiple parameters
-                db.Graph.AddVariable(
-                    context.symbol_id()[1].GetText(),
-                    context.symbol_id()[0].GetText(),
-                    def);
+               
             }
 
             return ret;
@@ -234,7 +214,6 @@ namespace CodeTranslator
 
             foreach (var i in instructions)
             {
-                db.SaveInstruction(i[0], i[1], i[2]);
             }
 
             return null;
@@ -249,7 +228,6 @@ namespace CodeTranslator
 
             //initial declaration
             instructions.Add(new []{ReservedKw.Declare, type, id});
-            db.SaveVariable(id, type);
 
             if (context.assignment() != null)
             {
@@ -306,7 +284,6 @@ namespace CodeTranslator
             else
             {
                 //assign as initializer
-                recipient = db.Graph.GetLastDeclared();
             }
 
             if (recipient == null)
@@ -368,7 +345,6 @@ namespace CodeTranslator
                 result = ReservedMeta.ResultBuffer;
             }
 
-            db.SaveInstruction(ReservedKw.Return, result);
 
             return null;
         }
@@ -413,8 +389,6 @@ namespace CodeTranslator
                 args = args.TrimEnd(',');
             }
 
-            db.SaveInstruction(ReservedKw.Invoke, context.symbol_id().GetText(), args);
-
             return null;
         }
 
@@ -447,22 +421,18 @@ namespace CodeTranslator
                     return null;
             }
 
-            db.SaveInstruction(op, operand);
-
             return null;
         }
 
         public override object VisitLv_unary_ops(KCCParser.Lv_unary_opsContext context)
         {
-            db.SaveInstruction(context.increment() != null ? ReservedKw.Pre_Inc : ReservedKw.Pre_Dec,
-                context.symbol_id().GetText());
+            
             return null;
         }
 
         public override object VisitRv_unary_ops(KCCParser.Rv_unary_opsContext context)
         {
-            db.SaveInstruction(context.increment() != null ? ReservedKw.Post_Inc : ReservedKw.Post_Dec,
-                context.symbol_id().GetText());
+            
             return null;
         }
     }

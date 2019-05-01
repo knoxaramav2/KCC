@@ -11,16 +11,10 @@ namespace CodeTranslator
 {
     public class Translator
     {
-        private static Db _db;
 
         public Translator()
         {
             
-        }
-
-        public Db GetDb()
-        {
-            return _db;
         }
 
         public void Translate(string raw)
@@ -32,24 +26,9 @@ namespace CodeTranslator
             var visitor = new KccVisitor();
 
             var result = visitor.Visit(kccParser.assembly());
-            var db = visitor.GetDb();
-            db.Close();
-            db.Graph.Rewind();
-
-            if (_db == null)
-            {
-                _db = db;
-            }
+           
         }
 
-        public void DumpGraph()
-        {
-            _db.Graph.WalkthroughPrint();
-        }
-
-        public void ResolveSymbols()
-        {
-            _db.Graph.ResolveSymbols();
-        }
+       
     }
 }

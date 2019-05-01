@@ -45,16 +45,14 @@ namespace Compiler
                 translator.Translate(pageInfo.ToString());
             }
 
-            translator.DumpGraph();
-            translator.ResolveSymbols();
-
+    
             if (errorReporter.ValidateAndFlush())
             {
                 return -1;
             }
 
-            var converter = new Converter(translator.GetDb());
-            converter.CreateAssembly(translator.GetDb());
+            var converter = new Converter();
+            converter.CreateAssembly();
 
             if (errorReporter.ValidateAndFlush())
             {

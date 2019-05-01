@@ -13,44 +13,36 @@ namespace Compiler
     public class Converter
     {
         private List<string> _asm;
-        private ProgramGraph _graph;
         private CliOptions _cli;
         private LocaleArchFrags _fragments;
-        private Db _db;
 
-        public Converter(Db db)
+        public Converter()
         {
             _asm = new List<string>();
             _cli = CliOptions.GetInstance();
-            _db = db;
         }
 
         public void Build()
         {
             //TODO Support other architectures than x86-x64
-            CreateAssembly(_db);
+            CreateAssembly();
         }
 
-        public void CreateAssembly(Db db)
+        public void CreateAssembly()
         {
-            _graph = db.Graph;
-            _graph.Rewind();
-            //_graph.NextAssembly();
 
             //TODO Choose from list
 
             IArchAgent agent = new Nasm32();
-            agent.Init(_graph);
 
-
-            while (_graph.NextAssembly())
+            while (false)
             {
                 _asm.Add(agent.GetHeader());
                 _asm.Add(agent.GetGlobals());
                 _asm.Add(agent.GetConstData());
                 _asm.Add(agent.GetFunctionDefs());
                 
-                using (var file = new StreamWriter($@"{_graph.GetCurrentAsmName()}.s", false))
+                using (var file = new StreamWriter($@".s", false))
                 {
                     foreach (var line in _asm)
                     {
