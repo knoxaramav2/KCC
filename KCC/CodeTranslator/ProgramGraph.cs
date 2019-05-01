@@ -18,6 +18,7 @@ namespace CodeTranslator
         private ScopeNode _viewAsm;
         private InstructionBase _instructionBase;
         private GlobalSymbolTable _symbolTable;
+        private GlobalMethodTable _methodTable;
 
         public ProgramGraph()
         {
@@ -25,6 +26,7 @@ namespace CodeTranslator
             _current = null;
             _root = new ScopeNode("#ROOT#", ulong.MaxValue);
             _symbolTable = GlobalSymbolTable.GetInstance();
+            _methodTable = GlobalMethodTable.GetInstance();
             _current = _root;
             ProgramInit = false;
             _instructionBase = new InstructionBase();
@@ -40,7 +42,7 @@ namespace CodeTranslator
         private ulong AddFieldScope(string name, string meta, bool executable)
         {
             _refCounter++;
-            _symbolTable.AddTable(_refCounter, GetCurrentReferenceId());
+            //_symbolTable.AddTable(_refCounter, GetCurrentReferenceId());
 
             if (_current.Fields == null)
             {
@@ -72,9 +74,9 @@ namespace CodeTranslator
         public ulong AddAssembly(string name)
         {
             ProgramInit = true;
-
+            var preRef = _refCounter;
             _refCounter++;
-            _symbolTable.AddTable(_refCounter, GetCurrentReferenceId());
+            _symbolTable.AddTable(preRef, GetCurrentReferenceId());
 
             //reset head to assembly level
             _current = _root;
@@ -85,7 +87,8 @@ namespace CodeTranslator
                 _current.Fields = new ScopeNode(name, _refCounter);
                 _current = _current.Fields;
                 _current.Host = _root;
-                Debug.PrintDbg($"> Asm + {GetScopeString()}");
+                //Debug.PrintDbg($"> Asm + {GetScopeString()}");
+                //_symbolTable.AddTable(_refCounter, preRef);
                 return _current.RefId;
             }
 
@@ -100,15 +103,17 @@ namespace CodeTranslator
             _current.Previous = tmp;
             _current.Host = _root;
 
-            Debug.PrintDbg($"> Asm + {GetScopeString()}");
-
+            //Debug.PrintDbg($"> Asm + {GetScopeString()}");
+            //_symbolTable.AddTable(_refCounter, preRef);
             return _current.RefId;
         }
 
         public ulong AddClass(string name)
         {
+            var preRef = GetCurrentReferenceId();
             var refId = AddFieldScope(name, null, false);
-            Debug.PrintDbg($"> Class + {GetScopeString()}");
+            _symbolTable.AddTable(refId, preRef);
+            //Debug.PrintDbg($"> Class + {GetScopeString()}");
             return refId;
         }
 
@@ -121,11 +126,16 @@ namespace CodeTranslator
         /// <returns></returns>
         public ulong AddFunction(string name, string type, string args, string defArgs)
         {
+            var pId = GetCurrentReferenceId();
+
             var meta = GetOverloadString(name, type, args, defArgs);
             var refId = AddFieldScope(name, meta, true);
-            Debug.PrintDbg($"> Function + {GetScopeString()}");
+            //Debug.PrintDbg($"> Function + {GetScopeString()}");
             _instructionBase.AddFunction(refId);
             _instructionBase.AddParameter(args, defArgs, ref _refCounter);
+
+            _methodTable.AddRecord(pId, refId, name, type);
+
             return refId;
         }
 
@@ -153,8 +163,10 @@ namespace CodeTranslator
         //Body fields
         public ulong AddVariable(string name, string type, string defVal=null)
         {
+            var pId = GetCurrentReferenceId();
             _current.AddBodyField(new BodyField(name, _refCounter++, type, defVal));
-            Debug.PrintDbg($"> Variable + {GetScopeString()}.{name} = {defVal}");
+            _symbolTable.AddRecord(GetCurrentReferenceId(), _refCounter - 1, name, type);
+            //Debug.PrintDbg($"> Variable + {GetScopeString()}.{name} = {defVal}");
             return _refCounter;
         }
 
@@ -192,7 +204,7 @@ namespace CodeTranslator
                 return;
             }
 
-            Debug.PrintDbg($"    >Params {_instructionBase.GetCurrentFunction().RefId} | {args} {defArgs}");
+            //Debug.PrintDbg($"    >Params {_instructionBase.GetCurrentFunction().RefId} | {args} {defArgs}");
         }
 
         public void AddInstruction(string op, string arg0 = null, string arg1 = null)
@@ -203,7 +215,7 @@ namespace CodeTranslator
                 return;
             }
 
-            Debug.PrintDbg($"    >Inst {_instructionBase.GetCurrentFunction().RefId} | {op} {arg0} {arg1}");
+            //Debug.PrintDbg($"    >Inst {_instructionBase.GetCurrentFunction().RefId} | {op} {arg0} {arg1}");
         }
 
         /// <summary>
@@ -297,11 +309,14 @@ namespace CodeTranslator
 
             _current = _root.Fields;
 
+            Rewind();
+
             return ResolveSymbolRec(_current);
         }
 
         private bool ResolveSymbolRec(ScopeNode n)
         {
+            
 
 
 
@@ -347,6 +362,31 @@ namespace CodeTranslator
 
 
             return -1;
+        }
+
+        /// <summary>
+        /// Step forward in graph and return the refId to the current body
+        /// </summary>
+        /// <returns></returns>
+        public ulong StepNext()
+        {
+            if (_viewAsm == null)
+            {
+                return 0;
+            }
+
+            if (_viewAsm.Fields != null)
+            {
+                _viewAsm = _viewAsm.Fields;
+            } else if (_viewAsm.Next != null)
+            {
+                _viewAsm = _viewAsm.Next;
+            } else if (_viewAsm.Host != null)
+            {
+                _viewAsm = _viewAsm.Host.Next;
+            }
+
+            return _viewAsm.RefId;
         }
 
         //Conversion

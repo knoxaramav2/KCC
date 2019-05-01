@@ -82,14 +82,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
-    <Compile Include="DB.cs" />
+    <Compile Include="Intermediates\Old\DB.cs" />
     <Compile Include="IArchAgent.cs" />
     <Compile Include="InstOp.cs" />
-    <Compile Include="LocaleArchFrags.cs" />
+    <Compile Include="Intermediates\Old\LocaleArchFrags.cs" />
+    <Compile Include="Intermediates\Old\MethodTable.cs" />
     <Compile Include="OpCodes.cs" />
     <Compile Include="ProgramGraph.cs" />
     <Compile Include="Reserved.cs" />
-    <Compile Include="SymbolTable.cs" />
+    <Compile Include="Intermediates\IndTriples\SymbolAddrTable.cs" />
+    <Compile Include="Intermediates\Old\SymbolTable.cs" />
     <Compile Include="Targets\Nasm32.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="KCC.g4.lexer.cs">
@@ -99,7 +101,7 @@
       <DependentUpon>KCC.g4</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TypeTable.cs" />
+    <Compile Include="Intermediates\Old\TypeTable.cs" />
     <Compile Include="Visitor.cs" />
   </ItemGroup>
   <ItemGroup>

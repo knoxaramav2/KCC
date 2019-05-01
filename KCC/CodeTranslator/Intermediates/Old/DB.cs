@@ -42,6 +42,8 @@ namespace CodeTranslator
             BuildVarInstanceTable();
             BuildFunctionTable();
 
+
+            /*
             var tables = _sqLiteConnection.GetSchema("Tables");
             var columns = _sqLiteConnection.GetSchema("Columns");
             Debug.PrintDbg(">>>DATABASE<<<");
@@ -58,7 +60,7 @@ namespace CodeTranslator
                 }
             }
 
-            Debug.PrintDbg("<<<DATABASE>>>");
+            Debug.PrintDbg("<<<DATABASE>>>");*/
         }
 
         private void BuildFunctionTable()

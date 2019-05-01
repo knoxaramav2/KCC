@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CommonLangLib;
 
 namespace CodeTranslator
 {
@@ -52,14 +53,17 @@ namespace CodeTranslator
             return ret;
         }
 
-        public bool AddRecord(ulong scopeId, ulong record, string symbol, uint typeId)
+        public bool AddRecord(ulong scopeId, ulong parentId, ulong record, string symbol, uint typeId)
         {
             var table = _tables[scopeId];
 
-            if (table == null || table.GetRecord(record) != null)
+            if (table == null)
             {
-                return false;
+                table = new SymbolTable(parentId);
+                _tables.Add(parentId, table);
             }
+
+            Debug.PrintDbg($"+Symbol {scopeId}::{record} {symbol} @{typeId}");
 
             table.AddRecord(record, typeId, symbol);
 
@@ -68,7 +72,12 @@ namespace CodeTranslator
 
         public bool AddRecord(ulong scopeId, ulong record, string symbol, string typeString)
         {
-
+            var type = _typeTable.GetRecord(scopeId, typeString);
+            if (type == null)
+            {
+                Debug.PrintDbg($"Could not register symbol {typeString}:{symbol} @{scopeId}");
+                return false;
+            }
 
             return true;
         }

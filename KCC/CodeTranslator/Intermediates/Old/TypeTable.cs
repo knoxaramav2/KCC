@@ -9,7 +9,7 @@ namespace CodeTranslator
         private static TypeTable _self;
         private static uint _recordCounter;
         private static uint _reserveCounter;
-        private List<TypeScopeTable> _tables;
+        private Dictionary<ulong, TypeScopeTable> _tables;
 
         private const uint RESERVE_TYPE_ID = 30;
 
@@ -31,7 +31,7 @@ namespace CodeTranslator
 
         private TypeTable()
         {
-            _tables = new List<TypeScopeTable>();
+            _tables = new Dictionary<ulong, TypeScopeTable>();
             _recordCounter = RESERVE_TYPE_ID;
             _reserveCounter = 1;
 
@@ -51,7 +51,7 @@ namespace CodeTranslator
             TypeScopeTable table;
             var newRecId = (isSKw ? _reserveCounter : _recordCounter);
 
-            if ((table = GetTable(scopeId)) == null || 
+            if ((table = _tables[scopeId]) == null || 
                  !table.AddRecord(newRecId, inheritId, scopeId, symbol, size))
             {
                 Debug.PrintDbg($"Typedef failed: {scopeId}::{symbol} : {size}B");
@@ -74,46 +74,52 @@ namespace CodeTranslator
 
         public TypeDefinition GetRecord(ulong scopeId, uint refId)
         {
-            foreach (var t in _tables)
+            while (scopeId != 0)
             {
-                if (t.ScopeId == scopeId)
+                TypeScopeTable table;// = _tables[scopeId];
+
+                if (_tables.TryGetValue(scopeId, out table)) break;
+
+                var rec = table.GetRecord(refId);
+                if (rec != null)
                 {
-                    return t.GetRecord(refId);
+                    return rec;
                 }
+
+                scopeId = table.ParentId;
             }
+
+            Debug.PrintDbg($"Could not resolve type {refId} @{scopeId}");
 
             return null;
         }
 
         public TypeDefinition GetRecord(ulong scopeId, string symbol)
         {
-            foreach (var t in _tables)
+            while (scopeId != 0)
             {
-                if (t.ScopeId == scopeId)
+                var table = _tables[scopeId];
+                if (table == null) break;
+
+                var rec = table.GetRecord(symbol);
+                if (rec != null)
                 {
-                    return t.GetRecord(symbol);
+                    return rec;
                 }
+
+                scopeId = table.ParentId;
             }
+
+            Debug.PrintDbg($"Could not resolve type {symbol} @{scopeId}");
 
             return null;
         }
 
-        private TypeScopeTable GetTable(ulong scopeId)
-        {
-            foreach (var t in _tables)
-            {
-                if (t.ScopeId == scopeId)
-                {
-                    return t;
-                }
-            }
-
-            return null;
-        }
+      
 
         public void AddTable(ulong scopeId, ulong parentScopeId)
         {
-            _tables.Add(new TypeScopeTable(scopeId, parentScopeId));
+            _tables.Add(scopeId, new TypeScopeTable(scopeId, parentScopeId));
         }
     }
 
@@ -159,6 +165,8 @@ namespace CodeTranslator
             {
                 return false;
             }
+
+            Debug.PrintDbg($"+Type {scopeId}::{refId} {symbol}({size}B) @{inheritId}");
 
             _records.Add(new TypeDefinition(refId, inheritId, scopeId, symbol, size));
 
