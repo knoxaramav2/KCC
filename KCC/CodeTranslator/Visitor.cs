@@ -71,7 +71,7 @@ namespace CodeTranslator
                 return null;
             }
 
-            _controller.CreateScope(context.symbol_id().GetText(), "asm");
+            _controller.CreateScope(context.symbol_id().GetText(), "asm", BodyType.Asm);
 
             VisitBlock_struct(context.block_struct());
 
@@ -137,7 +137,8 @@ namespace CodeTranslator
 
             _controller.CreateScope(
                 context.restric_id().GetText(),
-                context.symbol_id().GetText());
+                context.symbol_id().GetText(),
+                BodyType.Function);
 
             //TODO Parse argument list
 

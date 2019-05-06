@@ -42,7 +42,7 @@ namespace KCC
             OptimizeLevel = 0;
             VerboseLevel = Verbosity.Basic;
 
-            OutputName = "out.exe";
+            OutputName = "out.s";
 
             Arch = new AutoArch();
         }

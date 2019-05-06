@@ -17,7 +17,7 @@ namespace CodeTranslator.Targets
 
         public string GetHeader()
         {
-            return $"    .file \"{_cli.Src}\"" +
+            return $"    .file \"{_cli.Src}\"" + Environment.NewLine +
                    "    .def __main; .scl 2; .type 32; .endef";
         }
 
@@ -33,7 +33,7 @@ namespace CodeTranslator.Targets
         {
             switch (d)
             {
-                case Directives.Lc: return $".LC{info}";
+                case Directives.Lc: return $".LC{info}:";
                 case Directives.Ascii: return $".ascii \"{info}\\0\"";
                 case Directives.Text: return ".text";
 
@@ -43,20 +43,26 @@ namespace CodeTranslator.Targets
 
         public string GetConstData()
         {
-            var ret = "    .section .rdata, \"dr\"";
+            var ret = "    .section .rdata, \"dr\"" + Environment.NewLine;
 
             var m = InstDeclController.Meta;
 
             foreach (var d in m.GetDirectives())
             {
-                var dr = GetDirectiveString(d.Directive, d.Info);
+                var dr = GetDirectiveString(d.Directive, d.Info) + Environment.NewLine;
                 foreach (var n in d.Nested)
                 {
-                    dr += $"    {GetDirectiveString(n.Directive, n.Info)}";
+                    dr += $"    {GetDirectiveString(n.Directive, n.Info)}"
+                        + Environment.NewLine;
                 }
 
-                ret += Environment.NewLine + dr;
+                ret += dr + Environment.NewLine;
             }
+
+            ret += "    .text" + Environment.NewLine +
+                   "    .globl main" + Environment.NewLine + 
+                   "    .def main; .scl 2; .type 32; .endef" + Environment.NewLine +
+                   "    .seh_proc main" + Environment.NewLine;
 
             Debug.PrintDbg($"{ret}");
 
@@ -65,12 +71,59 @@ namespace CodeTranslator.Targets
 
         public string GetFunctionDefs()
         {
-            return "";
+            var fncs = _controller.FindAll();
+            var ret = "";
+            foreach (var fnc in fncs)
+            {
+                if (fnc.BodyType != BodyType.Function) continue;
+                ret += $"{fnc.Id}:" + Environment.NewLine +
+                       $"   pushq %rbp" + Environment.NewLine +
+                       $"   .seh_pushreg %rbp" + Environment.NewLine +
+                       $"   movq %rsp, %rbp" + Environment.NewLine +
+                       $"   .seh_setframe %rbp, 0" + Environment.NewLine +
+                       $"   subq $32, %rsp" + Environment.NewLine +
+                       $"   .seh_stackalloc 32" + Environment.NewLine +
+                       $"   .seh_endprologue" + Environment.NewLine;
+                if (fnc.Id == "main")
+                {
+                    ret += "    call __main" + Environment.NewLine;
+                }
+
+                foreach (var i in fnc.Instructions.Inst)
+                {
+                    ret += FormatInstruction(i.Op, i.Arg0, i.Arg1, null, null, OpModifier.None)
+                        + Environment.NewLine;
+                }
+
+                ret += "    movl $0, %eax" + Environment.NewLine +
+                       "    addq $32, %rsp" + Environment.NewLine +
+                       "    popq %rbp" + Environment.NewLine +
+                       "    ret" +Environment.NewLine +
+                       "    .seh_endproc" + Environment.NewLine+
+                       "    .ident \"KCC V1\"" + Environment.NewLine+
+                       "    .def printf; .scl 2; .type 32; .endef" + Environment.NewLine;
+
+            }
+
+            return ret;
         }
 
-        public string FormatInstruction(InstOp opcode, int arg0, int arg1, int spcl1, int spcl2, InstOp mode)
+        public string FormatInstruction(InstOp opcode, string arg0, string arg1, string spcl1, string spcl2, OpModifier mode)
         {
-            return "";
+            var ret = "";
+
+            switch (opcode)
+            {
+                case InstOp.Print:
+                    ret = $"    leaq .LC{arg0}(%rip), %rcx" + Environment.NewLine +
+                          $"    call printf";
+                    break;
+                case InstOp.Exit:
+
+                    break;
+            }
+
+            return ret;
         }
     }
 }

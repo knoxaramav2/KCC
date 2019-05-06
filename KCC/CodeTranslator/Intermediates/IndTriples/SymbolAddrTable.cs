@@ -11,6 +11,8 @@ namespace CodeTranslator
         private uint _offset;
         private static ushort _blockSize;
 
+        public BodyType BodyType;
+
         public string Id { get; }
 
         //Non-scope specific counters for easier assembly/temp name generation
@@ -91,6 +93,11 @@ namespace CodeTranslator
             return AddRecord(new SymbolEntry(id, t.Width, t));
         }
 
+        public void SetType(BodyType t)
+        {
+            BodyType = t;
+        }
+
         //TODO Merge with add record
         public SymbolEntry AddCString(string msg)
         {
@@ -110,6 +117,24 @@ namespace CodeTranslator
         {
             return !_entries.TryGetValue(id, out var e) ? _header?.SearchRecord(id) : e;
         }
+
+        public List<SymbolAddrTable> SearchAll()
+        {
+            var ret = new List<SymbolAddrTable> {this};
+
+            foreach (var e in _entries)
+            {
+                if (e.Value.Target == null)
+                {
+                    continue;
+                } 
+
+                ret.AddRange(e.Value.Target.SearchAll());
+            }
+
+            return ret;
+        }
+
     }
 
     public class SymbolEntry
@@ -136,5 +161,13 @@ namespace CodeTranslator
             _scope = scope;
         }
 
+    }
+
+    public enum BodyType
+    {
+        AnonBlock,
+        Asm,
+        Function,
+        Class
     }
 }

@@ -4,12 +4,12 @@ namespace CodeTranslator
 {
     public class IndInstTable : IDatumTable<InstEntry>
     {
-        private List<InstEntry> _inst;
+        public List<InstEntry> Inst { get; internal set; }
         private List<KeyValuePair<int, InstEntry>> _ind;
 
         public IndInstTable()
         {
-            _inst = new List<InstEntry>();
+            Inst = new List<InstEntry>();
             _ind = new List<KeyValuePair<int, InstEntry>>();
         }
 
@@ -20,7 +20,7 @@ namespace CodeTranslator
 
         public InstEntry AddRecord(InstEntry t)
         {
-            _inst.Add(t);
+            Inst.Add(t);
             _ind.Add(new KeyValuePair<int, InstEntry>(_ind.Count, t));
 
             return t;

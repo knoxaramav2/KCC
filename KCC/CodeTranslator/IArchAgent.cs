@@ -41,6 +41,6 @@
         /// <param name="spcl2">Special argument modifier 2</param>
         /// <param name="mode">Instruction modifier</param>
         /// <returns>Formatted string representing target instruction translation</returns>
-        string FormatInstruction(InstOp opcode, int arg0, int arg1, int spcl1, int spcl2, InstOp mode);
+        string FormatInstruction(InstOp opcode, string arg0, string arg1, string spcl1, string spcl2, OpModifier mode);
     }
 }

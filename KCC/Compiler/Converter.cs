@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.IO;
 using CodeTranslator;
 using CodeTranslator.Targets;
+using CommonLangLib;
 using KCC;
 
 namespace Compiler
@@ -45,7 +46,7 @@ namespace Compiler
                 _asm.Add(agent.GetConstData());
                 _asm.Add(agent.GetFunctionDefs());
                 
-                using (var file = new StreamWriter($@"{Directory.GetCurrentDirectory()}\projects\preproc\{_cli.OutputName}", false))
+                using (var file = new StreamWriter($@"{KCCEnv.ExeUri}\projects\preproc\{_cli.OutputName}", false))
                 {
                     foreach (var line in _asm)
                     {

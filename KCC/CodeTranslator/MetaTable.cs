@@ -19,6 +19,9 @@ namespace CodeTranslator
             if (d == Directives.Lc)
             {
                 info = ""+_lcCounter++;
+            } else if (d == Directives.Ascii)
+            {
+                info = info.Replace("\"", "");
             }
         }
 

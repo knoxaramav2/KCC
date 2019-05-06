@@ -2,7 +2,7 @@
 
 namespace CodeTranslator.Targets
 {
-    public class Nasm32 : IArchAgent
+    public class Nasm32// : IArchAgent
     {
         private GlobalSymbolTable _symbolTable;
         private TypeTable _typeTable;

@@ -62,9 +62,10 @@ namespace CodeTranslator
             return true;
         }
 
-        public bool CreateScope(string id, string type)
+        public bool CreateScope(string id, string type, BodyType t)
         {
             var table = (SymbolAddrTable)_currentScope.AddTable(id, type);
+            table.SetType(t);
 
             if (table == null)
             {
@@ -86,7 +87,18 @@ namespace CodeTranslator
             }
             _currentScope = _currentScope?.GetPrevious();
             Debug.PrintDbg($"Now pointed to {_currentScope?.Id}");
-        }        
+        }
 
+        public SymbolAddrTable FindFirstOf(string sym)
+        {
+            _currentScope = _symTable;
+            _symTable.SearchRecord(sym);
+            return null;
+        }
+
+        public List<SymbolAddrTable> FindAll()
+        {
+            return _symTable.SearchAll();
+        }
     }
 }
