@@ -2,7 +2,7 @@
 
 namespace CodeTranslator
 {
-    class IndInstTable : IDatumTable<InstEntry>
+    public class IndInstTable : IDatumTable<InstEntry>
     {
         private List<InstEntry> _inst;
         private List<KeyValuePair<int, InstEntry>> _ind;
@@ -13,7 +13,7 @@ namespace CodeTranslator
             _ind = new List<KeyValuePair<int, InstEntry>>();
         }
 
-        public IDatumTable<InstEntry> AddTable()
+        public IDatumTable<InstEntry> AddTable(string id, string type)
         {
             throw new System.NotImplementedException();
         }
@@ -23,7 +23,7 @@ namespace CodeTranslator
             _inst.Add(t);
             _ind.Add(new KeyValuePair<int, InstEntry>(_ind.Count, t));
 
-            return null;
+            return t;
         }
 
         public void ClearTable()
@@ -37,8 +37,16 @@ namespace CodeTranslator
         }
     }
 
-    class InstEntry
+    public class InstEntry
     {
+        public InstOp Op;
+        public string Arg0, Arg1;
 
+        public InstEntry(InstOp op, string arg0, string arg1)
+        {
+            Op = op;
+            Arg0 = arg0;
+            Arg1 = arg1;
+        }
     }
 }

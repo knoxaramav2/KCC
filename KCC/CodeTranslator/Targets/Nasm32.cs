@@ -6,13 +6,13 @@ namespace CodeTranslator.Targets
     {
         private GlobalSymbolTable _symbolTable;
         private TypeTable _typeTable;
-        private ProgramGraph _graph;
+        private InstDeclController _graph;
 
         public Nasm32()
         {
         }
 
-        public void Init(ProgramGraph graph)
+        public void Init(InstDeclController graph)
         {
             _symbolTable = GlobalSymbolTable.GetInstance();
             _typeTable = TypeTable.GetInstance();

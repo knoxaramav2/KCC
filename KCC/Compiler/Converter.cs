@@ -15,11 +15,13 @@ namespace Compiler
         private List<string> _asm;
         private CliOptions _cli;
         private LocaleArchFrags _fragments;
+        private InstDeclController _controller;
 
         public Converter()
         {
             _asm = new List<string>();
             _cli = CliOptions.GetInstance();
+            _controller = InstDeclController.GetInstance();
         }
 
         public void Build()
@@ -33,7 +35,7 @@ namespace Compiler
 
             //TODO Choose from list
 
-            IArchAgent agent = new Nasm32();
+            IArchAgent agent = new Gas32();
 
             while (true)
             {
@@ -42,7 +44,7 @@ namespace Compiler
                 _asm.Add(agent.GetConstData());
                 _asm.Add(agent.GetFunctionDefs());
                 
-                using (var file = new StreamWriter($@".s", false))
+                using (var file = new StreamWriter($@"{Directory.GetCurrentDirectory()}\projects\preproc\{_cli.OutputName}", false))
                 {
                     foreach (var line in _asm)
                     {

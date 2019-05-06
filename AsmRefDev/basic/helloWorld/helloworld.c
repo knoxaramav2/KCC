@@ -1,10 +1,6 @@
 #include <stdio.h>
 
-void helloWorld(){
-	printf("Hello world");
-}
-
 int main(){
-	helloWorld();
-	return 0;
+	printf("Hello world %d %d", 5, 99);
+	printf("Hello worlds");
 }

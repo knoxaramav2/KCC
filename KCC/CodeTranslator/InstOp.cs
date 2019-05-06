@@ -36,8 +36,6 @@
 
         NoOp,                   //Mock operation, no action
 
-
-
         #endregion
 
         #region ARITHMETIC
@@ -103,6 +101,8 @@
 
         Call,                   //Invoke function
 
+        Exit,
+
         #endregion
 
         #region SYSTEM
@@ -120,9 +120,19 @@
 
         #endregion
 
+        #region Primitives
+
         //Primitive Constructions
         Int,
         CString,
+
+        #endregion
+
+        #region Directives
+
+        Lcn,                    //create an LC[n] directive
+
+        #endregion
     }
 
     public enum OpModifier

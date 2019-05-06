@@ -7,7 +7,7 @@
     <ProjectGuid>{3DDF6B2C-3ADE-444C-999B-4061860C4E9D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Compiler</RootNamespace>
-    <AssemblyName>Compiler</AssemblyName>
+    <AssemblyName>KCC</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

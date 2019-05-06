@@ -52,7 +52,7 @@ namespace Compiler
             }
 
             var converter = new Converter();
-            converter.CreateAssembly();
+            //converter.CreateAssembly();
 
             if (errorReporter.ValidateAndFlush())
             {

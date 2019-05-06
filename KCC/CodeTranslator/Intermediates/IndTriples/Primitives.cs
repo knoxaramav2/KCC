@@ -13,8 +13,8 @@ namespace CodeTranslator
 
     public class DataTypeTable
     {
-        private Dictionary<string, DataType> _typeTable;
-        private uint _typeCounter;
+        private static Dictionary<string, DataType> _typeTable;
+        private static uint _typeCounter;
 
         /// <summary>
         /// Initialize supported primitives
@@ -23,6 +23,8 @@ namespace CodeTranslator
         {
             _typeTable = new Dictionary<string, DataType>();
             _typeCounter = 1;
+
+            _typeTable.Add("asm", new DataType(0, ref _typeCounter, "asm"));
 
             _typeTable.Add("void", new DataType(0, ref _typeCounter, "void"));
             _typeTable.Add("int", new DataType(4, ref _typeCounter, "int"));
@@ -39,9 +41,9 @@ namespace CodeTranslator
             _typeTable.Add("cstring", new DataType(0, ref _typeCounter, "cstring"));
             _typeTable.Add("array", new DataType(0, ref _typeCounter, "array"));
         }
-        private DataTypeTable _self;
+        private static DataTypeTable _self;
 
-        public DataTypeTable GetInstance()
+        public static DataTypeTable GetInstance()
         {
             return _self ?? (_self = new DataTypeTable());
         }
@@ -59,13 +61,15 @@ namespace CodeTranslator
         public uint TypeId { get; }
         public string SymbolId { get; }
         public List<DataType> Body { get; }
+        public SymbolAddrTable Scope { get; internal set; }
 
-        public DataType(ushort width, ref uint typeId, string symbolId, List<DataType> body=null)
+        public DataType(ushort width, ref uint typeId, string symbolId, SymbolAddrTable scope=null, List<DataType> body=null)
         {
             Width = width;
             TypeId = typeId++;
             SymbolId = symbolId;
             Body = body;
+            Scope = scope;
 
             Debug.PrintDbg($"RegVar {width} {typeId} {symbolId} {body?.Count}");
         }

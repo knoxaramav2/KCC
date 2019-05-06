@@ -12,7 +12,7 @@ class               : 'class' symbol_id block_struct;
 
 //enclosures
 //restricted group options
-decl_group          : L_PARANTH (var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)? R_PARANTH
+decl_group          : L_PARANTH ((var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)?)? R_PARANTH
                     | L_PARANTH (var_proto_decl|~R_PARANTH)? R_PARANTH;
 
 call_group          : L_PARANTH (value_id|~R_PARANTH) ((','value_id|~R_PARANTH)+)? R_PARANTH
@@ -41,12 +41,22 @@ inst_exec           : instruction
 
 instruction         : var_decl SEMI?
                     | symbol_id assignment
-                    | keywords symbol_id? SEMI?
+                    | keywords (call_group|value_id)? SEMI?
+                    | fnc_call
+                    //| inline_asm
                     ;
 
+//special blocks
+//inline_asm          :'__asm__' L_BRACE ((asm_seq|~R_BRACE)+)? R_BRACE;
+
+//Keywords
+
 //keywords
-keywords            : return;
-return              : RETURN expression? SEMI;
+keywords            : 'return'
+                    | 'print'
+                    | 'exit'
+                    ;
+
 
 //declarations
 var_proto_decl      :(symbol_id symbol_id (SET (value_id | symbol_id)))?
@@ -72,6 +82,17 @@ rv_unary_ops        : symbol_id increment
 
 lv_unary_ops        : increment symbol_id
                     | decrement symbol_id;
+
+//inline assembly
+asm_seq            : asm_header?
+                      ((asm_inst)+)?
+                    ;
+
+asm_header          :('.'?restric_id':')
+                    ;
+asm_inst            :('.'?restric_id)
+                    ;
+
 
 increment           : INCREMENT;
 decrement           : DECRIMENT;
@@ -138,6 +159,8 @@ fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;
 
 fragment ALPHA  : [a-zA-Z_];
+
+fragment NEWLINE : '\r'?'\n';
 
 
 //enclosures

@@ -32,8 +32,8 @@ namespace CommonLangLib
         UnexpectedToken,
 
         //Data tables
-        SymbolRedefinitino,
-
+        SymbolRedefinition,
+        SymbolUndefined,
     }
 
     public class ErrorReporter

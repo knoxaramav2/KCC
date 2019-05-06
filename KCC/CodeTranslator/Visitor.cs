@@ -56,19 +56,11 @@ namespace CodeTranslator
 
     internal class KccVisitor : KCCBaseVisitor<object>
     {
-        private void levelUpScope(string scope)
-        {
-
-        }
-
-        private void levelDownScope(string scope)
-        {
-
-        }
+        private InstDeclController _controller;
 
         public KccVisitor()
         {
-           
+           _controller = InstDeclController.GetInstance();
         }
 
         public override object VisitAssembly(KCCParser.AssemblyContext context)
@@ -79,9 +71,11 @@ namespace CodeTranslator
                 return null;
             }
 
+            _controller.CreateScope(context.symbol_id().GetText(), "asm");
 
             VisitBlock_struct(context.block_struct());
 
+            _controller.ExitScope();
 
             return null;
         }
@@ -121,6 +115,7 @@ namespace CodeTranslator
         {
             VisitFnc_proto(context.fnc_proto());
             VisitBlock_exec(context.block_exec());
+            _controller.ExitScope();
             return null;
         }
 
@@ -139,6 +134,12 @@ namespace CodeTranslator
 
             args = args.Trim(',');
             defs = defs.Trim(',');
+
+            _controller.CreateScope(
+                context.restric_id().GetText(),
+                context.symbol_id().GetText());
+
+            //TODO Parse argument list
 
             return null;
         }
@@ -204,7 +205,27 @@ namespace CodeTranslator
                 instructions = (List<string[]>) VisitAssignment(context.assignment());
             } else if (context.keywords() != null)
             {
-                VisitKeywords(context.keywords());
+                switch (context.keywords().GetText())
+                {
+                    case "return": break;
+                    case "print":
+                        if (context.call_group().IsEmpty)
+                        {
+                            return null;
+                        }
+
+                        _controller.AddDirective(Directives.Lc, null);
+                        _controller.AddDirective(
+                            Directives.Ascii,
+                            context.call_group().value_id()[0].GetText(),
+                            true);
+                        _controller.AddInstruction(InstOp.Print, $"{MetaTable.GetLcCounter()-1}", null);
+
+                        break;
+                    case "exit":
+                        _controller.AddInstruction(InstOp.Exit, null, null);
+                        break;
+                }
             }
             else
             {
@@ -320,35 +341,22 @@ namespace CodeTranslator
 
         public override object VisitKeywords(KCCParser.KeywordsContext context)
         {
-            if (context.@return() != null)
+            switch (context.GetText())
             {
-                VisitReturn(context.@return());
-            }
-            else
-            {
-                Debug.PrintDbg("Unrecognized keyword");
+                case "return":
+
+                    break;
+                case "print":
+
+                    break;
+                case "exit":
+
+                    break;
             }
 
             return null;
         }
-
-        public override object VisitReturn(KCCParser.ReturnContext context)
-        {
-            string result;
-
-            if (context.expression() != null)
-            {
-                result = (string) VisitExpression(context.expression());
-            }
-            else
-            {
-                result = ReservedMeta.ResultBuffer;
-            }
-
-
-            return null;
-        }
-
+        
         //Note: Return reference to final expression result for chaining
         //if result not saved to variable, return as #TBUFF (temporary result buffer)
         public override object VisitExpression(KCCParser.ExpressionContext context)

@@ -5,7 +5,7 @@
     /// </summary>
     public interface IArchAgent
     {
-        void Init(ProgramGraph graph);
+        void Init(InstDeclController graph);
 
         /// <summary>
         /// Generates assembly header

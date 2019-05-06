@@ -82,17 +82,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
+    <Compile Include="Directives.cs" />
+    <Compile Include="Intermediates\IndTriples\IDatumTable.cs" />
     <Compile Include="Intermediates\IndTriples\IndInstTable.cs" />
+    <Compile Include="Intermediates\IndTriples\InstDeclController.cs" />
+    <Compile Include="Intermediates\IndTriples\Primitives.cs" />
     <Compile Include="Intermediates\Old\DB.cs" />
     <Compile Include="IArchAgent.cs" />
     <Compile Include="InstOp.cs" />
     <Compile Include="Intermediates\Old\LocaleArchFrags.cs" />
     <Compile Include="Intermediates\Old\MethodTable.cs" />
+    <Compile Include="MetaTable.cs" />
     <Compile Include="OpCodes.cs" />
     <Compile Include="ProgramGraph.cs" />
     <Compile Include="Reserved.cs" />
     <Compile Include="Intermediates\IndTriples\SymbolAddrTable.cs" />
     <Compile Include="Intermediates\Old\SymbolTable.cs" />
+    <Compile Include="Targets\Gas32.cs" />
     <Compile Include="Targets\Nasm32.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="KCC.g4.lexer.cs">
