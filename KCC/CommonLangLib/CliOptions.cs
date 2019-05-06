@@ -174,7 +174,7 @@ namespace KCC
         {
             if (!ReadHelpDoc) return;
 
-            var lines = File.ReadAllLines(KCCEnv.BaseUri+"//cli.txt");
+            var lines = File.ReadAllLines(KCCEnv.ExeUri+"//cli.txt");
             foreach (var line in lines)
             {
                 ColorIO.WriteLineClr(line, ConsoleColor.Yellow);

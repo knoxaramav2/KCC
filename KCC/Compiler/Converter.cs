@@ -36,6 +36,7 @@ namespace Compiler
             //TODO Choose from list
 
             IArchAgent agent = new Gas32();
+            agent.Init(_controller);
 
             while (true)
             {

@@ -15,6 +15,7 @@ namespace CommonLangLib
         {
             BaseUri = Directory.GetCurrentDirectory();
             ExeUri = System.Reflection.Assembly.GetEntryAssembly().Location;
+            ExeUri = Path.GetDirectoryName(ExeUri);
 
             BaseUri = BaseUri.Replace('\\', '/');
             ExeUri = ExeUri.Replace('\\', '/');

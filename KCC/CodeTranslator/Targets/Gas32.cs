@@ -1,4 +1,6 @@
-﻿using KCC;
+﻿using System;
+using CommonLangLib;
+using KCC;
 
 namespace CodeTranslator.Targets
 {
@@ -52,19 +54,23 @@ namespace CodeTranslator.Targets
                 {
                     dr += $"    {GetDirectiveString(n.Directive, n.Info)}";
                 }
+
+                ret += Environment.NewLine + dr;
             }
+
+            Debug.PrintDbg($"{ret}");
 
             return ret;
         }
 
         public string GetFunctionDefs()
         {
-            throw new System.NotImplementedException();
+            return "";
         }
 
         public string FormatInstruction(InstOp opcode, int arg0, int arg1, int spcl1, int spcl2, InstOp mode)
         {
-            throw new System.NotImplementedException();
+            return "";
         }
     }
 }
