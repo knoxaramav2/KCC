@@ -35,7 +35,7 @@ namespace Compiler
 
             IArchAgent agent = new Nasm32();
 
-            while (false)
+            while (true)
             {
                 _asm.Add(agent.GetHeader());
                 _asm.Add(agent.GetGlobals());
@@ -51,6 +51,8 @@ namespace Compiler
 
                     
                 }
+
+                break;
             }
         }
 

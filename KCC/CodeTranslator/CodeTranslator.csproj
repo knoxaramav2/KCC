@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
+    <Compile Include="Intermediates\IndTriples\IndInstTable.cs" />
     <Compile Include="Intermediates\Old\DB.cs" />
     <Compile Include="IArchAgent.cs" />
     <Compile Include="InstOp.cs" />

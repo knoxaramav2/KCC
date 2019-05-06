@@ -101,16 +101,28 @@
 
         Jmp,                    //Jump to
 
+        Call,                   //Invoke function
+
         #endregion
 
         #region SYSTEM
         RgSystem,
 
         SysCall,                //Generate software interrupt
-        
+
 
         #endregion
 
+        //For temporary operations
+        #region DevCodes
+
+        Print,
+
+        #endregion
+
+        //Primitive Constructions
+        Int,
+        CString,
     }
 
     public enum OpModifier

@@ -29,7 +29,10 @@ namespace CommonLangLib
         //AST Validation Errors
         AbsentAssemblyBlock,
         AbsertFunctionBody,
-        UnexpectedToken
+        UnexpectedToken,
+
+        //Data tables
+        SymbolRedefinitino,
 
     }
 
