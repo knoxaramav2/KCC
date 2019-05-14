@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace CommonLangLib
 {
@@ -8,19 +9,67 @@ namespace CommonLangLib
     /// Upon instantiation, detect current platform info
     /// for default target configuration
     /// </summary>
+    /// https://stackoverflow.com/questions/767613/identifying-the-cpu-architecture-type-using-c-sharp
     public class AutoArch
     {
-        public ArchId Arch { get; private set; }
+        [DllImport("kernel32.dll")]
+        private static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
 
+        private const int PROC_ARCH_AMD64   = 9;
+        private const int PROC_ARCH_IA64    = 6;
+        private const int PROC_ARCH_ARM     = 5;
+        private const int PROC_ARCH_INTEL   = 0;
+        
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SYSTEM_INFO
+        {
+            public short wProcessorArchitecture;
+            public short wReserved;
+            public int dwPageSize;
+            public IntPtr lpMinimumApplicationAddress;
+            public IntPtr lpMaximumApplicationAddress;
+            public IntPtr dwActiveProcessorMask;
+            public int dwNumberOfProcessors;
+            public int dwProcessorType;
+            public int dwAllocationGranularity;
+            public short wProcessorLevel;
+            public short wProcessorRevision;
+        }
+
+        public ProcessorArchitecture Arch { get; internal set; }
 
         /// <summary>
         /// AutoDetect system information
         /// </summary>
         public AutoArch()
         {
-            
+            DetectSystem();
         }
 
-        //setters
+        private void DetectSystem()
+        {
+            var si = new SYSTEM_INFO();
+            GetNativeSystemInfo(ref si);
+            switch (si.wProcessorArchitecture)
+            {
+                case PROC_ARCH_INTEL:
+                    Arch = ProcessorArchitecture.X86;
+                    break;
+                case PROC_ARCH_IA64:
+                    Arch = ProcessorArchitecture.IA64;
+                    break;
+                case PROC_ARCH_AMD64:
+                    Arch = ProcessorArchitecture.Amd64;
+                    break;
+                case PROC_ARCH_ARM:
+                    Arch = ProcessorArchitecture.Arm;
+                    break;
+                default:
+                    ErrorReporter.GetInstance().Add(
+                        $"Unrecognized CPU family: {si.wProcessorArchitecture}", 
+                        ErrorCode.UnrecognizedInstructionFamily);
+                    break;
+            }
+        }
     }
 }

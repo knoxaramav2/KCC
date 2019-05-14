@@ -34,6 +34,9 @@ namespace CommonLangLib
         //Data tables
         SymbolRedefinition,
         SymbolUndefined,
+
+        //Platform
+        UnrecognizedInstructionFamily,
     }
 
     public class ErrorReporter

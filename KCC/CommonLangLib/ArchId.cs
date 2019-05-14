@@ -5,6 +5,8 @@
     /// </summary>
     public enum ArchId
     {
-        X86
+        X86,
+        AMD64,
+        IA64
     }
 }
