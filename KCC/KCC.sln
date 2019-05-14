@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLangLib", "CommonLangLib\CommonLangLib.csproj", "{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}"
 EndProject
@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTranslator", "CodeTrans
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linker", "Linker\Linker.csproj", "{AE9F6134-0F96-4765-A3DA-2C009129B99B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{52E23271-FD6A-4F8A-BAB8-111D52F239A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,14 @@ Global
 		{AE9F6134-0F96-4765-A3DA-2C009129B99B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE9F6134-0F96-4765-A3DA-2C009129B99B}.Release|x64.ActiveCfg = Release|Any CPU
 		{AE9F6134-0F96-4765-A3DA-2C009129B99B}.Release|x64.Build.0 = Release|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{52E23271-FD6A-4F8A-BAB8-111D52F239A3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

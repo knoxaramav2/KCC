@@ -1,0 +1,6 @@
+﻿asm main{
+	void main(){
+		print("Hello, world \r\n");
+		print("Goodbye\r\n");
+	}
+}

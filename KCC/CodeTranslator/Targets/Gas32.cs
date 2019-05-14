@@ -136,8 +136,6 @@ namespace CodeTranslator.Targets
             //TODO Watch for required libraries
             string shell, exec;
             string libs = "";
-            var len = _cli.OutputName.Length;
-            string outname = _cli.OutputName.Remove(len-2, 2);
 
             if (CliOptions.Arch.OS == OS.Linux)
             {
@@ -156,7 +154,7 @@ namespace CodeTranslator.Targets
                 StartInfo = new ProcessStartInfo {
                     FileName = shell,
                     Arguments = $"{exec} \"gcc {asmPath} {libs} -o " +
-                    $"{KCCEnv.ExeUri}/{outname}\"",
+                    $"{KCCEnv.BaseUri}/{_cli.OutputName}\"",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true

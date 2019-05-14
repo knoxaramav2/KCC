@@ -47,7 +47,7 @@ namespace Compiler
                 _asm.Add(agent.GetConstData());
                 _asm.Add(agent.GetFunctionDefs());
 
-                string asmPath = $@"{KCCEnv.ExeUri}/{_cli.OutputName}";
+                string asmPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}.s";
 
                 using (var file = new StreamWriter(asmPath, false))
                 {

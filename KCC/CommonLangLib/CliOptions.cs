@@ -42,7 +42,7 @@ namespace KCC
             OptimizeLevel = 0;
             VerboseLevel = Verbosity.Basic;
 
-            OutputName = "out.s";
+            OutputName = "out";
 
             Arch = new AutoArch();
         }
@@ -152,7 +152,8 @@ namespace KCC
                             }
 
                             Src = value;
-                            OutputName = $@"{Path.ChangeExtension(Src, ".s")}";
+                            OutputName = $@"{Path.ChangeExtension(Src, "")}";
+                            OutputName = OutputName.Remove(OutputName.Length - 1, 1);
 
                             break;
                         default:
