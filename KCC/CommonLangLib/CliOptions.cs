@@ -142,10 +142,17 @@ namespace KCC
                                 break;
                             } else if (Src != null)
                             {
-                                reporter.Add("Previous source file " + Src + " will be ignored", ErrorCode.Warning);
+                                reporter.Add("Previous source file " + Src + " will be ignored", ErrorCode.FileRedundant);
+                            }
+
+                            var ext = Path.GetExtension(value);
+                            if (ext.ToLower() != ".kcc")
+                            {
+                                reporter.Add($"Warning: {value} may not be a recognized file", ErrorCode.BadFileExtension);
                             }
 
                             Src = value;
+                            OutputName = $@"{Path.ChangeExtension(Src, ".s")}";
 
                             break;
                         default:

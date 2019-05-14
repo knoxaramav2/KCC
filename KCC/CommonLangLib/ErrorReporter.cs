@@ -9,6 +9,7 @@ namespace CommonLangLib
         Warning,
         //File Warnings
         FileRedundant,
+        BadFileExtension,
 
         //Macro Warnings
         MacroRedefine,
@@ -37,6 +38,8 @@ namespace CommonLangLib
 
         //Platform
         UnrecognizedInstructionFamily,
+        UnrecognizedOS,
+        UnsupportedOS
     }
 
     public class ErrorReporter

@@ -39,22 +39,25 @@ namespace Compiler
             IArchAgent agent = new Gas32();
             agent.Init(_controller);
 
+            //TODO support multiple files
             while (true)
             {
                 _asm.Add(agent.GetHeader());
                 _asm.Add(agent.GetGlobals());
                 _asm.Add(agent.GetConstData());
                 _asm.Add(agent.GetFunctionDefs());
-                
-                using (var file = new StreamWriter($@"{KCCEnv.ExeUri}\projects\preproc\{_cli.OutputName}", false))
+
+                string asmPath = $@"{KCCEnv.ExeUri}/{_cli.OutputName}";
+
+                using (var file = new StreamWriter(asmPath, false))
                 {
                     foreach (var line in _asm)
                     {
                         file.WriteLine(line);
                     }
-
-                    
                 }
+
+                agent.InvokeLocalAssembler(asmPath);
 
                 break;
             }

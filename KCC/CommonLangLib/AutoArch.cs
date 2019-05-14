@@ -15,6 +15,9 @@ namespace CommonLangLib
         [DllImport("kernel32.dll")]
         private static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
 
+        [DllImport("RuntimeInformation.dll")]
+        private static extern bool IsRuntimePlatform();
+
         private const int PROC_ARCH_AMD64   = 9;
         private const int PROC_ARCH_IA64    = 6;
         private const int PROC_ARCH_ARM     = 5;
@@ -37,6 +40,8 @@ namespace CommonLangLib
         }
 
         public ProcessorArchitecture Arch { get; internal set; }
+        public OS OS { get; internal set; }
+
 
         /// <summary>
         /// AutoDetect system information
@@ -71,5 +76,33 @@ namespace CommonLangLib
                     break;
             }
         }
+
+        private void DetectPlatform()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                OS = OS.Windows;
+            } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                OS = OS.Linux;
+            } else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                OS = OS.OSX;
+                ErrorReporter.GetInstance().Add("MacOS has no planned support", ErrorCode.UnsupportedOS);
+            } else
+            {
+                OS = OS.NA;
+                ErrorReporter.GetInstance().Add("Operating system can not be recognized: " +
+                    $"{RuntimeInformation.OSDescription}", ErrorCode.UnrecognizedOS);
+            }
+        }
+    }
+
+    public enum OS
+    {
+        NA,
+        Windows,
+        Linux,
+        OSX     //No plans to support
     }
 }

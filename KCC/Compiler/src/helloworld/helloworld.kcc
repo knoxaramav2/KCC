@@ -1,0 +1,6 @@
+﻿asm dev{
+	void main(){
+		print("Sup World.\r\n");
+		print("Aight, bye.\r\n");
+	}
+}

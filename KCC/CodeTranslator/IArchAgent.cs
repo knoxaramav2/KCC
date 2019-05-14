@@ -42,5 +42,7 @@
         /// <param name="mode">Instruction modifier</param>
         /// <returns>Formatted string representing target instruction translation</returns>
         string FormatInstruction(InstOp opcode, string arg0, string arg1, string spcl1, string spcl2, OpModifier mode);
+
+        bool InvokeLocalAssembler(string asmPath);
     }
 }

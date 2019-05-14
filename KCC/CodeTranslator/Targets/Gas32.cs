@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using CommonLangLib;
 using KCC;
 
@@ -64,7 +66,7 @@ namespace CodeTranslator.Targets
                    "    .def main; .scl 2; .type 32; .endef" + Environment.NewLine +
                    "    .seh_proc main" + Environment.NewLine;
 
-            Debug.PrintDbg($"{ret}");
+            CommonLangLib.Debug.PrintDbg($"{ret}");
 
             return ret;
         }
@@ -124,6 +126,50 @@ namespace CodeTranslator.Targets
             }
 
             return ret;
+        }
+
+        public bool InvokeLocalAssembler(string asmPath)
+        {
+            //System.Diagnostics.Process.Start("CMD.exe", $@"/C gcc {asmPath} -o {Path.GetFileNameWithoutExtension(asmPath)}")
+            //    .WaitForExit();
+
+            //TODO Watch for required libraries
+            string shell, exec;
+            string libs = "";
+            var len = _cli.OutputName.Length;
+            string outname = _cli.OutputName.Remove(len-2, 2);
+
+            if (CliOptions.Arch.OS == OS.Linux)
+            {
+                shell = "/bin/bash";
+                exec = "-c";
+            } else
+            {
+                shell = "CMD.exe";
+                exec = "/C";
+            }
+
+            var process = new Process
+            {
+
+
+                StartInfo = new ProcessStartInfo {
+                    FileName = shell,
+                    Arguments = $"{exec} \"gcc {asmPath} {libs} -o " +
+                    $"{KCCEnv.ExeUri}/{outname}\"",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+            string result = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            CommonLangLib.Debug.PrintDbg(result);
+
+            return true;
         }
     }
 }
