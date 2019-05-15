@@ -149,23 +149,40 @@ namespace CodeTranslator.Targets
 
             var process = new Process
             {
-
-
                 StartInfo = new ProcessStartInfo {
                     FileName = shell,
                     Arguments = $"{exec} \"gcc {asmPath} {libs} -o " +
                     $"{KCCEnv.BaseUri}/{_cli.OutputName}\"",
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
                 }
             };
 
-            process.Start();
-            string result = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+            process.EnableRaisingEvents = true;
 
-            CommonLangLib.Debug.PrintDbg(result);
+            string stdOut="", stdErr="";
+
+            process.Start();
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                stdOut += process.StandardOutput.ReadLine() + Environment.NewLine;
+            }
+
+            while (!process.StandardError.EndOfStream)
+            {
+                stdErr += process.StandardError.ReadLine() + Environment.NewLine;
+            }
+
+            CommonLangLib.Debug.PrintDbg(stdOut);
+            CommonLangLib.Debug.PrintDbg(stdErr);
+
+            if (stdErr != "")
+            {
+                return false;
+            }
 
             return true;
         }

@@ -49,6 +49,7 @@ namespace CommonLangLib
         public AutoArch()
         {
             DetectSystem();
+            DetectPlatform();
         }
 
         private void DetectSystem()

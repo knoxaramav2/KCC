@@ -190,6 +190,12 @@ namespace KCC
 
             Console.Out.Flush();
         }
+
+        public void Refresh(string [] args)
+        {
+            _self = new CliOptions();
+            ParseCli(args);
+        }
     }
 
     public enum Verbosity

@@ -31,14 +31,28 @@ namespace UnitTests
                     FileName = shell,
                     Arguments = $"{exec} \"{command} {args}",
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = false,
                 }
             };
 
+            process.EnableRaisingEvents = true;
+
+            string result = "";
+            string err = "";
+
             process.Start();
-            string result = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                result += process.StandardOutput.ReadLine() + "\r\n";
+            }
+
+            while (!process.StandardError.EndOfStream)
+            {
+                err += process.StandardError.ReadLine();
+            }
 
             CommonLangLib.Debug.PrintDbg(result);
 
