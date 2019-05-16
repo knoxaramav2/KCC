@@ -33,7 +33,6 @@ namespace UnitTests
             cli.Refresh(new string[] { "--src=" +KCCEnv.BaseUri+"/"+helloPath + ".kcc" });
             var exec = CliOptions.Arch.OS == CommonLangLib.OS.Windows ? ".exe" : "";
             string actual = Utils.CallSystem($"{KCCEnv.BaseUri}/src/prints/helloworld{exec}","");
-            //string actual = Utils.CallSystem($"echo", "meh");
             string expected = "Hello, world \r\nGoodbye\r\n";
             Assert.AreEqual(expected, actual, "Hello world output not as expected");
         }

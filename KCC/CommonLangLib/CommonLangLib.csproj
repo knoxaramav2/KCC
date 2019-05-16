@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchId.cs" />
+    <Compile Include="AsmRef.cs" />
     <Compile Include="AutoArch.cs" />
     <Compile Include="CliOptions.cs" />
     <Compile Include="ColorIO.cs" />

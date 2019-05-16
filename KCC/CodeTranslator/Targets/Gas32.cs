@@ -10,16 +10,18 @@ namespace CodeTranslator.Targets
     {
         private InstDeclController _controller;
         private CliOptions _cli;
+        private string _nl;
 
         public void Init(InstDeclController controller)
         {
             _controller = controller;
             _cli = CliOptions.GetInstance();
+            _nl = Environment.NewLine;
         }
 
         public string GetHeader()
         {
-            return $"    .file \"{_cli.Src}\"" + Environment.NewLine +
+            return $"    .file \"{_cli.Src}\"" + _nl +
                    "    .def __main; .scl 2; .type 32; .endef";
         }
 
@@ -45,26 +47,26 @@ namespace CodeTranslator.Targets
 
         public string GetConstData()
         {
-            var ret = "    .section .rdata, \"dr\"" + Environment.NewLine;
+            var ret = "    .section .rdata, \"dr\"" + _nl;
 
             var m = InstDeclController.Meta;
 
             foreach (var d in m.GetDirectives())
             {
-                var dr = GetDirectiveString(d.Directive, d.Info) + Environment.NewLine;
+                var dr = GetDirectiveString(d.Directive, d.Info) + _nl;
                 foreach (var n in d.Nested)
                 {
                     dr += $"    {GetDirectiveString(n.Directive, n.Info)}"
-                        + Environment.NewLine;
+                        + _nl;
                 }
 
-                ret += dr + Environment.NewLine;
+                ret += dr + _nl;
             }
 
-            ret += "    .text" + Environment.NewLine +
-                   "    .globl main" + Environment.NewLine + 
-                   "    .def main; .scl 2; .type 32; .endef" + Environment.NewLine +
-                   "    .seh_proc main" + Environment.NewLine;
+            ret += "    .text" + _nl +
+                   "    .globl main" + _nl + 
+                   "    .def main; .scl 2; .type 32; .endef" + _nl +
+                   "    .seh_proc main" + _nl;
 
             CommonLangLib.Debug.PrintDbg($"{ret}");
 
@@ -78,33 +80,32 @@ namespace CodeTranslator.Targets
             foreach (var fnc in fncs)
             {
                 if (fnc.BodyType != BodyType.Function) continue;
-                ret += $"{fnc.Id}:" + Environment.NewLine +
-                       $"   pushq %rbp" + Environment.NewLine +
-                       $"   .seh_pushreg %rbp" + Environment.NewLine +
-                       $"   movq %rsp, %rbp" + Environment.NewLine +
-                       $"   .seh_setframe %rbp, 0" + Environment.NewLine +
-                       $"   subq $32, %rsp" + Environment.NewLine +
-                       $"   .seh_stackalloc 32" + Environment.NewLine +
-                       $"   .seh_endprologue" + Environment.NewLine;
+                ret += $"{fnc.Id}:" + _nl +
+                       $"   pushq %rbp" + _nl +
+                       $"   .seh_pushreg %rbp" + _nl +
+                       $"   movq %rsp, %rbp" + _nl +
+                       $"   .seh_setframe %rbp, 0" + _nl +
+                       $"   subq $32, %rsp" + _nl +
+                       $"   .seh_stackalloc 32" + _nl +
+                       $"   .seh_endprologue" + _nl;
                 if (fnc.Id == "main")
                 {
-                    ret += "    call __main" + Environment.NewLine;
+                    ret += "    call __main" + _nl;
                 }
 
                 foreach (var i in fnc.Instructions.Inst)
                 {
                     ret += FormatInstruction(i.Op, i.Arg0, i.Arg1, null, null, OpModifier.None)
-                        + Environment.NewLine;
+                        + _nl;
                 }
 
-                ret += "    movl $0, %eax" + Environment.NewLine +
-                       "    addq $32, %rsp" + Environment.NewLine +
-                       "    popq %rbp" + Environment.NewLine +
-                       "    ret" +Environment.NewLine +
-                       "    .seh_endproc" + Environment.NewLine+
-                       "    .ident \"KCC V1\"" + Environment.NewLine+
-                       "    .def printf; .scl 2; .type 32; .endef" + Environment.NewLine;
-
+                ret += "    movl $0, %eax" + _nl +
+                       "    addq $32, %rsp" + _nl +
+                       "    popq %rbp" + _nl +
+                       "    ret" +_nl +
+                       "    .seh_endproc" + _nl+
+                       "    .ident \"KCC V1\"" + _nl+
+                       "    .def printf; .scl 2; .type 32; .endef" + _nl;
             }
 
             return ret;
@@ -117,11 +118,12 @@ namespace CodeTranslator.Targets
             switch (opcode)
             {
                 case InstOp.Print:
-                    ret = $"    leaq .LC{arg0}(%rip), %rcx" + Environment.NewLine +
+                    ret = $"    leaq .LC{arg0}(%{AsmRef.GetInstructionPointer(BitCntr.B64)}), %{AsmRef.GetCounter(BitCntr.B64)}" + _nl +
                           $"    call printf";
                     break;
                 case InstOp.Exit:
-
+                    ret = $"    movl %{arg0}, %{AsmRef.GetDestination(BitCntr.B32)}" + _nl +
+                           "    call exit";
                     break;
             }
 
@@ -130,9 +132,6 @@ namespace CodeTranslator.Targets
 
         public bool InvokeLocalAssembler(string asmPath)
         {
-            //System.Diagnostics.Process.Start("CMD.exe", $@"/C gcc {asmPath} -o {Path.GetFileNameWithoutExtension(asmPath)}")
-            //    .WaitForExit();
-
             //TODO Watch for required libraries
             string shell, exec;
             string libs = "";
@@ -168,12 +167,12 @@ namespace CodeTranslator.Targets
 
             while (!process.StandardOutput.EndOfStream)
             {
-                stdOut += process.StandardOutput.ReadLine() + Environment.NewLine;
+                stdOut += process.StandardOutput.ReadLine() + _nl;
             }
 
             while (!process.StandardError.EndOfStream)
             {
-                stdErr += process.StandardError.ReadLine() + Environment.NewLine;
+                stdErr += process.StandardError.ReadLine() + _nl;
             }
 
             CommonLangLib.Debug.PrintDbg(stdOut);

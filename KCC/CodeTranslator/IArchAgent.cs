@@ -43,6 +43,11 @@
         /// <returns>Formatted string representing target instruction translation</returns>
         string FormatInstruction(InstOp opcode, string arg0, string arg1, string spcl1, string spcl2, OpModifier mode);
 
+        /// <summary>
+        /// Invokes a system call to a local assembler to generate the executable
+        /// </summary>
+        /// <param name="asmPath">Path the source assembly</param>
+        /// <returns>False if errors occured</returns>
         bool InvokeLocalAssembler(string asmPath);
     }
 }
