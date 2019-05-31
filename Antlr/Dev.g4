@@ -15,8 +15,8 @@ class               : 'class' symbol_id block_struct;
 decl_group          : L_PARANTH ((var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)?)? R_PARANTH
                     | L_PARANTH (var_proto_decl|~R_PARANTH)? R_PARANTH;
 
-call_group          : L_PARANTH (value_id|~R_PARANTH) ((','value_id|~R_PARANTH)+)? R_PARANTH
-                    | L_PARANTH (value_id|~R_PARANTH)? R_PARANTH;
+call_group          : L_PARANTH (expression|~R_PARANTH) ((','expression|~R_PARANTH)+)? R_PARANTH
+                    | L_PARANTH (expression(value_id|~R_PARANTH))? R_PARANTH;
 
 group               : L_PARANTH (instruction|~R_PARANTH) ((','instruction|~R_PARANTH)+)? R_PARANTH
                     | L_PARANTH (instruction|~R_PARANTH)? R_PARANTH;
@@ -122,7 +122,8 @@ value_id            : STRINGLIT | DECIMAL | IDENTIFIER;
 
 expression          : unary_expr
                     | fnc_call
-                    | value_id; 
+                    | unary_symb?value_id (((binary_ops value_id)|(expression))+)?
+                    ;
 
 string              : STRINGLIT;
 char                : '\'' ALPHA '\'';

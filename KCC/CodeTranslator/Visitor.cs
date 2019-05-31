@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Antlr4.Runtime.Misc;
 using CommonLangLib;
 
 namespace CodeTranslator
@@ -206,29 +207,16 @@ namespace CodeTranslator
                 instructions = (List<string[]>) VisitAssignment(context.assignment());
             } else if (context.keywords() != null)
             {
-                switch (context.keywords().GetText())
+                if (context.call_group() != null)
                 {
-                    case "return": break;
-                    case "print":
-                        if (context.call_group().IsEmpty)
-                        {
-                            return null;
-                        }
-
-                        _controller.AddDirective(Directives.Lc, null);
-                        _controller.AddDirective(
-                            Directives.Ascii,
-                            context.call_group().value_id()[0].GetText(),
-                            true);
-                        _controller.AddInstruction(InstOp.Print, $"{MetaTable.GetLcCounter()-1}", null);
-
-                        break;
-                    case "exit":
-                        _controller.AddInstruction(InstOp.Exit, null, null);
-                        break;
+                    VisitCall_group(context.call_group());
                 }
-            }
-            else
+                VisitKeywords(context.keywords());
+            } else if (context.fnc_call() != null)
+            {
+                VisitCall_group(context.call_group());
+                VisitFnc_call(context.fnc_call());  
+            } else
             {
                 Debug.PrintDbg("Instruction not defined");
                 return null;
@@ -296,7 +284,6 @@ namespace CodeTranslator
             var raw_op = context.assign_ops().GetText();
             string recipient = null;
             var value = "";
-
             
             if (context.symbol_id() != null)
             {
@@ -346,12 +333,19 @@ namespace CodeTranslator
             {
                 case "return":
 
+
                     break;
                 case "print":
+                    _controller.AddDirective(Directives.Lc, null);
+                    _controller.AddDirective(
+                        Directives.Ascii,
+                        context.call_group().value_id()[0].GetText(),
+                        true);
+                    _controller.AddInstruction(InstOp.Print, $"{MetaTable.GetLcCounter() - 1}", null);
 
                     break;
                 case "exit":
-
+                    _controller.AddInstruction(InstOp.Exit, null, null);
                     break;
             }
 
@@ -397,6 +391,13 @@ namespace CodeTranslator
                 args = parameters.Aggregate("", (current, p) => current + (p.GetText() + ","));
                 args = args.TrimEnd(',');
             }
+
+            return null;
+        }
+
+        public override object VisitCall_group([NotNull] KCCParser.Call_groupContext context)
+        {
+            if (context.)
 
             return null;
         }
