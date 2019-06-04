@@ -62,30 +62,33 @@ expression          : (unary_expr|value_id) binary_ops (unary_expr|value_id|expr
                     | unary_expr;*/
 
 expression          : '-' expression
-                    | expression oop_2 expression
+                    | expression oop_1 expression
                     | expression oop_3 expression
                     | expression oop_4 expression
+                    | expression oop_5 expression
                     | value_id
                     |
                     ;
 
-oop_1               : symbol_id'.'symbol_id (('.'symbol_id)+)?
+oop_1               : ('.'|index_anyvalue|function_call)
                     ;
 
-oop_2               : symbol_id INCREMENT#post_inc
+oop_2               : //index_anyvalue#index
+                    //| function_call#fnc_call
+                    ;
+
+oop_3               : symbol_id INCREMENT#post_inc
                     | symbol_id DECRIMENT#post_dec
-                    | function_call#fnc_call
-                    | index_anyvalue#index
                     ;
 
-oop_3               : INCREMENT symbol_id#pre_inc
+oop_4               : INCREMENT (oop_1|symbol_id)#pre_inc
                     | DECRIMENT symbol_id#pre_dec
                     | NOT value_id#not
                     | BIT_INVERT value_id#invert
                     | '(' restric_id ')' value_id#cast
                     ;
 
-oop_4               :  MULTIPLY value_id#product
+oop_5               :  MULTIPLY value_id#product
                     |  DIVIDE value_id#quotient
                     |  MODULO value_id#remainder
                     |  EXPONENT value_id#power
@@ -140,7 +143,7 @@ bitwise_ops         : BIT_AND
                     | BIT_RSHIFT
                     ;
 
-symbol_id           : IDENTIFIER (('.'IDENTIFIER)+)?;
+symbol_id           : IDENTIFIER;
 restric_id          : IDENTIFIER;
 value_id            : bool |string | char | decimal | integer | symbol_id;
 
