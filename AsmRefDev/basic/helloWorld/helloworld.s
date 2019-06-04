@@ -1,33 +1,35 @@
 	.file	"helloworld.c"
-	.def	__main;	.scl	2;	.type	32;	.endef
 	.section .rdata,"dr"
 .LC0:
-	.ascii "Hello world %d %d\0"
-.LC1:
-	.ascii "Hello worlds\0"
+	.ascii "%d\15\12\0"
 	.text
-	.globl	main
-	.def	main;	.scl	2;	.type	32;	.endef
-	.seh_proc	main
-main:
+	.globl	print
+	.def	print;	.scl	2;	.type	32;	.endef
+print:
 	pushq	%rbp
-	.seh_pushreg	%rbp
 	movq	%rsp, %rbp
-	.seh_setframe	%rbp, 0
 	subq	$32, %rsp
-	.seh_stackalloc	32
-	.seh_endprologue
-	call	__main
-	movl	$99, %r8d
-	movl	$5, %edx
+	movl	%ecx, 16(%rbp)
+	movl	16(%rbp), %edx
 	leaq	.LC0(%rip), %rcx
 	call	printf
-	leaq	.LC1(%rip), %rcx
-	call	printf
-	movl	$0, %eax
-	addq	$32, %rsp
-	popq	%rbp
+	nop
+	leave
 	ret
-	.seh_endproc
+	.def	__main;	.scl	2;	.type	32;	.endef
+	.globl	main
+	.def	main;	.scl	2;	.type	32;	.endef
+main:
+	pushq	%rbp
+	movq	%rsp, %rbp
+	subq	$48, %rsp
+	call	__main
+	movl	$5, -4(%rbp)
+	movl	-4(%rbp), %eax
+	movl	%eax, %ecx
+	call	print
+	movl	$0, %eax
+	leave
+	ret
 	.ident	"GCC: (GNU) 6.4.0"
 	.def	printf;	.scl	2;	.type	32;	.endef

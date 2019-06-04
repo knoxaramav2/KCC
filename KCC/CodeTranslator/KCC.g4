@@ -5,51 +5,25 @@ options{
 }
 
 
-rules               : assembly +;
+rules               : assembly_decl +;
 
-assembly            : ASSEMBLY symbol_id block_struct;
-class               : 'class' symbol_id block_struct;
+//constructs
+assembly_decl       : ASSEMBLY symbol_id asm_block;
+class_decl          : 'class' symbol_id class_block;
+function_decl        : symbol_id symbol_id fnc_header function_block;
 
-//enclosures
-//restricted group options
-decl_group          : L_PARANTH ((var_proto_decl|~R_PARANTH) ((','var_proto_decl|~R_PARANTH)+)?)? R_PARANTH
-                    | L_PARANTH (var_proto_decl|~R_PARANTH)? R_PARANTH;
+//blocks
+asm_block           : L_BRACE ((class_decl|function_decl|~R_BRACE)+)? R_BRACE;
+class_block         : L_BRACE ((function_decl|var_decl|~R_BRACE)+)? R_BRACE;
+function_block      : L_BRACE ((var_decl|keyword_call|function_call|~R_BRACE)+)? R_BRACE  ;
 
-call_group          : L_PARANTH (expression|~R_PARANTH) ((','expression|~R_PARANTH)+)? R_PARANTH
-                    | L_PARANTH (expression(value_id|~R_PARANTH))? R_PARANTH;
 
-group               : L_PARANTH (instruction|~R_PARANTH) ((','instruction|~R_PARANTH)+)? R_PARANTH
-                    | L_PARANTH (instruction|~R_PARANTH)? R_PARANTH;
+//groups
+fnc_header          :   L_PARANTH ((var_decl)(','(var_decl)+)?|~R_PARANTH)? R_PARANTH;
 
-//defines properties of a body
-block_struct        : L_BRACE ((inst_body|~R_BRACE)+)? R_BRACE
-                    ;
-//contains executable instructions
-block_exec          : L_BRACE ((instruction|~R_BRACE)+)? R_BRACE
-                    ;
+call_group          :   L_PARANTH (((value_id|expression)(','(value_id|expression))+)?|~R_PARANTH)? R_PARANTH;
+expr_group          :   ;
 
-block               : L_BRACE ((.|~R_BRACE)+)? R_BRACE;
-
-//allowed in definition
-inst_body           : var_decl
-                    | fnc_proto
-                    | fnc_decl
-                    | class;
-//allowed in function body
-inst_exec           : instruction
-                    ;
-
-instruction         : var_decl SEMI?
-                    | symbol_id assignment
-                    | keywords (call_group|value_id)? SEMI?
-                    | fnc_call
-                    //| inline_asm
-                    ;
-
-//special blocks
-//inline_asm          :'__asm__' L_BRACE ((asm_seq|~R_BRACE)+)? R_BRACE;
-
-//Keywords
 
 //keywords
 keywords            : 'return'
@@ -58,23 +32,20 @@ keywords            : 'return'
                     ;
 
 
-//declarations
-var_proto_decl      :(symbol_id symbol_id (SET (value_id | symbol_id)))?
-                    ;
-var_decl            :symbol_id symbol_id (assignment)?
-                    ;
-fnc_call            : symbol_id call_group;
-fnc_decl            : fnc_proto block_exec;
-fnc_proto           : symbol_id restric_id decl_group SEMI?;
-
-//basic
-assignment          : assign_ops expression
-                    | symbol_id assign_ops expression;
+//operations
+var_decl            : symbol_id symbol_id ('=' (expression|value_id))?;
+keyword_call        : keywords (call_group|value_id)?;
+function_call       : symbol_id call_group;
 
 unary_expr          : lv_unary_ops
                     | rv_unary_ops
                     | unary_symb symbol_id
                     ;
+
+//operations
+expression          : (unary_expr|value_id) binary_ops (unary_expr|value_id|expression)
+                    | expression binary_ops (expression|value_id)
+                    | unary_expr;
 
 //resolution
 rv_unary_ops        : symbol_id increment
@@ -82,17 +53,6 @@ rv_unary_ops        : symbol_id increment
 
 lv_unary_ops        : increment symbol_id
                     | decrement symbol_id;
-
-//inline assembly
-asm_seq            : asm_header?
-                      ((asm_inst)+)?
-                    ;
-
-asm_header          :('.'?restric_id':')
-                    ;
-asm_inst            :('.'?restric_id)
-                    ;
-
 
 increment           : INCREMENT;
 decrement           : DECRIMENT;
@@ -119,11 +79,6 @@ assign_ops          : SET
 symbol_id           : IDENTIFIER (('.'IDENTIFIER)+)?;
 restric_id          : IDENTIFIER;
 value_id            : STRINGLIT | DECIMAL | IDENTIFIER;
-
-expression          : unary_expr
-                    | fnc_call
-                    | unary_symb?value_id (((binary_ops value_id)|(expression))+)?
-                    ;
 
 string              : STRINGLIT;
 char                : '\'' ALPHA '\'';

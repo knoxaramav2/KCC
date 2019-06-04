@@ -64,9 +64,9 @@ namespace CodeTranslator
            _controller = InstDeclController.GetInstance();
         }
 
-        public override object VisitAssembly(KCCParser.AssemblyContext context)
+        public override object VisitAssembly_decl(KCCParser.Assembly_declContext context)
         {
-            if (context.block_struct() == null)
+            if (context.asm_block() == null)
             {
                 ErrorReporter.GetInstance().Add("Missing assembly block", ErrorCode.AbsentAssemblyBlock);
                 return null;
@@ -74,40 +74,26 @@ namespace CodeTranslator
 
             _controller.CreateScope(context.symbol_id().GetText(), "asm", BodyType.Asm);
 
-            VisitBlock_struct(context.block_struct());
+            VisitAsm_block(context.asm_block());
 
             _controller.ExitScope();
 
             return null;
         }
 
-        public override object VisitBlock_struct(KCCParser.Block_structContext context)
+        public override object VisitAsm_block(KCCParser.Asm_blockContext context)
         {
-            foreach (var inst in context.inst_body())
+            foreach(var f in context.function_decl())
             {
-                var varDecl = inst.var_decl();
-                var fncProto = inst.fnc_proto();
-                var fncDcl = inst.fnc_decl();
-                var classDcl = inst.@class();
-
-                if (varDecl != null)
-                {
-                    VisitVar_decl(varDecl);
-                } else if (fncDcl != null)
-                {
-                    //saved first to fix argument declaration scope
-                    VisitFnc_decl(fncDcl);
-                } else if (fncProto != null)
-                {
-                    ErrorReporter.GetInstance().Add("Prototype without block not supported", ErrorCode.AbsertFunctionBody);
-                } else if (classDcl != null)
-                {
-                    VisitClass(classDcl);
-                } else
-                {
-                    Debug.PrintDbg("BlockStruct Unexepected : " + inst);
-                }
+                VisitFunction_decl(f);
             }
+
+            foreach(var c in context.class_decl())
+            {
+                VisitClass_decl(c);
+            }
+
+            _controller.ExitScope();
 
             return null;
         }
@@ -397,7 +383,10 @@ namespace CodeTranslator
 
         public override object VisitCall_group([NotNull] KCCParser.Call_groupContext context)
         {
-            if (context.)
+            if (context.expression() != null)
+            {
+
+            }
 
             return null;
         }

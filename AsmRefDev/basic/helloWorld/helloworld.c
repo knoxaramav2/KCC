@@ -1,6 +1,10 @@
 #include <stdio.h>
 
+void print(int a){
+	printf("%d\r\n", a);
+}
+
 int main(){
-	printf("Hello world %d %d", 5, 99);
-	printf("Hello worlds");
+	int a = 5;
+	print(a);
 }
