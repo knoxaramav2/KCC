@@ -26,7 +26,7 @@ namespace CodeTranslator
 
             VisitAsm_block(context.asm_block());
 
-            return base.VisitAssembly_decl(context);
+            return null;
         }
 
         public override object VisitAsm_block([NotNull] KCCParser.Asm_blockContext context)
@@ -42,7 +42,7 @@ namespace CodeTranslator
                 VisitFunction_decl(function_def);
             }
 
-            return base.VisitAsm_block(context);
+            return null;
         }
 
         //classes

@@ -5,7 +5,7 @@ namespace CodeTranslator
 {
     public class InstDeclController
     {
-        //private static IndInstTable _instTable;
+        private static SymbolAddrTable _root;
         private static SymbolAddrTable _symTable;
         private static SymbolAddrTable _currentScope;
         private static InstDeclController _self;
@@ -16,9 +16,8 @@ namespace CodeTranslator
 
         private InstDeclController()
         {
-            //_instTable = new IndInstTable();
-            _symTable = new SymbolAddrTable("#ROOT",null,_blocksize);
-            _currentScope = _symTable;
+            _root = new SymbolAddrTable("#ROOT",null,_blocksize);
+            _currentScope = _symTable = _root;
             Meta = new MetaTable();
         }
 
@@ -99,6 +98,12 @@ namespace CodeTranslator
         public List<SymbolAddrTable> FindAll()
         {
             return _symTable.SearchAll();
+        }
+
+        public string DumpInternalCode(int formattedWidth)
+        {
+            var cTbl = _root.GetFormattedLog(formattedWidth);
+            return null;
         }
     }
 }

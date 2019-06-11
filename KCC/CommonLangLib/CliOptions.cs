@@ -17,6 +17,7 @@ namespace KCC
         //Start Switches
         private bool ReadHelpDoc { get; set; }
         public bool EnableDebugMessages;
+        public bool OutputInternals { get; internal set; }
 
         //Function Switches
 
@@ -35,6 +36,7 @@ namespace KCC
 
             ReadHelpDoc = false;
             EnableDebugMessages = false;
+            OutputInternals = false;
 
             Libraries = new List<string>();
             Src = null;
@@ -155,6 +157,9 @@ namespace KCC
                             OutputName = $@"{Path.ChangeExtension(Src, "")}";
                             OutputName = OutputName.Remove(OutputName.Length - 1, 1);
 
+                            break;
+                        case "pintern":
+                            OutputInternals = true;
                             break;
                         default:
                             _canContinue = false;

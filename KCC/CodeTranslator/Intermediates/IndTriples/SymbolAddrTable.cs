@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using CommonLangLib;
+using System.Linq;
 
 namespace CodeTranslator
 {
     public class SymbolAddrTable : IDatumTable<SymbolEntry>
     {
-        private SymbolAddrTable _header;
+        private SymbolAddrTable _header;//parent address table
         public IndInstTable Instructions;//Note: Also acts as a constructor
         private DataTypeTable _typeTable;
         private uint _offset;
@@ -135,6 +136,70 @@ namespace CodeTranslator
             return ret;
         }
 
+        IDatumTable<SymbolEntry> IDatumTable<SymbolEntry>.AddTable(string id, string type)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        SymbolEntry IDatumTable<SymbolEntry>.AddRecord(SymbolEntry t)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        void IDatumTable<SymbolEntry>.ClearTable()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        SymbolEntry IDatumTable<SymbolEntry>.SearchRecord(string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetFormattedLog(int maxWidth)
+        {
+            var hWidth = maxWidth / 2;
+            var symLen = _entries.Count;
+            var instLen = Instructions.Inst.Count;
+
+            var headerSymbol    = "Symbol |";
+            var headerInstruct  = "Instruction";
+            var symId           = "ID     |";
+            var symType         = "Type   |";
+            var InstOp          = "Op";
+            var InstArg0        = "Arg0";
+            var InstArg1        = "Arg1";
+            var InstMod         = "Mod";
+            var header = headerSymbol.PadLeft(hWidth) + headerInstruct.PadLeft(hWidth);
+
+            string id, type, op, arg0, arg1, mod;
+            string ret = "";
+
+            for (int i = 0; i < symLen && i < instLen; ++i)
+            {
+                id = type = op = arg0 = arg1 = mod = "";
+
+                if (instLen < i)
+                {
+                    var inst = Instructions.Inst[i];
+                    op = inst.Op.ToString();
+                    arg0 = inst.Arg0;
+                    arg1 = inst.Arg1;
+                    mod = inst.OpModifier.ToString();
+                }
+
+                if (symLen < i)
+                {
+                    var entry = _entries.Values.ElementAt(i);
+                    id = entry.Id;
+                    type = entry.Type.ToString();
+                }
+
+                ret += $"{op},{arg0},{arg1},{mod} | {id},{type}"+System.Environment.NewLine;
+            }
+
+            return ret;
+        }
     }
 
     public class SymbolEntry

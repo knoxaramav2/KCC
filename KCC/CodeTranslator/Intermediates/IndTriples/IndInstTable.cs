@@ -5,12 +5,10 @@ namespace CodeTranslator
     public class IndInstTable : IDatumTable<InstEntry>
     {
         public List<InstEntry> Inst { get; internal set; }
-        private List<KeyValuePair<int, InstEntry>> _ind;
 
         public IndInstTable()
         {
             Inst = new List<InstEntry>();
-            _ind = new List<KeyValuePair<int, InstEntry>>();
         }
 
         public IDatumTable<InstEntry> AddTable(string id, string type)
@@ -21,7 +19,6 @@ namespace CodeTranslator
         public InstEntry AddRecord(InstEntry t)
         {
             Inst.Add(t);
-            _ind.Add(new KeyValuePair<int, InstEntry>(_ind.Count, t));
 
             return t;
         }
@@ -32,6 +29,11 @@ namespace CodeTranslator
         }
 
         public InstEntry SearchRecord(string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetFormattedLog(int maxWidth)
         {
             throw new System.NotImplementedException();
         }

@@ -25,6 +25,16 @@ namespace Compiler
             _controller = InstDeclController.GetInstance();
         }
 
+        public void LogInternalTranslation()
+        {
+            if (!_cli.OutputInternals)
+            {
+                return;
+            }
+
+            Debug.PrintDbg(_controller.DumpInternalCode(System.Console.WindowWidth));
+        }
+
         public void Build()
         {
             //TODO Support other architectures than x86-x64
@@ -63,12 +73,6 @@ namespace Compiler
             }
         }
 
-        public void TargetWin10AMD()
-        {
-            _asm.Add(_fragments.GetLocaleDataHeader());
-            _asm.Add(_fragments.GetGlobalData());
-            _asm.Add(_fragments.GetFunctionDefs());
-        }
     }
 
 

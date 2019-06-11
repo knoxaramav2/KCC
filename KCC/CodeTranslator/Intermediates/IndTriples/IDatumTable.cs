@@ -6,5 +6,7 @@
         T AddRecord(T t);
         void ClearTable();
         T SearchRecord(string id);
+
+        string GetFormattedLog(int maxWidth);
     }
 }

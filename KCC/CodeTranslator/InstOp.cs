@@ -56,7 +56,7 @@
         Mult,
         Div,
         Modulo,
-        Power
+        Power,
 
         PostIncrement,
         PostDecrement,
