@@ -273,6 +273,67 @@ namespace CodeTranslator
             return null;
         }
 
+        //Comparators**********************
+        public override object VisitShift([NotNull] KCCParser.ShiftContext context)
+        {
+            //TODO
+            return base.VisitShift(context);
+        }
+
+        public override object VisitCompare1([NotNull] KCCParser.Compare1Context context)
+        {
+            //TODO
+            return base.VisitCompare1(context);
+        }
+
+        public override object VisitCompare2([NotNull] KCCParser.Compare2Context context)
+        {
+            //TODO
+            return base.VisitCompare2(context);
+        }
+
+        public override object VisitB_and([NotNull] KCCParser.B_andContext context)
+        {
+            //TODO
+            return base.VisitB_and(context);
+        }
+
+        public override object VisitB_or([NotNull] KCCParser.B_orContext context)
+        {
+            //TODO
+            return base.VisitB_or(context);
+        }
+
+        public override object VisitB_xor([NotNull] KCCParser.B_xorContext context)
+        {
+            //TODO
+            return base.VisitB_xor(context);
+        }
+
+        public override object VisitL_and([NotNull] KCCParser.L_andContext context)
+        {
+            //TODO
+            return base.VisitL_and(context);
+        }
+
+        public override object VisitL_or([NotNull] KCCParser.L_orContext context)
+        {
+            //TODO
+            return base.VisitL_or(context);
+        }
+
+        public override object VisitList([NotNull] KCCParser.ListContext context)
+        {
+            //TODO
+            return base.VisitList(context);
+        }
+
+        public override object VisitParan([NotNull] KCCParser.ParanContext context)
+        {
+            //TODO
+            return base.VisitParan(context);
+        }
+
         public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)
         {
             return context.value_id()?.symbol_id()?.GetText();
