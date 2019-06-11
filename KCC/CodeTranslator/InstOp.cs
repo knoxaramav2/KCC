@@ -51,8 +51,17 @@
         SetOr,
         SetXor,
 
+        Add,
+        Sub,
+        Mult,
+        Div,
+        Modulo,
+        Power
 
-
+        PostIncrement,
+        PostDecrement,
+        PreIncrement,
+        PreDecrement,
         #endregion
 
         #region MEM_SWAP
@@ -70,6 +79,8 @@
         ShL,                    //Shift Left
         ShR,                    //Shift Right
 
+        IndexAccess,
+
         #endregion
 
         #region LOGIC
@@ -77,6 +88,7 @@
 
         Or,                     //Numeric OR
         And,                    //Numeric AND
+        Not,
 
         BOr,                    //Bitwise OR
         BAnd,                   //Bitwise AND
@@ -84,6 +96,8 @@
         BInv,                   //Bitwise Invert
         BXor,                   //Bitwise Xor
         BXorI,                  //Bitwise Xor Immediate
+
+        
 
         #endregion
 
@@ -108,6 +122,10 @@
 
         SysCall,                //Generate software interrupt
 
+        StartFncCall,   //Mark the start of function call expressions
+        EndFncCall,     //Mark the end of function call expressions; evaluate expressions and determine result registers
+        MarkAsArg,      //Mark previous expression as argument; Delimits argument evaluation
+        //IG: [START] [Var] [MARK] [EXPRESSION] [MARK] [VAR] [MARK] [END]
 
         #endregion
 
@@ -138,6 +156,10 @@
         None,
         Immediate,
         FromLastTemp,
-        NullOrDefault
+        NullOrDefault,
+        LTempRTemp,
+        LRawRTemp,
+        LTempRRaw,
+        LRawRRaw
     }
 }
