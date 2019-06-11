@@ -41,12 +41,14 @@ namespace CodeTranslator
     {
         public InstOp Op;
         public string Arg0, Arg1;
+        public OpModifier OpModifier;
 
-        public InstEntry(InstOp op, string arg0, string arg1)
+        public InstEntry(InstOp op, string arg0, string arg1, OpModifier opModifier=OpModifier.None)
         {
             Op = op;
             Arg0 = arg0;
             Arg1 = arg1;
+            OpModifier = opModifier;
         }
     }
 }

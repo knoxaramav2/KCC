@@ -1,6 +1,5 @@
 ﻿asm dev{
 	void main(){
-		print("Sup World.\r\n");
-		print("Aightss, bye.\r\n");
+		int a = 7;
 	}
 }

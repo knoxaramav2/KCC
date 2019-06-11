@@ -41,19 +41,17 @@
         #region ARITHMETIC
         RgArithmetic = 100,
 
-        Add,                    //Numeric Add W Overflow
-        AddI,                   //Numeric Immediate Add W Overflow
-        Sub,                    //Numeric Subtract W Overflow
-        SubI,                   //Numeric Subtract Immediate
-        Mult,                   //Numeric Mult W Overflow
-        MultI,                  //Numeric Mult Immediate
-        Div,                    //Numeric Div W Overflow
-        DivI,                   //Numeric Div Immediate
+        Set,
+        SetAdd,
+        SetSub,
+        SetMult,
+        SetDiv,
+        SetModulo,
+        SetAnd,
+        SetOr,
+        SetXor,
 
-        Set,                    //Set byte
-        SetI,                   //Set byte immediate
-        SetW,                   //Set word
-        SetWI,                  //Set word immediate
+
 
         #endregion
 
@@ -138,6 +136,8 @@
     public enum OpModifier
     {
         None,
-        Immediate
+        Immediate,
+        FromLastTemp,
+        NullOrDefault
     }
 }

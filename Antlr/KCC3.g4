@@ -23,7 +23,8 @@ function_decl        : fnc_type=symbol_id fnc_name=symbol_id fnc_header function
 //blocks
 asm_block           : L_BRACE ((class_decl|function_decl|~R_BRACE)+)? R_BRACE;
 class_block         : L_BRACE ((function_decl|var_decl|~R_BRACE)+)? R_BRACE;
-function_block      : L_BRACE ((var_decl|keyword_call|function_call|expression|~R_BRACE)+)? R_BRACE  ;
+//function_block      : L_BRACE ((var_decl|keyword_call|function_call|expression|~R_BRACE)+)? R_BRACE  ;
+function_block      : L_BRACE ((expression|~R_BRACE)+)? R_BRACE  ;
 
 //groups
 fnc_header          :   L_PARANTH ((var_decl)(','(var_decl)+)?|~R_PARANTH)? R_PARANTH;
@@ -38,16 +39,17 @@ index_variable      : '[' ']';
 
 function_call       : symbol_id call_group
                     ;
-keyword_call        : keywords (call_group|expression)?
-                    ;
+//keyword_call        : keywords (call_group|expression)?
+  //                  ;
 var_decl            : var_type=symbol_id index_anyvalue? var_name=symbol_id ('=' expression)?
                     ;
 
 //keywords
+/*
 keywords            : 'return'
-                    | 'print'
+                    //| 'print'
                     | 'exit'
-                    ;
+                    ;*/
 
 //operations
 /*
@@ -70,27 +72,30 @@ rval_op             : INCREMENT accessor        #pre_inc
                     | DECRIMENT accessor        #pre_dec
                     | NOT val_var               #not
                     | BIT_INVERT val_var        #invert
-                    | (symbol_id) val_var       #type_cast
+                    | '('symbol_id')' val_var       #type_cast
                     ;
 
-expression          : symbol_id
-                    | value_id
-                    | accessor expression
-                    | lval_op
-                    | rval_op
-                    | expression prod_op=('*'|'/'|'%'|'**') expression
-                    | expression sum_op=('+'|'-') expression
-                    | expression shift_op=('<<'|'>>') expression
-                    | expression gl_compare=('<'|'<='|'>'|'>=') expression
-                    | expression eq_compare=('=='|'!=') expression
-                    | expression bw_and='&' expression
-                    | expression bw_xor='^' expression
-                    | expression bw_or='|' expression
-                    | expression lg_and=('&&'|'!&') expression
-                    | expression lg_or=('||'|'!|'|'|||'|'!||') expression
-                    | expression op_sum=('='|'+='|'-='|'*='|'/='|'%='|'&='|'^='|'|=') expression index_anyvalue?
-                    | expression list=',' expression
-                    | '(' paran=expression ')'
+expression          : //accessor #simple_accessor
+                     lval_op #lv
+                    | rval_op #rv
+                    | expression prod_op=('*'|'/'|'%'|'**') expression      #math1
+                    | expression sum_op=('+'|'-') expression                #math2
+                    | expression shift_op=('<<'|'>>') expression            #shift
+                    | expression gl_compare=('<'|'<='|'>'|'>=') expression  #compare1
+                    | expression eq_compare=('=='|'!=') expression          #compare2
+                    | expression bw_and='&' expression                      #b_and
+                    | expression bw_xor='^' expression                      #b_xor
+                    | expression bw_or='|' expression                       #b_or
+                    | expression lg_and=('&&'|'!&') expression              #l_and
+                    | expression lg_or=('||'|'!|'|'|||'|'!||') expression   #l_or
+                    | expression symbol_id (op_sum=('='|'+='|'-='|'*='|'/='|'%='|'&='|'^='|'|=') expression)? index_anyvalue? #set_alt
+                    | expression list=',' expression #list
+                    | '(' paran=expression ')'  #paran
+
+                    | value_id  #simple_value
+
+                    //|symbol_id  #simple_symbol
+
                     ;
 
 comparison_outer    : LESS_THAN
