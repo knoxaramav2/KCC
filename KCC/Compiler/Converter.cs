@@ -32,7 +32,9 @@ namespace Compiler
                 return;
             }
 
-            Debug.PrintDbg(_controller.DumpInternalCode(System.Console.WindowWidth));
+            string log = _controller.DumpInternalCode(System.Console.WindowWidth);
+
+            Debug.PrintDbg(log);
         }
 
         public void Build()

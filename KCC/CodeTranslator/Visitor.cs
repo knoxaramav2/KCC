@@ -26,6 +26,8 @@ namespace CodeTranslator
 
             VisitAsm_block(context.asm_block());
 
+            _controller.ExitScope();
+
             return null;
         }
 
@@ -95,7 +97,7 @@ namespace CodeTranslator
             if (context.expression() != null)
             {
                 VisitExpression(context.expression());
-                _controller.AddInstruction(InstOp.Set, id, null, OpModifier.FromLastTemp);
+                _controller.AddInstruction(InstOp.Set, id, null, null, OpModifier.FromLastTemp);
             }
 
             return null;
@@ -105,8 +107,8 @@ namespace CodeTranslator
 
         public override object VisitSet_alt([NotNull] KCCParser.Set_altContext context)
         {
-            string declType = null;
-            string symbolId = null;
+            string declType;
+            string symbolId;
             string op = context.op_sum.Text;
             string index = context.index_anyvalue()?.GetText();
             InstOp instOp = InstOp.NoOp;
@@ -123,7 +125,7 @@ namespace CodeTranslator
                 exprIdx = 1;
             }
 
-            if (context.op_sum != null)
+            if (op != null)
             {
                 switch (context.op_sum.Text)
                 {
@@ -138,11 +140,12 @@ namespace CodeTranslator
                     case "|=":  instOp = InstOp.SetXor; break;
                 }
 
-                Visit(dCtx[exprIdx]);
-                _controller.AddInstruction(instOp, symbolId, index, OpModifier.FromLastTemp);
+                var value = (string) Visit(dCtx[exprIdx]);
+                OpModifier valueType = value == null ? OpModifier.NullOrDefault : OpModifier.None;
+                _controller.AddInstruction(instOp, symbolId, value, index, valueType);
             } else
             {
-                _controller.AddInstruction(InstOp.Set, symbolId, index, OpModifier.NullOrDefault);
+                _controller.AddInstruction(InstOp.Set, symbolId, null, index, OpModifier.NullOrDefault);
             }
 
             return null;
@@ -200,13 +203,13 @@ namespace CodeTranslator
 
         public override object VisitNot([NotNull] KCCParser.NotContext context)
         {
-            _controller.AddInstruction(InstOp.Not, null, null, OpModifier.FromLastTemp);
+            _controller.AddInstruction(InstOp.Not, null, null, null, OpModifier.FromLastTemp);
             return null;
         }
 
         public override object VisitInvert([NotNull] KCCParser.InvertContext context)
         {
-            _controller.AddInstruction(InstOp.BInv, null, null, OpModifier.FromLastTemp);
+            _controller.AddInstruction(InstOp.BInv, null, null, null, OpModifier.FromLastTemp);
             return null;
         }
 
@@ -240,7 +243,7 @@ namespace CodeTranslator
                     break;
             }
 
-            _controller.AddInstruction(op, lval, rval, mod);
+            _controller.AddInstruction(op, lval, rval, null, mod);
 
             return null;
         }
@@ -268,7 +271,7 @@ namespace CodeTranslator
                     break;
             }
 
-            _controller.AddInstruction(op, lval, rval, mod);
+            _controller.AddInstruction(op, lval, rval, null, mod);
 
             return null;
         }
@@ -336,7 +339,7 @@ namespace CodeTranslator
 
         public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)
         {
-            return context.value_id()?.symbol_id()?.GetText();
+            return (string)VisitValue_id(context.value_id());
         }
 
         public override object VisitAccessor([NotNull] KCCParser.AccessorContext context)
@@ -356,6 +359,29 @@ namespace CodeTranslator
             return ret;
         }
 
+        public override object VisitValue_id([NotNull] KCCParser.Value_idContext context)
+        {
+            if (context.@bool() != null)
+            {
+                return context.@bool().GetText();
+            } else if (context.@string() != null)
+            {
+                return context.@string().GetText();
+            } else if (context.@char() != null)
+            {
+                return context.@char().GetText();
+            } else if (context.integer() != null)
+            {
+                return context.integer().GetText();
+            } else if (context.@decimal() != null)
+            {
+                return context.@decimal().GetText();
+            } else if (context.symbol_id() != null)
+            {
+                return context.symbol_id().GetText();
+            }
 
+            return null;
+        }
     }
 }

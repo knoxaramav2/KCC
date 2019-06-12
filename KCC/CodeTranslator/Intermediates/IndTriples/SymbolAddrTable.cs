@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CommonLangLib;
 using System.Linq;
+using System;
 
 namespace CodeTranslator
 {
@@ -163,7 +164,7 @@ namespace CodeTranslator
             var instLen = Instructions.Inst.Count;
 
             var headerSymbol    = "Symbol |";
-            var headerInstruct  = "Instruction";
+            var headerInstruct  = "Instruction ";
             var symId           = "ID     |";
             var symType         = "Type   |";
             var InstOp          = "Op";
@@ -172,14 +173,18 @@ namespace CodeTranslator
             var InstMod         = "Mod";
             var header = headerSymbol.PadLeft(hWidth) + headerInstruct.PadLeft(hWidth);
 
-            string id, type, op, arg0, arg1, mod;
-            string ret = "";
 
-            for (int i = 0; i < symLen && i < instLen; ++i)
+
+            string id, type, op, arg0, arg1, mod;
+            string underscore = new string('_', maxWidth);
+            string ret = header + System.Environment.NewLine + underscore + System.Environment.NewLine;
+            
+
+            for (int i = 0; (i < symLen) || (i < instLen); ++i)
             {
                 id = type = op = arg0 = arg1 = mod = "";
 
-                if (instLen < i)
+                if (i < instLen)
                 {
                     var inst = Instructions.Inst[i];
                     op = inst.Op.ToString();
@@ -188,14 +193,21 @@ namespace CodeTranslator
                     mod = inst.OpModifier.ToString();
                 }
 
-                if (symLen < i)
+                if (i < symLen)
                 {
                     var entry = _entries.Values.ElementAt(i);
                     id = entry.Id;
-                    type = entry.Type.ToString();
+                    type = entry.Type.SymbolId;
                 }
 
-                ret += $"{op},{arg0},{arg1},{mod} | {id},{type}"+System.Environment.NewLine;
+                ret += $"{id} | {type} | {op} | {arg0} | {arg1} | {mod} "+System.Environment.NewLine;
+            }
+
+            foreach (var e in _entries.Values)
+            {
+                if (e.Target == null) continue;
+                ret += underscore;
+                ret += e?.Target.GetFormattedLog(maxWidth) + Environment.NewLine;
             }
 
             return ret;

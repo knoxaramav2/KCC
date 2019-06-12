@@ -158,7 +158,7 @@ namespace KCC
                             OutputName = OutputName.Remove(OutputName.Length - 1, 1);
 
                             break;
-                        case "pintern":
+                        case "--pintern":
                             OutputInternals = true;
                             break;
                         default:

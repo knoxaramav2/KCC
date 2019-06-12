@@ -40,7 +40,7 @@ namespace CodeTranslator
             return true;
         }
 
-        public bool AddInstruction(InstOp op, string arg0, string arg1, OpModifier opModifier=OpModifier.None)
+        public bool AddInstruction(InstOp op, string arg0, string arg1, string special=null, OpModifier opModifier=OpModifier.None)
         {
             _currentScope.Instructions.AddRecord(new InstEntry(op, arg0, arg1));
             Debug.PrintDbg($"{op} {arg0} {arg1} {opModifier}");
@@ -103,7 +103,7 @@ namespace CodeTranslator
         public string DumpInternalCode(int formattedWidth)
         {
             var cTbl = _root.GetFormattedLog(formattedWidth);
-            return null;
+            return cTbl;
         }
     }
 }
