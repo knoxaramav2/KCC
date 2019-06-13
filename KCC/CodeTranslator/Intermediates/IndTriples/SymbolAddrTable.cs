@@ -171,7 +171,7 @@ namespace CodeTranslator
             var InstArg0        = "Arg0 |";
             var InstArg1        = "Arg1 |";
             var InstMod         = "Mod |";
-            var header = ('(' + Id + ' ' + BodyType.ToString()+')').PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
+            var header = ('<'+_header?.Id+">::(" + Id + ' ' + BodyType.ToString()+')').PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
             var subHeader = symId.PadLeft(hWidth/2)+symType.PadLeft(hWidth/2)+
                 InstOp.PadLeft(hWidth/4)+InstArg0.PadLeft(hWidth/4)+InstArg1.PadLeft(hWidth/4)+
                 InstMod.PadLeft(hWidth/4);
