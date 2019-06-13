@@ -136,6 +136,8 @@
         MarkAsArg,      //Mark previous expression as argument; Delimits argument evaluation
         //IG: [START] [Var] [MARK] [EXPRESSION] [MARK] [VAR] [MARK] [END]
 
+        DeclareVar,
+
         #endregion
 
         //For temporary operations

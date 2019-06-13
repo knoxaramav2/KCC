@@ -5,10 +5,12 @@ namespace CodeTranslator
     public class IndInstTable : IDatumTable<InstEntry>
     {
         public List<InstEntry> Inst { get; internal set; }
+        public SymbolAddrTable SymbolTable { get; internal set; }
 
-        public IndInstTable()
+        public IndInstTable(SymbolAddrTable symbolAddrTable)
         {
             Inst = new List<InstEntry>();
+            SymbolTable = symbolAddrTable;
         }
 
         public IDatumTable<InstEntry> AddTable(string id, string type)
@@ -36,6 +38,15 @@ namespace CodeTranslator
         public string GetFormattedLog(int maxWidth)
         {
             throw new System.NotImplementedException();
+        }
+
+        public int GetStackFrameSize()
+        {
+            var varsInScope = new List<string>();
+
+
+
+            return 0;
         }
     }
 

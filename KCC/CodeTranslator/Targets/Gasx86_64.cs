@@ -6,23 +6,51 @@ using KCC;
 
 namespace CodeTranslator.Targets
 {
-    public class Gas32 : IArchAgent
+    public class Gasx86_64 : IArchAgent
     {
         private InstDeclController _controller;
         private CliOptions _cli;
         private string _nl;
+
+        private int byteWidth; //For bools, chars
+        private int shortWidth; //Short integers
+        private int intWidth; //integers, floats
+        private int longWidth; //longs, doubles
+        private int longlongWidth; //long longs, long double
+
+        int bitMode;
 
         public void Init(InstDeclController controller)
         {
             _controller = controller;
             _cli = CliOptions.GetInstance();
             _nl = Environment.NewLine;
+
+            if (CliOptions.Arch.Arch == System.Reflection.ProcessorArchitecture.Amd64)
+            {
+                byteWidth = 1;
+                shortWidth = 2;
+                intWidth = 4;
+                longWidth = 8;
+                longlongWidth = 16;
+
+                bitMode = 64;
+            } else if (CliOptions.Arch.Arch == System.Reflection.ProcessorArchitecture.X86)
+            {
+                byteWidth = 1;
+                shortWidth = 2;
+                intWidth = 4;
+                longWidth = 8;
+                longlongWidth = 16;
+
+                bitMode = 32;
+            }
         }
 
         public string GetHeader()
         {
-            return $"    .file \"{_cli.Src}\"" + _nl +
-                   "    .def __main; .scl 2; .type 32; .endef";
+            return $"\t.file \"{_cli.Src}\"" + _nl +
+                   $"\t.def __main; .scl 2; .type {bitMode}; .endef" + _nl;
         }
 
         public string GetGlobals()
@@ -47,7 +75,7 @@ namespace CodeTranslator.Targets
 
         public string GetConstData()
         {
-            var ret = "    .section .rdata, \"dr\"" + _nl;
+            var ret = "\t.section .rdata, \"dr\"" + _nl;
 
             var m = InstDeclController.Meta;
 
@@ -60,13 +88,17 @@ namespace CodeTranslator.Targets
                         + _nl;
                 }
 
-                ret += dr + _nl;
+                ret += dr;
+
+                if (d.Nested.Count == 0)
+                {
+                    ret += _nl;
+                }
             }
 
-            ret += "    .text" + _nl +
-                   "    .globl main" + _nl + 
-                   "    .def main; .scl 2; .type 32; .endef" + _nl +
-                   "    .seh_proc main" + _nl;
+            ret += "\t.text" + _nl +
+                   "\t.globl main" + _nl +
+                   $"\t.def main; .scl 2; .type {bitMode}; .endef"+_nl;
 
             CommonLangLib.Debug.PrintDbg($"{ret}");
 
@@ -80,32 +112,9 @@ namespace CodeTranslator.Targets
             foreach (var fnc in fncs)
             {
                 if (fnc.BodyType != BodyType.Function) continue;
-                ret += $"{fnc.Id}:" + _nl +
-                       $"   pushq %rbp" + _nl +
-                       $"   .seh_pushreg %rbp" + _nl +
-                       $"   movq %rsp, %rbp" + _nl +
-                       $"   .seh_setframe %rbp, 0" + _nl +
-                       $"   subq $32, %rsp" + _nl +
-                       $"   .seh_stackalloc 32" + _nl +
-                       $"   .seh_endprologue" + _nl;
-                if (fnc.Id == "main")
-                {
-                    ret += "    call __main" + _nl;
-                }
-
-                foreach (var i in fnc.Instructions.Inst)
-                {
-                    ret += FormatInstruction(i.Op, i.Arg0, i.Arg1, null, null, OpModifier.None)
-                        + _nl;
-                }
-
-                ret += "    movl $0, %eax" + _nl +
-                       "    addq $32, %rsp" + _nl +
-                       "    popq %rbp" + _nl +
-                       "    ret" +_nl +
-                       "    .seh_endproc" + _nl+
-                       "    .ident \"KCC V1\"" + _nl+
-                       "    .def printf; .scl 2; .type 32; .endef" + _nl;
+                ret += fnc.Id + ":" + _nl;
+                //Create function prologue
+                ret += "\tpushq\t\t%rbp";
             }
 
             return ret;

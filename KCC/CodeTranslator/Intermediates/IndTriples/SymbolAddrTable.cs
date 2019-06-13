@@ -28,7 +28,7 @@ namespace CodeTranslator
             Id = id;
 
             _header = previous;
-            Instructions = new IndInstTable();
+            Instructions = new IndInstTable(this);
             _offset = 0;
             _blockSize = blockSize;
 

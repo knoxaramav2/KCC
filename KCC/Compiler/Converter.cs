@@ -58,7 +58,7 @@ namespace Compiler
 
             //TODO Choose from list
 
-            IArchAgent agent = new Gas32();
+            IArchAgent agent = new Gasx86_64();
             agent.Init(_controller);
 
             //TODO support multiple files
@@ -75,7 +75,7 @@ namespace Compiler
                 {
                     foreach (var line in _asm)
                     {
-                        file.WriteLine(line);
+                        file.Write(line);
                     }
                 }
 

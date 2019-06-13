@@ -532,6 +532,8 @@ namespace CodeTranslator
                 return context.@bool().GetText();
             } else if (context.@string() != null)
             {
+                _controller.AddDirective(Directives.Lc, context.@string().GetText());
+                _controller.AddDirective(Directives.Ascii, context.@string().GetText(), true);
                 return context.@string().GetText();
             } else if (context.@char() != null)
             {

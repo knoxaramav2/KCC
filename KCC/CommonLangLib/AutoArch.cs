@@ -56,8 +56,10 @@ namespace CommonLangLib
         {
             var si = new SYSTEM_INFO();
             GetNativeSystemInfo(ref si);
+            
             switch (si.wProcessorArchitecture)
             {
+                
                 case PROC_ARCH_INTEL:
                     Arch = ProcessorArchitecture.X86;
                     break;

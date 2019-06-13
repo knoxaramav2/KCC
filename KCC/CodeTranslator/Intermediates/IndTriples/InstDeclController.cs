@@ -56,6 +56,8 @@ namespace CodeTranslator
                 return false;
             }
 
+            AddInstruction(InstOp.DeclareVar, id, type);
+
             Debug.PrintDbg($"Declared {id}:{type}");
 
             return true;

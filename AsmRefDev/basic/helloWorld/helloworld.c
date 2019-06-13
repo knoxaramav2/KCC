@@ -1,10 +1,15 @@
 #include <stdio.h>
 
-void print(int a){
-	printf("%d\r\n", a);
-}
-
 int main(){
-	int a = 5;
-	print(a);
+
+    char * s = "hello world";
+    char * g = "goodbye";
+    int a = 500;
+    int b = 2;
+    int c = a * b << 7;
+
+    printf("%d\r\n", c);
+
+    return c;
+
 }
