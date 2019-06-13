@@ -141,7 +141,7 @@ namespace CodeTranslator
                 }
 
                 var value = (string) Visit(dCtx[exprIdx]);
-                OpModifier valueType = value == null ? OpModifier.NullOrDefault : OpModifier.None;
+                OpModifier valueType = value == null ? OpModifier.FromLastTemp : OpModifier.None;
                 _controller.AddInstruction(instOp, symbolId, value, index, valueType);
             } else
             {
@@ -264,10 +264,10 @@ namespace CodeTranslator
             switch (context.sum_op.Text)
             {
                 case "+":
-                    op = InstOp.Mult;
+                    op = InstOp.Add;
                     break;
                 case "-":
-                    op = InstOp.Div;
+                    op = InstOp.Sub;
                     break;
             }
 
@@ -279,62 +279,228 @@ namespace CodeTranslator
         //Comparators**********************
         public override object VisitShift([NotNull] KCCParser.ShiftContext context)
         {
-            //TODO
-            return base.VisitShift(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+            InstOp op = InstOp.NoOp;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            switch (context.shift_op.Text)
+            {
+                case "<<":
+                    op = InstOp.ShL;
+                    break;
+                case ">>":
+                    op = InstOp.ShR;
+                    break;
+            }
+
+            _controller.AddInstruction(op, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitCompare1([NotNull] KCCParser.Compare1Context context)
         {
-            //TODO
-            return base.VisitCompare1(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+            InstOp op = InstOp.NoOp;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            switch (context.gl_compare.Text)
+            {
+                case "<":
+                    op = InstOp.Lss;
+                    break;
+                case "<=":
+                    op = InstOp.LssEqu;
+                    break;
+                case ">":
+                    op = InstOp.Gtr;
+                    break;
+                case ">=":
+                    op = InstOp.GtrEqu;
+                    break;
+            }
+
+            _controller.AddInstruction(op, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitCompare2([NotNull] KCCParser.Compare2Context context)
         {
-            //TODO
-            return base.VisitCompare2(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+            InstOp op = InstOp.NoOp;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            switch (context.eq_compare.Text)
+            {
+                case "==":
+                    op = InstOp.Equ;
+                    break;
+                case "!+":
+                    op = InstOp.NEqu;
+                    break;
+            }
+
+            _controller.AddInstruction(op, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitB_and([NotNull] KCCParser.B_andContext context)
         {
-            //TODO
-            return base.VisitB_and(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            _controller.AddInstruction(InstOp.BAnd, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitB_or([NotNull] KCCParser.B_orContext context)
         {
-            //TODO
-            return base.VisitB_or(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            _controller.AddInstruction(InstOp.BOr, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitB_xor([NotNull] KCCParser.B_xorContext context)
         {
-            //TODO
-            return base.VisitB_xor(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            _controller.AddInstruction(InstOp.BXor, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitL_and([NotNull] KCCParser.L_andContext context)
         {
-            //TODO
-            return base.VisitL_and(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+            InstOp op = InstOp.NoOp;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            switch (context.lg_and.Text)
+            {
+                case "&&":
+                    op = InstOp.And;
+                    break;
+                case "!&":
+                    op = InstOp.Nand;
+                    break;
+            }
+
+            _controller.AddInstruction(op, lval, rval, null, mod);
+
+            return null;
         }
 
         public override object VisitL_or([NotNull] KCCParser.L_orContext context)
         {
-            //TODO
-            return base.VisitL_or(context);
+            var lval = (string)Visit(context.expression()[0]);
+            var rval = (string)Visit(context.expression()[1]);
+
+            OpModifier mod = OpModifier.None;
+            InstOp op = InstOp.NoOp;
+
+            if (lval == null && rval == null) mod = OpModifier.LTempRTemp;
+            else if (lval != null && rval == null) mod = OpModifier.LRawRTemp;
+            else if (lval == null && rval != null) mod = OpModifier.LTempRRaw;
+            else mod = OpModifier.LRawRRaw;
+
+            switch (context.lg_or.Text)
+            {
+                case "||":
+                    op = InstOp.Or;
+                    break;
+                case "!|":
+                    op = InstOp.Nor;
+                    break;
+                case "|||":
+                    op = InstOp.Xor;
+                    break;
+                case "!||":
+                    op = InstOp.XNor;
+                    break;
+            }
+
+            _controller.AddInstruction(op, lval, rval, null, mod);
+
+            return null;
         }
 
+        //Note: Null values indicate expression results, not specific values/symbols
         public override object VisitList([NotNull] KCCParser.ListContext context)
         {
-            //TODO
+            var ret = new List<string>();
+
+            foreach(var e in context.expression())
+            {
+                ret.Add((string) Visit(e));
+            }
+
             return base.VisitList(context);
         }
 
         public override object VisitParan([NotNull] KCCParser.ParanContext context)
         {
-            //TODO
-            return base.VisitParan(context);
+            if (context.expression() != null)
+            {
+                Visit(context.expression());
+            }
+            
+            return null;
         }
 
         public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)

@@ -2,8 +2,9 @@
 
     void main(){
         int a = 500;
-		bool b = true;
-		float c = 600.72;
+		int b = 2;
+		int c = a * b << 7;
+		bool rr = (a>=500 !|| b < 200);
     }
 
 }

@@ -42,7 +42,7 @@ namespace CodeTranslator
 
         public bool AddInstruction(InstOp op, string arg0, string arg1, string special=null, OpModifier opModifier=OpModifier.None)
         {
-            _currentScope.Instructions.AddRecord(new InstEntry(op, arg0, arg1));
+            _currentScope.Instructions.AddRecord(new InstEntry(op, arg0, arg1, opModifier));
             Debug.PrintDbg($"{op} {arg0} {arg1} {opModifier}");
 
             return true;

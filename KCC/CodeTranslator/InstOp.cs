@@ -86,9 +86,13 @@
         #region LOGIC
         RgLogic = 500,
 
-        Or,                     //Numeric OR
-        And,                    //Numeric AND
-        Not,
+        Or,                     //Logic OR
+        Nor,
+        Xor,
+        XNor,
+        And,                    //Logic AND
+        Not,                    //Logic NOT
+        Nand,                   //Logic NAND
 
         BOr,                    //Bitwise OR
         BAnd,                   //Bitwise AND
@@ -97,7 +101,12 @@
         BXor,                   //Bitwise Xor
         BXorI,                  //Bitwise Xor Immediate
 
-        
+        Lss,                    //Less Than
+        LssEqu,                 //Less Than or Equal
+        Gtr,                    //Greater Than
+        GtrEqu,                 //Greater Than or Equal
+        Equ,                    //Equal
+        NEqu,                   //Not Equal
 
         #endregion
 

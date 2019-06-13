@@ -34,7 +34,17 @@ namespace Compiler
 
             string log = _controller.DumpInternalCode(System.Console.WindowWidth);
 
-            Debug.PrintDbg(log);
+            if (_cli.VerboseLevel == Verbosity.Detailed)
+            {
+                Debug.PrintDbg(log);
+            }
+            
+
+            string logPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}_log.txt";
+            using (var file = new StreamWriter(logPath, false))
+            {
+                file.Write(log);
+            }
         }
 
         public void Build()
