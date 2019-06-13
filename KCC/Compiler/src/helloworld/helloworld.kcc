@@ -1,5 +1,9 @@
 ﻿asm dev{
-	void main(){
-		int a = 7;
-	}
+
+    void main(){
+        int a = 500;
+		bool b = true;
+		float c = 600.72;
+    }
+
 }

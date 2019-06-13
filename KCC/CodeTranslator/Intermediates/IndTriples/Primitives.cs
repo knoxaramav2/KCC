@@ -37,6 +37,7 @@ namespace CodeTranslator
             _typeTable.Add("double", new DataType(8, ref _typeCounter, "double"));
             _typeTable.Add("char", new DataType(1, ref _typeCounter, "char"));
             _typeTable.Add("uchar", new DataType(1, ref _typeCounter, "uchar"));
+            _typeTable.Add("bool", new DataType(1, ref _typeCounter, "bool"));
             _typeTable.Add("string", new DataType(0, ref _typeCounter, "string"));
             _typeTable.Add("cstring", new DataType(0, ref _typeCounter, "cstring"));
             _typeTable.Add("array", new DataType(0, ref _typeCounter, "array"));

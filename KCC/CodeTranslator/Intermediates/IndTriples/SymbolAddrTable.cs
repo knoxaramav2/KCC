@@ -164,20 +164,23 @@ namespace CodeTranslator
             var instLen = Instructions.Inst.Count;
 
             var headerSymbol    = "Symbol |";
-            var headerInstruct  = "Instruction ";
-            var symId           = "ID     |";
-            var symType         = "Type   |";
-            var InstOp          = "Op";
-            var InstArg0        = "Arg0";
-            var InstArg1        = "Arg1";
-            var InstMod         = "Mod";
-            var header = headerSymbol.PadLeft(hWidth) + headerInstruct.PadLeft(hWidth);
-
+            var headerInstruct  = "Instruction |";
+            var symId           = "ID |";
+            var symType         = "Type |";
+            var InstOp          = "Op |";
+            var InstArg0        = "Arg0 |";
+            var InstArg1        = "Arg1 |";
+            var InstMod         = "Mod |";
+            var header = ('(' + Id + ' ' + BodyType.ToString()+')').PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
+            var subHeader = symId.PadLeft(hWidth/2)+symType.PadLeft(hWidth/2)+
+                InstOp.PadLeft(hWidth/4)+InstArg0.PadLeft(hWidth/4)+InstArg1.PadLeft(hWidth/4)+
+                InstMod.PadLeft(hWidth/4);
 
 
             string id, type, op, arg0, arg1, mod;
-            string underscore = new string('_', maxWidth);
-            string ret = header + System.Environment.NewLine + underscore + System.Environment.NewLine;
+            string underscore = Environment.NewLine+(new string('_', maxWidth))+Environment.NewLine;
+            string scopeUnderscore = Environment.NewLine + (new string('+', maxWidth)) + Environment.NewLine;
+            string ret = header + underscore + subHeader + underscore;
             
 
             for (int i = 0; (i < symLen) || (i < instLen); ++i)
@@ -187,21 +190,25 @@ namespace CodeTranslator
                 if (i < instLen)
                 {
                     var inst = Instructions.Inst[i];
-                    op = inst.Op.ToString();
-                    arg0 = inst.Arg0;
-                    arg1 = inst.Arg1;
-                    mod = inst.OpModifier.ToString();
+                    op = inst.Op.ToString() + " |";
+                    arg0 = inst.Arg0 + " |";
+                    arg1 = inst.Arg1 + " |";
+                    mod = inst.OpModifier.ToString() + " |";
                 }
 
                 if (i < symLen)
                 {
                     var entry = _entries.Values.ElementAt(i);
-                    id = entry.Id;
-                    type = entry.Type.SymbolId;
+                    id = entry.Id + " |";
+                    type = entry.Type.SymbolId + " |";
                 }
 
-                ret += $"{id} | {type} | {op} | {arg0} | {arg1} | {mod} "+System.Environment.NewLine;
+                ret += id.PadLeft(hWidth / 2) + type.PadLeft(hWidth / 2) +
+                op.PadLeft(hWidth / 4) + arg0.PadLeft(hWidth / 4) + arg1.PadLeft(hWidth / 4) +
+                mod.PadLeft(hWidth / 4) + Environment.NewLine;
             }
+
+            ret += scopeUnderscore;
 
             foreach (var e in _entries.Values)
             {

@@ -91,11 +91,8 @@ expression          : //accessor #simple_accessor
                     | expression symbol_id (op_sum=('='|'+='|'-='|'*='|'/='|'%='|'&='|'^='|'|=') expression)? index_anyvalue? #set_alt
                     | expression list=',' expression #list
                     | '(' paran=expression ')'  #paran
-
                     | value_id  #simple_value
-
                     //|symbol_id  #simple_symbol
-
                     ;
 
 comparison_outer    : LESS_THAN
@@ -115,7 +112,7 @@ bool                : 'true' | 'false';
 decimal             : DECIMAL;
 integer             : INTEGER;
 string              : STRINGLIT;
-char                : '\'' ALPHA '\'';
+char                : '\'' . '\'';
 
 /*
  * Lexer Rules
@@ -184,6 +181,9 @@ L_PARANTH       : '(';
 R_PARANTH       : ')';
 L_BRACE         : '{';
 R_BRACE         : '}';
+
+MULTI_COMMENT   : '#*' .*? '*#' -> skip;
+LINE_COMMENT    : '#' ~[\r\n]* -> skip;
 
 ASSEMBLY            : 'asm' | 'assembly';
 
