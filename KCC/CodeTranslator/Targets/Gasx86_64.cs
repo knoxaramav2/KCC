@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CommonLangLib;
@@ -18,6 +19,9 @@ namespace CodeTranslator.Targets
         private int longWidth; //longs, doubles
         private int longlongWidth; //long longs, long double
 
+        private List<string> _externFncs;
+
+
         int bitMode;
 
         public void Init(InstDeclController controller)
@@ -25,6 +29,7 @@ namespace CodeTranslator.Targets
             _controller = controller;
             _cli = CliOptions.GetInstance();
             _nl = Environment.NewLine;
+            _externFncs = new List<string>();
 
             if (CliOptions.Arch.Arch == System.Reflection.ProcessorArchitecture.Amd64)
             {
@@ -114,7 +119,28 @@ namespace CodeTranslator.Targets
                 if (fnc.BodyType != BodyType.Function) continue;
                 ret += fnc.Id + ":" + _nl;
                 //Create function prologue
-                ret += "\tpushq\t\t%rbp";
+                ret += 
+                    "\tpushq\t%rbp" + _nl +
+                    "\tmovq\t%rsp,%rbp" + _nl;
+
+                //determine callee-save registers to preserve
+
+                //Allocate stack size
+
+                //Determine instructions and track variables by register
+
+                foreach (var i in fnc.Instructions.Inst)
+                {
+                    switch (i.Op)
+                    {
+                    }
+                }
+
+                //End function
+                ret += 
+                    "\tmovl\t$0, %eax" + _nl + 
+                    "\tpopq\t%rbp" + _nl + 
+                    "\tret" + _nl;
             }
 
             return ret;
@@ -193,6 +219,18 @@ namespace CodeTranslator.Targets
             }
 
             return true;
+        }
+
+        public string GetExternalFunctionDeclarations()
+        {
+            var ret = "";
+
+            foreach(var f in _externFncs)
+            {
+                ret += $"\t.def {f}; .type {bitMode}; .endef" + _nl;
+            }
+
+            return ret;
         }
     }
 }

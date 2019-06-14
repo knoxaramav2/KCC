@@ -29,7 +29,7 @@ function_block      : L_BRACE ((expression|~R_BRACE)+)? R_BRACE  ;
 //groups
 fnc_header          :   L_PARANTH ((var_decl)(','(var_decl)+)?|~R_PARANTH)? R_PARANTH;
 
-call_group          :   L_PARANTH ((value_id|expression)((','(value_id|expression))+)?|~R_PARANTH)? R_PARANTH;
+call_group          :   L_PARANTH ((expression)((','(value_id|expression))+)?|~R_PARANTH)? R_PARANTH;
 
 index_anyvalue      : index_string|index_integer|index_variable;
 index_string        : '['string|char']';

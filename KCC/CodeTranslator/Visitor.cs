@@ -168,8 +168,8 @@ namespace CodeTranslator
 
             foreach (var e in context.expression())
             {
-                Visit(e);
-                _controller.AddInstruction(InstOp.MarkAsArg, null, null);
+                var res = (string) Visit(e);
+                _controller.AddInstruction(InstOp.MarkAsArg, res, null);
             }
 
             _controller.AddInstruction(InstOp.EndFncCall, null, null);

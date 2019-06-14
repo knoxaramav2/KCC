@@ -1,12 +1,9 @@
 ﻿asm dev{
 
     void main(){
-		string s = "hello world!";
-		string s2 = "Goodbye";
-        int a = 500;
-		int b = 2;
-		int c = a * b << 7;
-		bool rr = (a>=500 !|| b < 200);
+		int a = 5;
+		int b = 7;
+		a *= b;
 		print("Hi");
     }
 

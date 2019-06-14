@@ -31,6 +31,8 @@
         /// <returns>Returns formatted function fields</returns>
         string GetFunctionDefs();
 
+        string GetExternalFunctionDeclarations();
+
         /// <summary>
         /// Convert an opcode and accompanying info into a line instruction
         /// </summary>
