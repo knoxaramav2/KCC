@@ -5,7 +5,7 @@ namespace CodeTranslator
 {
     public class InstDeclController
     {
-        //private static IndInstTable _instTable;
+        private static SymbolAddrTable _root;
         private static SymbolAddrTable _symTable;
         private static SymbolAddrTable _currentScope;
         private static InstDeclController _self;
@@ -16,9 +16,8 @@ namespace CodeTranslator
 
         private InstDeclController()
         {
-            //_instTable = new IndInstTable();
-            _symTable = new SymbolAddrTable("#ROOT",null,_blocksize);
-            _currentScope = _symTable;
+            _root = new SymbolAddrTable("#ROOT",null,_blocksize);
+            _currentScope = _symTable = _root;
             Meta = new MetaTable();
         }
 
@@ -41,15 +40,20 @@ namespace CodeTranslator
             return true;
         }
 
-        public bool AddInstruction(InstOp op, string arg0, string arg1)
+        public bool AddInstruction(InstOp op, string arg0, string arg1, string special=null, OpModifier opModifier=OpModifier.None)
         {
-            _currentScope.Instructions.AddRecord(new InstEntry(op, arg0, arg1));
-            Debug.PrintDbg($"{op} {arg0} {arg1}");
+            _currentScope.Instructions.AddRecord(new InstEntry(op, arg0, arg1, opModifier));
+            Debug.PrintDbg($"{op} {arg0} {arg1} {opModifier}");
 
             return true;
         }
 
-        public bool DeclareVariable(string id, string type)
+        public bool DeclareHeaderVariable(string id, string type)
+        {
+            return DeclareVariable(id, type, true);
+        }
+
+        public bool DeclareVariable(string id, string type, bool isHeader=false)
         {
             if (_currentScope.AddRecord(id,type)==null)
             {
@@ -57,7 +61,11 @@ namespace CodeTranslator
                 return false;
             }
 
-            Debug.PrintDbg($"Declared {id}:{type}");
+            var instOp = isHeader ? InstOp.DeclareHeaderVar : InstOp.DeclareVar;
+
+            AddInstruction(instOp, id, type);
+
+            Debug.PrintDbg($"Declared {id}:{type} :: Header? {isHeader}");
 
             return true;
         }
@@ -99,6 +107,12 @@ namespace CodeTranslator
         public List<SymbolAddrTable> FindAll()
         {
             return _symTable.SearchAll();
+        }
+
+        public string DumpInternalCode(int formattedWidth)
+        {
+            var cTbl = _root.GetFormattedLog(formattedWidth);
+            return cTbl;
         }
     }
 }

@@ -1,6 +1,10 @@
 ﻿asm dev{
-	void main(){
-		print("Sup World.\r\n");
-		print("Aightss, bye.\r\n");
-	}
+
+    void main(string[]args){
+		int a = 5;
+		int b = 7;
+		a *= b;
+		print("Hi");
+    }
+
 }

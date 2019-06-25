@@ -8,6 +8,12 @@
         void Init(InstDeclController graph);
 
         /// <summary>
+        /// Returns the full assembly file
+        /// </summary>
+        /// <returns></returns>
+        string GetAll();
+
+        /// <summary>
         /// Generates assembly header
         /// </summary>
         /// <returns>Formatted header assembly</returns>
@@ -32,6 +38,12 @@
         string GetFunctionDefs();
 
         /// <summary>
+        /// Returns a list of externally defined (or undefined) methods
+        /// </summary>
+        /// <returns></returns>
+        string GetExternalFunctionDeclarations();
+
+        /// <summary>
         /// Convert an opcode and accompanying info into a line instruction
         /// </summary>
         /// <param name="opcode">KCC internal code for instruction</param>
@@ -49,5 +61,7 @@
         /// <param name="asmPath">Path the source assembly</param>
         /// <returns>False if errors occured</returns>
         bool InvokeLocalAssembler(string asmPath);
+
+        string GetEpilogue();
     }
 }

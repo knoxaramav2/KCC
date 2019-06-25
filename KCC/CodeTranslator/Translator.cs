@@ -25,7 +25,7 @@ namespace CodeTranslator
             var kccParser = new KCCParser(ctStream) {BuildParseTree = true};
             var visitor = new KccVisitor();
 
-            var result = visitor.Visit(kccParser.assembly());
+            var result = visitor.Visit(kccParser.assembly_decl());
            
         }
 

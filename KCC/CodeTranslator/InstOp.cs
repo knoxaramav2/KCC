@@ -41,20 +41,27 @@
         #region ARITHMETIC
         RgArithmetic = 100,
 
-        Add,                    //Numeric Add W Overflow
-        AddI,                   //Numeric Immediate Add W Overflow
-        Sub,                    //Numeric Subtract W Overflow
-        SubI,                   //Numeric Subtract Immediate
-        Mult,                   //Numeric Mult W Overflow
-        MultI,                  //Numeric Mult Immediate
-        Div,                    //Numeric Div W Overflow
-        DivI,                   //Numeric Div Immediate
+        Set,
+        SetAdd,
+        SetSub,
+        SetMult,
+        SetDiv,
+        SetModulo,
+        SetAnd,
+        SetOr,
+        SetXor,
 
-        Set,                    //Set byte
-        SetI,                   //Set byte immediate
-        SetW,                   //Set word
-        SetWI,                  //Set word immediate
+        Add,
+        Sub,
+        Mult,
+        Div,
+        Modulo,
+        Power,
 
+        PostIncrement,
+        PostDecrement,
+        PreIncrement,
+        PreDecrement,
         #endregion
 
         #region MEM_SWAP
@@ -72,13 +79,20 @@
         ShL,                    //Shift Left
         ShR,                    //Shift Right
 
+        IndexAccess,
+
         #endregion
 
         #region LOGIC
         RgLogic = 500,
 
-        Or,                     //Numeric OR
-        And,                    //Numeric AND
+        Or,                     //Logic OR
+        Nor,
+        Xor,
+        XNor,
+        And,                    //Logic AND
+        Not,                    //Logic NOT
+        Nand,                   //Logic NAND
 
         BOr,                    //Bitwise OR
         BAnd,                   //Bitwise AND
@@ -86,6 +100,13 @@
         BInv,                   //Bitwise Invert
         BXor,                   //Bitwise Xor
         BXorI,                  //Bitwise Xor Immediate
+
+        Lss,                    //Less Than
+        LssEqu,                 //Less Than or Equal
+        Gtr,                    //Greater Than
+        GtrEqu,                 //Greater Than or Equal
+        Equ,                    //Equal
+        NEqu,                   //Not Equal
 
         #endregion
 
@@ -110,6 +131,13 @@
 
         SysCall,                //Generate software interrupt
 
+        StartFncCall,   //Mark the start of function call expressions
+        EndFncCall,     //Mark the end of function call expressions; evaluate expressions and determine result registers
+        MarkAsArg,      //Mark previous expression as argument; Delimits argument evaluation
+        //IG: [START] [Var] [MARK] [EXPRESSION] [MARK] [VAR] [MARK] [END]
+
+        DeclareVar,
+        DeclareHeaderVar,
 
         #endregion
 
@@ -138,6 +166,12 @@
     public enum OpModifier
     {
         None,
-        Immediate
+        Immediate,
+        FromLastTemp,
+        NullOrDefault,
+        LTempRTemp,
+        LRawRTemp,
+        LTempRRaw,
+        LRawRRaw
     }
 }

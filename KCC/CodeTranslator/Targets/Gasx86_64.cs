@@ -1,28 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CommonLangLib;
+using System.Linq;
 using KCC;
 
 namespace CodeTranslator.Targets
 {
-    public class Gas32 : IArchAgent
+    public class Gasx86_64 : IArchAgent
     {
         private InstDeclController _controller;
         private CliOptions _cli;
         private string _nl;
+
+        private int byteWidth; //For bools, chars
+        private int shortWidth; //Short integers
+        private int intWidth; //integers, floats
+        private int longWidth; //longs, doubles
+        private int longlongWidth; //long longs, long double
+
+        private List<string> _externFncs;
+        
+        int bitMode;
 
         public void Init(InstDeclController controller)
         {
             _controller = controller;
             _cli = CliOptions.GetInstance();
             _nl = Environment.NewLine;
+            _externFncs = new List<string>();
+
+            if (CliOptions.Arch.Arch == System.Reflection.ProcessorArchitecture.Amd64)
+            {
+                byteWidth = 1;
+                shortWidth = 2;
+                intWidth = 4;
+                longWidth = 8;
+                longlongWidth = 16;
+
+                bitMode = 64;
+            } else if (CliOptions.Arch.Arch == System.Reflection.ProcessorArchitecture.X86)
+            {
+                byteWidth = 1;
+                shortWidth = 2;
+                intWidth = 4;
+                longWidth = 8;
+                longlongWidth = 16;
+
+                bitMode = 32;
+            }
         }
 
         public string GetHeader()
         {
-            return $"    .file \"{_cli.Src}\"" + _nl +
-                   "    .def __main; .scl 2; .type 32; .endef";
+            return $"\t.file \"{_cli.Src}\"" + _nl +
+                   $"\t.def __main; .scl 2; .type {bitMode}; .endef" + _nl;
         }
 
         public string GetGlobals()
@@ -47,7 +80,7 @@ namespace CodeTranslator.Targets
 
         public string GetConstData()
         {
-            var ret = "    .section .rdata, \"dr\"" + _nl;
+            var ret = "\t.section .rdata, \"dr\"" + _nl;
 
             var m = InstDeclController.Meta;
 
@@ -60,13 +93,13 @@ namespace CodeTranslator.Targets
                         + _nl;
                 }
 
-                ret += dr + _nl;
-            }
+                ret += dr;
 
-            ret += "    .text" + _nl +
-                   "    .globl main" + _nl + 
-                   "    .def main; .scl 2; .type 32; .endef" + _nl +
-                   "    .seh_proc main" + _nl;
+                if (d.Nested.Count == 0)
+                {
+                    ret += _nl;
+                }
+            }
 
             CommonLangLib.Debug.PrintDbg($"{ret}");
 
@@ -80,32 +113,48 @@ namespace CodeTranslator.Targets
             foreach (var fnc in fncs)
             {
                 if (fnc.BodyType != BodyType.Function) continue;
-                ret += $"{fnc.Id}:" + _nl +
-                       $"   pushq %rbp" + _nl +
-                       $"   .seh_pushreg %rbp" + _nl +
-                       $"   movq %rsp, %rbp" + _nl +
-                       $"   .seh_setframe %rbp, 0" + _nl +
-                       $"   subq $32, %rsp" + _nl +
-                       $"   .seh_stackalloc 32" + _nl +
-                       $"   .seh_endprologue" + _nl;
-                if (fnc.Id == "main")
+
+                //Determine stack size
+
+                //Define function
+                ret += $"\t.globl {fnc.Id}" + _nl;
+                ret += $"\t.def {fnc.Id} .scl 2; .type {bitMode}; .endef" + _nl;
+
+                ret += fnc.Id + ":" + _nl;
+                //Create function prologue
+                ret += 
+                    "\tpushq\t%rbp" + _nl +
+                    "\tmovq\t%rsp, %rbp" + _nl +
+                    $"\tsubq\t${fnc.GetUnoptomizedStackWidth()}, %rsp" + _nl;
+
+                //determine callee-save registers to preserve
+
+                //Allocate stack size
+                var _stackOffset = new List<KeyValuePair<string, uint>>();
+                uint currOffset = 0;
+                for(var i = 0; i < fnc._entries.Values.Count; ++i)
                 {
-                    ret += "    call __main" + _nl;
+                    var _e = fnc._entries.Values.ElementAt(i);
+                    currOffset += _e.Width == 0? (uint) CliOptions.Arch.MAX_BUS_WIDTH : _e.Width;
+                    _stackOffset.Add(new KeyValuePair<string, uint>(_e.Id, currOffset));
+                    CommonLangLib.Debug.PrintDbg($"OFFSET {_e.Id}::{currOffset}");
                 }
+
+
+                //Determine instructions and track variables by register
 
                 foreach (var i in fnc.Instructions.Inst)
                 {
-                    ret += FormatInstruction(i.Op, i.Arg0, i.Arg1, null, null, OpModifier.None)
-                        + _nl;
+                    switch (i.Op)
+                    {
+                    }
                 }
 
-                ret += "    movl $0, %eax" + _nl +
-                       "    addq $32, %rsp" + _nl +
-                       "    popq %rbp" + _nl +
-                       "    ret" +_nl +
-                       "    .seh_endproc" + _nl+
-                       "    .ident \"KCC V1\"" + _nl+
-                       "    .def printf; .scl 2; .type 32; .endef" + _nl;
+                //End function
+                ret += 
+                    "\tmovl\t$0, %eax" + _nl + 
+                    "\tpopq\t%rbp" + _nl + 
+                    "\tret" + _nl;
             }
 
             return ret;
@@ -184,6 +233,33 @@ namespace CodeTranslator.Targets
             }
 
             return true;
+        }
+
+        public string GetExternalFunctionDeclarations()
+        {
+            var ret = "";
+
+            foreach(var f in _externFncs)
+            {
+                ret += $"\t.def {f}; .type {bitMode}; .endef" + _nl;
+            }
+
+            return ret;
+        }
+
+        public string GetAll()
+        {
+            return 
+                        GetHeader() +
+                        GetGlobals() +
+                        GetConstData() +
+                        GetFunctionDefs() +
+                        GetEpilogue();
+        }
+
+        public string GetEpilogue()
+        {
+            return "\t.ident\t\"KCC GasX86_64\"";
         }
     }
 }

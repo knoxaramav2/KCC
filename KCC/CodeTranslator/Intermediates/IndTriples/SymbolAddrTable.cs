@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using CommonLangLib;
+using System.Linq;
+using System;
+using KCC;
 
 namespace CodeTranslator
 {
     public class SymbolAddrTable : IDatumTable<SymbolEntry>
     {
-        private SymbolAddrTable _header;
+        private SymbolAddrTable _header;//parent address table
         public IndInstTable Instructions;//Note: Also acts as a constructor
         private DataTypeTable _typeTable;
         private uint _offset;
@@ -14,19 +17,20 @@ namespace CodeTranslator
         public BodyType BodyType;
 
         public string Id { get; }
+        private uint _stackWidth;
 
         //Non-scope specific counters for easier assembly/temp name generation
         public static uint LDCounter { get; internal set; }
         public static List<string> CStrings { get; internal set; }
 
-        private readonly Dictionary<string, SymbolEntry> _entries;
+        public readonly Dictionary<string, SymbolEntry> _entries;
 
         public SymbolAddrTable(string id, SymbolAddrTable previous, ushort blockSize)
         {
             Id = id;
 
             _header = previous;
-            Instructions = new IndInstTable();
+            Instructions = new IndInstTable(this);
             _offset = 0;
             _blockSize = blockSize;
 
@@ -67,12 +71,14 @@ namespace CodeTranslator
 
             //TODO Better alignment
             var dblk = _offset % _blockSize;
-            if (t.Width > dblk)
+            var tWidth = t.Width == 0 ? (uint) CliOptions.Arch.MAX_BUS_WIDTH : t.Width;
+            if (tWidth > dblk)
             {
                 _offset += dblk;
             }
 
-            _offset += t.Width;
+            _stackWidth += tWidth;
+            _offset += tWidth;
 
             t.SetScope(this);
             t.Offset = _offset;
@@ -108,6 +114,11 @@ namespace CodeTranslator
             return e;
         }
 
+        public uint GetUnoptomizedStackWidth()
+        {
+            return _stackWidth;
+        }
+
         public void ClearTable()
         {
             _entries.Clear();
@@ -135,6 +146,88 @@ namespace CodeTranslator
             return ret;
         }
 
+        IDatumTable<SymbolEntry> IDatumTable<SymbolEntry>.AddTable(string id, string type)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        SymbolEntry IDatumTable<SymbolEntry>.AddRecord(SymbolEntry t)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        void IDatumTable<SymbolEntry>.ClearTable()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        SymbolEntry IDatumTable<SymbolEntry>.SearchRecord(string id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string GetFormattedLog(int maxWidth)
+        {
+            var hWidth = maxWidth / 2;
+            var symLen = _entries.Count;
+            var instLen = Instructions.Inst.Count;
+
+            var headerSymbol    = "Symbol |";
+            var headerInstruct  = "Instruction |";
+            var symId           = "ID |";
+            var symType         = "Type |";
+            var InstOp          = "Op |";
+            var InstArg0        = "Arg0 |";
+            var InstArg1        = "Arg1 |";
+            var InstMod         = "Mod |";
+            var header = ('<'+_header?.Id+">::(" + Id + ' ' + BodyType.ToString()+')' + $" ${_stackWidth} B").PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
+            var subHeader = symId.PadLeft(hWidth/2)+symType.PadLeft(hWidth/2)+
+                InstOp.PadLeft(hWidth/4)+InstArg0.PadLeft(hWidth/4)+InstArg1.PadLeft(hWidth/4)+
+                InstMod.PadLeft(hWidth/4);
+
+
+            string id, type, op, arg0, arg1, mod;
+            string underscore = Environment.NewLine+(new string('_', maxWidth))+Environment.NewLine;
+            string scopeUnderscore = Environment.NewLine + (new string('+', maxWidth)) + Environment.NewLine;
+            string ret = header + underscore + subHeader + underscore;
+            
+
+            for (int i = 0; (i < symLen) || (i < instLen); ++i)
+            {
+                id = type = op = arg0 = arg1 = mod = "";
+
+                if (i < instLen)
+                {
+                    var inst = Instructions.Inst[i];
+                    op = inst.Op.ToString() + " |";
+                    arg0 = inst.Arg0 + " |";
+                    arg1 = inst.Arg1 + " |";
+                    mod = inst.OpModifier.ToString() + " |";
+                }
+
+                if (i < symLen)
+                {
+                    var entry = _entries.Values.ElementAt(i);
+                    id = entry.Id + " |";
+                    type = entry.Type.SymbolId + " |";
+                }
+
+                ret += id.PadLeft(hWidth / 2) + type.PadLeft(hWidth / 2) +
+                op.PadLeft(hWidth / 4) + arg0.PadLeft(hWidth / 4) + arg1.PadLeft(hWidth / 4) +
+                mod.PadLeft(hWidth / 4) + Environment.NewLine;
+            }
+
+            ret += scopeUnderscore;
+
+            foreach (var e in _entries.Values)
+            {
+                if (e.Target == null) continue;
+                ret += underscore;
+                ret += e?.Target.GetFormattedLog(maxWidth) + Environment.NewLine;
+            }
+
+            return ret;
+        }
     }
 
     public class SymbolEntry

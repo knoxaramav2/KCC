@@ -41,7 +41,7 @@ namespace CommonLangLib
 
         public ProcessorArchitecture Arch { get; internal set; }
         public OS OS { get; internal set; }
-
+        public int MAX_BUS_WIDTH;
 
         /// <summary>
         /// AutoDetect system information
@@ -56,19 +56,25 @@ namespace CommonLangLib
         {
             var si = new SYSTEM_INFO();
             GetNativeSystemInfo(ref si);
+            
             switch (si.wProcessorArchitecture)
             {
+                
                 case PROC_ARCH_INTEL:
                     Arch = ProcessorArchitecture.X86;
+                    MAX_BUS_WIDTH = 4;
                     break;
                 case PROC_ARCH_IA64:
                     Arch = ProcessorArchitecture.IA64;
+                    MAX_BUS_WIDTH = 8;
                     break;
                 case PROC_ARCH_AMD64:
                     Arch = ProcessorArchitecture.Amd64;
+                    MAX_BUS_WIDTH = 8;
                     break;
                 case PROC_ARCH_ARM:
                     Arch = ProcessorArchitecture.Arm;
+                    MAX_BUS_WIDTH = 8;
                     break;
                 default:
                     ErrorReporter.GetInstance().Add(

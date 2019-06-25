@@ -38,7 +38,7 @@ expression      : assign_expr
                 | symbol_id
                 | group
                 | unary_ops expression
-                | left=expression op=binary right=expression
+                | expression binary expression
                 | bool
                 | type_specifier symbol_id
                 ;

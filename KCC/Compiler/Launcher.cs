@@ -31,6 +31,7 @@ namespace Compiler
 
             if (cliOptions.Src == null)
             {
+                ColorIO.WriteLineError("Source file is either unspecified or unable to be read");
                 return -1;
             }
 
@@ -48,15 +49,17 @@ namespace Compiler
     
             if (errorReporter.ValidateAndFlush())
             {
+                ColorIO.WriteLineError("Fatal Errors Found: Cannot Continue");
                 return -1;
             }
 
             var converter = new Converter();
-            //converter.CreateAssembly();
+            converter.LogInternalTranslation();
 
             if (errorReporter.ValidateAndFlush())
             {
-                return -2;
+                ColorIO.WriteLineError("Fatal Errors Found: Cannot Continue");
+                return -1;
             }
 
             converter.Build();

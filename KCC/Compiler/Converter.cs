@@ -25,6 +25,28 @@ namespace Compiler
             _controller = InstDeclController.GetInstance();
         }
 
+        public void LogInternalTranslation()
+        {
+            if (!_cli.OutputInternals)
+            {
+                return;
+            }
+
+            string log = _controller.DumpInternalCode(System.Console.WindowWidth);
+
+            if (_cli.VerboseLevel == Verbosity.Detailed)
+            {
+                Debug.PrintDbg(log);
+            }
+            
+
+            string logPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}_log.txt";
+            using (var file = new StreamWriter(logPath, false))
+            {
+                file.Write(log);
+            }
+        }
+
         public void Build()
         {
             //TODO Support other architectures than x86-x64
@@ -36,16 +58,18 @@ namespace Compiler
 
             //TODO Choose from list
 
-            IArchAgent agent = new Gas32();
+            IArchAgent agent = new Gasx86_64();
             agent.Init(_controller);
 
             //TODO support multiple files
             while (true)
             {
-                _asm.Add(agent.GetHeader());
-                _asm.Add(agent.GetGlobals());
-                _asm.Add(agent.GetConstData());
-                _asm.Add(agent.GetFunctionDefs());
+                //_asm.Add(agent.GetHeader());
+                //_asm.Add(agent.GetGlobals());
+                //_asm.Add(agent.GetConstData());
+                //_asm.Add(agent.GetFunctionDefs());
+
+                _asm.Add(agent.GetAll());
 
                 string asmPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}.s";
 
@@ -53,7 +77,7 @@ namespace Compiler
                 {
                     foreach (var line in _asm)
                     {
-                        file.WriteLine(line);
+                        file.Write(line);
                     }
                 }
 
@@ -63,12 +87,6 @@ namespace Compiler
             }
         }
 
-        public void TargetWin10AMD()
-        {
-            _asm.Add(_fragments.GetLocaleDataHeader());
-            _asm.Add(_fragments.GetGlobalData());
-            _asm.Add(_fragments.GetFunctionDefs());
-        }
     }
 
 

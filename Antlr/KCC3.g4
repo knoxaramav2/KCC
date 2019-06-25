@@ -1,4 +1,4 @@
-grammar KCC;
+grammar KCC3;
 
 options{
     language= CSharp;
