@@ -137,6 +137,7 @@
         //IG: [START] [Var] [MARK] [EXPRESSION] [MARK] [VAR] [MARK] [END]
 
         DeclareVar,
+        DeclareHeaderVar,
 
         #endregion
 

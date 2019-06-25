@@ -64,10 +64,12 @@ namespace Compiler
             //TODO support multiple files
             while (true)
             {
-                _asm.Add(agent.GetHeader());
-                _asm.Add(agent.GetGlobals());
-                _asm.Add(agent.GetConstData());
-                _asm.Add(agent.GetFunctionDefs());
+                //_asm.Add(agent.GetHeader());
+                //_asm.Add(agent.GetGlobals());
+                //_asm.Add(agent.GetConstData());
+                //_asm.Add(agent.GetFunctionDefs());
+
+                _asm.Add(agent.GetAll());
 
                 string asmPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}.s";
 

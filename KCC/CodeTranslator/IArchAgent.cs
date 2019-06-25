@@ -8,6 +8,12 @@
         void Init(InstDeclController graph);
 
         /// <summary>
+        /// Returns the full assembly file
+        /// </summary>
+        /// <returns></returns>
+        string GetAll();
+
+        /// <summary>
         /// Generates assembly header
         /// </summary>
         /// <returns>Formatted header assembly</returns>
@@ -31,6 +37,10 @@
         /// <returns>Returns formatted function fields</returns>
         string GetFunctionDefs();
 
+        /// <summary>
+        /// Returns a list of externally defined (or undefined) methods
+        /// </summary>
+        /// <returns></returns>
         string GetExternalFunctionDeclarations();
 
         /// <summary>
@@ -51,5 +61,7 @@
         /// <param name="asmPath">Path the source assembly</param>
         /// <returns>False if errors occured</returns>
         bool InvokeLocalAssembler(string asmPath);
+
+        string GetEpilogue();
     }
 }

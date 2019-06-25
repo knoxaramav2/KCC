@@ -68,7 +68,16 @@ namespace CodeTranslator
         {
             foreach(var v in context.var_decl())
             {
-                VisitVar_decl(v);
+                var type = v.symbol_id()[0].GetText();
+                var id = v.symbol_id()[1].GetText();
+
+                _controller.DeclareHeaderVariable(id, type);
+
+                if (v.expression() != null)
+                {
+                    VisitExpression(v.expression());
+                    _controller.AddInstruction(InstOp.Set, id, null, null, OpModifier.FromLastTemp);
+                }
             }
 
             return null;
@@ -114,15 +123,13 @@ namespace CodeTranslator
             InstOp instOp = InstOp.NoOp;
 
             var dCtx = context.expression();
-            int exprIdx = 0;
 
-            symbolId = context.symbol_id().GetText();
+            symbolId = context.accessor().GetText();
 
-            if (dCtx.Length == 2)//Contains a type, so is definition
+            if (context.symbol_id() != null)//Contains a type, so is definition
             {
-                declType = (string) Visit(dCtx[0]);
+                declType = context.symbol_id().GetText();
                 _controller.DeclareVariable(symbolId, declType);
-                exprIdx = 1;
             }
 
             if (op != null)
@@ -140,7 +147,7 @@ namespace CodeTranslator
                     case "|=":  instOp = InstOp.SetXor; break;
                 }
 
-                var value = (string) Visit(dCtx[exprIdx]);
+                var value = (string) Visit(dCtx);
                 OpModifier valueType = value == null ? OpModifier.FromLastTemp : OpModifier.None;
                 _controller.AddInstruction(instOp, symbolId, value, index, valueType);
             } else
@@ -217,7 +224,7 @@ namespace CodeTranslator
         public override object VisitMath1([NotNull] KCCParser.Math1Context context)
         {
             var lval = (string) Visit(context.expression()[0]);
-            var rval = (string)Visit(context.expression()[1]);
+            var rval = (string) Visit(context.expression()[1]);
 
             OpModifier mod = OpModifier.None;
             InstOp op = InstOp.NoOp;

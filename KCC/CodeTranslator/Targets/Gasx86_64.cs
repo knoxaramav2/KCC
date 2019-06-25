@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CommonLangLib;
+using System.Linq;
 using KCC;
 
 namespace CodeTranslator.Targets
@@ -20,8 +21,7 @@ namespace CodeTranslator.Targets
         private int longlongWidth; //long longs, long double
 
         private List<string> _externFncs;
-
-
+        
         int bitMode;
 
         public void Init(InstDeclController controller)
@@ -101,10 +101,6 @@ namespace CodeTranslator.Targets
                 }
             }
 
-            ret += "\t.text" + _nl +
-                   "\t.globl main" + _nl +
-                   $"\t.def main; .scl 2; .type {bitMode}; .endef"+_nl;
-
             CommonLangLib.Debug.PrintDbg($"{ret}");
 
             return ret;
@@ -117,15 +113,33 @@ namespace CodeTranslator.Targets
             foreach (var fnc in fncs)
             {
                 if (fnc.BodyType != BodyType.Function) continue;
+
+                //Determine stack size
+
+                //Define function
+                ret += $"\t.globl {fnc.Id}" + _nl;
+                ret += $"\t.def {fnc.Id} .scl 2; .type {bitMode}; .endef" + _nl;
+
                 ret += fnc.Id + ":" + _nl;
                 //Create function prologue
                 ret += 
                     "\tpushq\t%rbp" + _nl +
-                    "\tmovq\t%rsp,%rbp" + _nl;
+                    "\tmovq\t%rsp, %rbp" + _nl +
+                    $"\tsubq\t${fnc.GetUnoptomizedStackWidth()}, %rsp" + _nl;
 
                 //determine callee-save registers to preserve
 
                 //Allocate stack size
+                var _stackOffset = new List<KeyValuePair<string, uint>>();
+                uint currOffset = 0;
+                for(var i = 0; i < fnc._entries.Values.Count; ++i)
+                {
+                    var _e = fnc._entries.Values.ElementAt(i);
+                    currOffset += _e.Width == 0? (uint) CliOptions.Arch.MAX_BUS_WIDTH : _e.Width;
+                    _stackOffset.Add(new KeyValuePair<string, uint>(_e.Id, currOffset));
+                    CommonLangLib.Debug.PrintDbg($"OFFSET {_e.Id}::{currOffset}");
+                }
+
 
                 //Determine instructions and track variables by register
 
@@ -231,6 +245,21 @@ namespace CodeTranslator.Targets
             }
 
             return ret;
+        }
+
+        public string GetAll()
+        {
+            return 
+                        GetHeader() +
+                        GetGlobals() +
+                        GetConstData() +
+                        GetFunctionDefs() +
+                        GetEpilogue();
+        }
+
+        public string GetEpilogue()
+        {
+            return "\t.ident\t\"KCC GasX86_64\"";
         }
     }
 }

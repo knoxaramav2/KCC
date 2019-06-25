@@ -88,7 +88,7 @@ expression          : //accessor #simple_accessor
                     | expression bw_or='|' expression                       #b_or
                     | expression lg_and=('&&'|'!&') expression              #l_and
                     | expression lg_or=('||'|'!|'|'|||'|'!||') expression   #l_or
-                    | expression symbol_id (op_sum=('='|'+='|'-='|'*='|'/='|'%='|'&='|'^='|'|=') expression)? index_anyvalue? #set_alt
+                    | symbol_id? accessor op_sum=('='|'+='|'-='|'*='|'/='|'%='|'&='|'^='|'|=') expression index_anyvalue? #set_alt
                     | expression list=',' expression #list
                     | '(' paran=expression ')'  #paran
                     | value_id  #simple_value

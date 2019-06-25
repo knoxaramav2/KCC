@@ -48,7 +48,12 @@ namespace CodeTranslator
             return true;
         }
 
-        public bool DeclareVariable(string id, string type)
+        public bool DeclareHeaderVariable(string id, string type)
+        {
+            return DeclareVariable(id, type, true);
+        }
+
+        public bool DeclareVariable(string id, string type, bool isHeader=false)
         {
             if (_currentScope.AddRecord(id,type)==null)
             {
@@ -56,9 +61,11 @@ namespace CodeTranslator
                 return false;
             }
 
-            AddInstruction(InstOp.DeclareVar, id, type);
+            var instOp = isHeader ? InstOp.DeclareHeaderVar : InstOp.DeclareVar;
 
-            Debug.PrintDbg($"Declared {id}:{type}");
+            AddInstruction(instOp, id, type);
+
+            Debug.PrintDbg($"Declared {id}:{type} :: Header? {isHeader}");
 
             return true;
         }

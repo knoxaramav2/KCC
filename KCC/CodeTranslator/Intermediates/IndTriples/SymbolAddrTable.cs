@@ -2,6 +2,7 @@
 using CommonLangLib;
 using System.Linq;
 using System;
+using KCC;
 
 namespace CodeTranslator
 {
@@ -16,12 +17,13 @@ namespace CodeTranslator
         public BodyType BodyType;
 
         public string Id { get; }
+        private uint _stackWidth;
 
         //Non-scope specific counters for easier assembly/temp name generation
         public static uint LDCounter { get; internal set; }
         public static List<string> CStrings { get; internal set; }
 
-        private readonly Dictionary<string, SymbolEntry> _entries;
+        public readonly Dictionary<string, SymbolEntry> _entries;
 
         public SymbolAddrTable(string id, SymbolAddrTable previous, ushort blockSize)
         {
@@ -69,12 +71,14 @@ namespace CodeTranslator
 
             //TODO Better alignment
             var dblk = _offset % _blockSize;
-            if (t.Width > dblk)
+            var tWidth = t.Width == 0 ? (uint) CliOptions.Arch.MAX_BUS_WIDTH : t.Width;
+            if (tWidth > dblk)
             {
                 _offset += dblk;
             }
 
-            _offset += t.Width;
+            _stackWidth += tWidth;
+            _offset += tWidth;
 
             t.SetScope(this);
             t.Offset = _offset;
@@ -108,6 +112,11 @@ namespace CodeTranslator
 
 
             return e;
+        }
+
+        public uint GetUnoptomizedStackWidth()
+        {
+            return _stackWidth;
         }
 
         public void ClearTable()
@@ -171,7 +180,7 @@ namespace CodeTranslator
             var InstArg0        = "Arg0 |";
             var InstArg1        = "Arg1 |";
             var InstMod         = "Mod |";
-            var header = ('<'+_header?.Id+">::(" + Id + ' ' + BodyType.ToString()+')').PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
+            var header = ('<'+_header?.Id+">::(" + Id + ' ' + BodyType.ToString()+')' + $" ${_stackWidth} B").PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
             var subHeader = symId.PadLeft(hWidth/2)+symType.PadLeft(hWidth/2)+
                 InstOp.PadLeft(hWidth/4)+InstArg0.PadLeft(hWidth/4)+InstArg1.PadLeft(hWidth/4)+
                 InstMod.PadLeft(hWidth/4);
