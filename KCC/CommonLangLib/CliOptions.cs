@@ -16,8 +16,9 @@ namespace KCC
 
         //Start Switches
         private bool ReadHelpDoc { get; set; }
-        public bool EnableDebugMessages;
-        public bool OutputInternals { get; internal set; }
+        public bool SoftClose { get; private set; }
+        public bool EnableDebugMessages { get; internal set; }
+        public bool OutputInternals { get; private set; }
 
         //Function Switches
 
@@ -35,6 +36,7 @@ namespace KCC
             _canContinue = true;
 
             ReadHelpDoc = false;
+            SoftClose = false;
             EnableDebugMessages = false;
             OutputInternals = false;
 
@@ -71,6 +73,7 @@ namespace KCC
                         {
                             case 'h':
                                 ReadHelpDoc = true;
+                                SoftClose = true;
                                 break;
                             case 'v':
                                 var val = DetectOptionValue(arg, j);
@@ -187,7 +190,7 @@ namespace KCC
         {
             if (!ReadHelpDoc) return;
 
-            var lines = File.ReadAllLines(KCCEnv.ExeUri+"//cli.txt");
+            var lines = File.ReadAllLines(@"data\cli.txt");
             foreach (var line in lines)
             {
                 ColorIO.WriteLineClr(line, ConsoleColor.Yellow);

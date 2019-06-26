@@ -142,11 +142,41 @@ namespace CodeTranslator.Targets
 
 
                 //Determine instructions and track variables by register
-
                 foreach (var i in fnc.Instructions.Inst)
                 {
                     switch (i.Op)
                     {
+                        //Declarations
+                        case InstOp.DeclareHeaderVar:
+                            
+                            break;
+                        case InstOp.DeclareVar:
+
+                            break;
+
+                        //Arithmetic
+                        case InstOp.Set:
+
+                            break;
+                        case InstOp.SetMult:
+
+                            break;
+
+                        //General
+                        case InstOp.Call:
+
+                            //TODO Check for keywords
+
+                            //TODO Check for functions in scope
+
+                            if (!_externFncs.Contains(i.Arg0))
+                            {
+                                _externFncs.Add(i.Arg0);
+                            }
+
+                            ret += $"\tcall\t{i.Arg0}"+_nl;
+
+                            break;
                     }
                 }
 
@@ -250,11 +280,12 @@ namespace CodeTranslator.Targets
         public string GetAll()
         {
             return 
-                        GetHeader() +
-                        GetGlobals() +
-                        GetConstData() +
-                        GetFunctionDefs() +
-                        GetEpilogue();
+                GetHeader() +
+                GetGlobals() +
+                GetConstData() +
+                GetFunctionDefs() +
+                GetExternalFunctionDeclarations() +
+                GetEpilogue();
         }
 
         public string GetEpilogue()

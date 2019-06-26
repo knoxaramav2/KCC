@@ -31,6 +31,11 @@ namespace Compiler
 
             if (cliOptions.Src == null)
             {
+                if (cliOptions.SoftClose)
+                {
+                    return 0;
+                }
+
                 ColorIO.WriteLineError("Source file is either unspecified or unable to be read");
                 return -1;
             }
