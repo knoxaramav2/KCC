@@ -510,10 +510,10 @@ namespace CodeTranslator
             return null;
         }
 
-        public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)
+        /*public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)
         {
             return (string)VisitValue_id(context.value_id());
-        }
+        }*/
 
         public override object VisitAccessor([NotNull] KCCParser.AccessorContext context)
         {
@@ -532,6 +532,39 @@ namespace CodeTranslator
             return ret;
         }
 
+        public override object VisitString([NotNull] KCCParser.StringContext context)
+        {
+            _controller.AddDirective(Directives.Lc, context.GetText());
+            var x= _controller.AddDirective(Directives.Ascii, context.GetText(), true);
+            return x;
+        }
+
+        public override object VisitIndex_string([NotNull] KCCParser.Index_stringContext context)
+        {
+            return base.VisitIndex_string(context);
+        }
+
+        public override object VisitInteger([NotNull] KCCParser.IntegerContext context)
+        {
+            return context.GetText();
+        }
+
+        public override object VisitChar([NotNull] KCCParser.CharContext context)
+        {
+            return context.GetText();
+        }
+
+        public override object VisitDecimal([NotNull] KCCParser.DecimalContext context)
+        {
+            return context.GetText();
+        }
+
+        public override object VisitSymbol_id([NotNull] KCCParser.Symbol_idContext context)
+        {
+            return context.GetText();
+        }
+
+        /*
         public override object VisitValue_id([NotNull] KCCParser.Value_idContext context)
         {
             if (context.@bool() != null)
@@ -557,6 +590,6 @@ namespace CodeTranslator
             }
 
             return null;
-        }
+        }*/
     }
 }

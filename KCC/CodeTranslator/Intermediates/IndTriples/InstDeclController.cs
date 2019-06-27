@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CommonLangLib;
 
 namespace CodeTranslator
@@ -26,18 +27,16 @@ namespace CodeTranslator
             return _self ?? (_self = new InstDeclController());
         }
 
-        public bool AddDirective(Directives d, string info, bool nested=false)
+        public string AddDirective(Directives d, string info, bool nested=false)
         {
             if (nested)
             {
-                Meta.AddNestedDirective(d, info);
+                return Meta.AddNestedDirective(d, info);
             }
             else
             {
-                Meta.AddDirective(d, info);
+                return Meta.AddDirective(d, info);
             }
-
-            return true;
         }
 
         public bool AddInstruction(InstOp op, string arg0, string arg1, string special=null, OpModifier opModifier=OpModifier.None)
@@ -113,6 +112,22 @@ namespace CodeTranslator
         {
             var cTbl = _root.GetFormattedLog(formattedWidth);
             return cTbl;
+        }
+
+        public string GetDirectiveLog()
+        {
+            var ret = "";
+
+            foreach(var e in Meta.Entries)
+            {
+                ret += $"{e.Directive.ToString().ToUpper()}{e.Info}:"+Environment.NewLine;
+                foreach(var m in e.Nested)
+                {
+                    ret += $"\t{m.Directive.ToString()} {m.Info}"+Environment.NewLine;
+                }
+            }
+
+            return ret;
         }
     }
 }

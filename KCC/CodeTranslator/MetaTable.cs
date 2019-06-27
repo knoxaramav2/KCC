@@ -6,12 +6,12 @@ namespace CodeTranslator
     public class MetaTable
     {
         private MetaEntry _current;
-        private List<MetaEntry> _entries;
+        public List<MetaEntry> Entries { get; internal set; }
         private static ushort _lcCounter;
 
         public MetaTable()
         {
-           _entries = new List<MetaEntry>();
+           Entries = new List<MetaEntry>();
         }
 
         private void DirDataCheck(Directives d, ref string info)
@@ -25,21 +25,35 @@ namespace CodeTranslator
             }
         }
 
-        public void AddDirective(Directives d, string info)
+        public string AddDirective(Directives d, string info)
         {
+            var ret = "";
+            if ((ret=FindConstByValue(info)) != null)
+            {
+                return ret;
+            }
+
             DirDataCheck(d, ref info);
 
             Debug.PrintDbg($"@{d}:{info}");
 
             _current = new MetaEntry(d, info);
-            _entries.Add(_current);
+            Entries.Add(_current);
+
+            return $"{_current.Directive.ToString().ToUpper()}{info}";
         }
-        public void AddNestedDirective(Directives d, string info)
+        public string AddNestedDirective(Directives d, string info)
         {
-            if (_entries == null)
+            if (Entries == null)
             {
                 Debug.PrintDbg($"Invalid nested directive with {info}");
-                return;
+                return null;
+            }
+
+            var ret = "";
+            if ((ret = FindConstByValue(info)) != null)
+            {
+                return ret;
             }
 
             DirDataCheck(d, ref info);
@@ -47,16 +61,43 @@ namespace CodeTranslator
             Debug.PrintDbg($"@  {d}:{info}");
 
             _current.AddNested(new MetaEntry(d, info));
+
+            return $"{_current.Directive.ToString().ToUpper()}{_current.Info}";
         }
 
         public List<MetaEntry> GetDirectives()
         {
-            return _entries;
+            return Entries;
         }
 
         public static ushort GetLcCounter()
         {
             return _lcCounter;
+        }
+
+        private string FindConstByValue(string value)
+        {
+
+            value = value.Replace("\"", "");
+
+            foreach (var e in Entries)
+            {
+                if (e.Directive != Directives.Lc)
+                {
+                    continue;
+                }
+
+                foreach (var v in e.Nested)
+                {
+                    //TODO Add other constant directives
+                    if (v.Directive == Directives.Ascii && v.Info == value)
+                    {
+                        return $"{e.Directive.ToString().ToUpper()}{e.Info}";
+                    }
+                }
+            }
+
+            return null;
         }
     }
 

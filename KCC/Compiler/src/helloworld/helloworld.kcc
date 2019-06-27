@@ -5,6 +5,10 @@
 		int b = 7;
 		a *= b;
 		print("Hi");
+		print("Hix");
+		print("Hix");
+		print("Hi");
+		print("Hic");
     }
 
 }

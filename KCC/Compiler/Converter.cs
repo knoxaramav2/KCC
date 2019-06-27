@@ -32,13 +32,13 @@ namespace Compiler
                 return;
             }
 
-            string log = _controller.DumpInternalCode(System.Console.WindowWidth);
+            string directives = _controller.GetDirectiveLog();
+            string log = directives + _controller.DumpInternalCode(System.Console.WindowWidth);
 
             if (_cli.VerboseLevel == Verbosity.Detailed)
             {
                 Debug.PrintDbg(log);
             }
-            
 
             string logPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}_log.txt";
             using (var file = new StreamWriter(logPath, false))
