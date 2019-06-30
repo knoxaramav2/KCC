@@ -8,11 +8,12 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Compiler</RootNamespace>
     <AssemblyName>KCC</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -84,7 +85,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CConsole.cs" />
-    <Compile Include="Converter.cs" />
     <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -105,13 +105,19 @@
       <Project>{EF3BF85C-5C5F-448C-BA74-8FA25C311A84}</Project>
       <Name>CommonLangLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConverterDNF\ConverterDNF.csproj">
+      <Project>{4a3dfdf5-27ce-4e41-9b14-f1882ae4701d}</Project>
+      <Name>ConverterDNF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PreProcessor\PreProcessor.csproj">
       <Project>{57C8529A-0BCA-46D9-9E22-1D6454EDE33C}</Project>
       <Name>PreProcessor</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="libs\" />
+    <Content Include="libs\GasX86_64.dll" />
+    <Content Include="srcdocs\cli.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net46\System.Data.SQLite.Core.targets')" />

@@ -1,6 +1,8 @@
-﻿
+﻿using CodeTranslator;
+using KCC;
+
 namespace TargetPluginSDK
-{/*
+{
     public interface ITarget
     {
         string TargetName { get; }
@@ -9,5 +11,5 @@ namespace TargetPluginSDK
 
         string Build();
 
-    }*/
+    }
 }

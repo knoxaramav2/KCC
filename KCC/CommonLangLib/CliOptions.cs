@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using CommonLangLib;
 
 namespace KCC
@@ -24,6 +22,7 @@ namespace KCC
         //String Options
         public string OutputName;
         public List<string> Libraries;
+        public string TargetOption;
         public string Src { get; private set; }
 
         //Level Options
@@ -39,6 +38,7 @@ namespace KCC
             OutputInternals = false;
 
             Libraries = new List<string>();
+
             Src = null;
 
             OptimizeLevel = 0;
@@ -47,6 +47,14 @@ namespace KCC
             OutputName = "out";
 
             Arch = new AutoArch();
+
+            switch (Arch.Arch)
+            {
+
+                default:
+                    TargetOption = "GasX86_64";
+                    break;
+            }
         }
 
         public static CliOptions GetInstance()
@@ -160,6 +168,10 @@ namespace KCC
                             break;
                         case "--pintern":
                             OutputInternals = true;
+                            break;
+                        case "--target":
+                            TargetOption = "/libs/" + value + ".dll";
+                            Debug.PrintDbg($"Selecting {TargetOption}");
                             break;
                         default:
                             _canContinue = false;

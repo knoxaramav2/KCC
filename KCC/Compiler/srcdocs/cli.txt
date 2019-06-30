@@ -1,0 +1,11 @@
+-h				Print help dialogue
+-v=<none>		Suppress warnings and errors
+-v=<silent>
+-v=<basic>		Default. Print briefs
+-v=<detailed>	Print extended messages, if available
+-v=<loud>
+
+
+--exe=<output>	Set output executable	
+--intdbg		Allow internal debug messages
+--src=<file>	Master source file	

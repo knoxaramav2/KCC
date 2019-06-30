@@ -53,7 +53,7 @@ namespace Compiler
                 return -1;
             }
 
-            var converter = new Converter();
+            var converter = new Converterx.Converter();
             converter.LogInternalTranslation();
 
             if (errorReporter.ValidateAndFlush())
