@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using CodeTranslator;
 using CodeTranslator.Targets;
 using CommonLangLib;
@@ -66,11 +68,6 @@ namespace Converterx
             //TODO support multiple files
             while (true)
             {
-                //_asm.Add(agent.GetHeader());
-                //_asm.Add(agent.GetGlobals());
-                //_asm.Add(agent.GetConstData());
-                //_asm.Add(agent.GetFunctionDefs());
-
                 _asm.Add(agent.GetAll());
 
                 string asmPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}.s";
@@ -91,12 +88,85 @@ namespace Converterx
 
         public void LoadTargetPlugin()
         {
-            var target = _cli.TargetOption;
+            //var target = _cli.TargetOption;
 
-            var plugins = Directory.GetFiles("libs", "*.dll");
+            //var plugins = Directory.GetFiles("libs", "*.dll");
+            string plugin = _cli.TargetOption != null ? _cli.TargetOption : GetDefaultPlugin();
 
+            string cpath = Environment.CurrentDirectory;
+            string pluginPath = cpath
+                .Substring(0, cpath.LastIndexOf("bin")) + $@"libs";
+
+            if (!Directory.Exists(pluginPath))
+            {
+                throw new TargetPluginNotFoundException($"Unable to find plugin directory: {pluginPath}");
+            }
+
+            var fileNames = Directory.GetFiles(pluginPath, "*.dll");
+            var assemblies = new List<Assembly>(fileNames.Length);
+
+            foreach (string pluginFile in fileNames)
+            {
+                var asmName = AssemblyName.GetAssemblyName(pluginFile);
+                var asm = Assembly.Load(asmName);
+                assemblies.Add(asm);
+            }
+
+            Type pluginType = typeof(ITarget);
+            var pluginTypes = new List<Type>();
+            foreach(var assembly in assemblies)
+            {
+                if (assembly == null) continue;
+                var types = assembly.GetTypes();
+
+                foreach(var type in types)
+                {
+                    if (!type.IsInterface && !type.IsAbstract && type.GetInterface(pluginType.FullName)!=null)
+                    {
+                        pluginTypes.Add(type);
+                    }
+                }
+            }
+
+            var plugins = new List<ITarget>(pluginTypes.Count);
+            foreach(Type t in pluginTypes)
+            {
+                ITarget p = (ITarget)Activator.CreateInstance(t);
+                p.Init(_cli, _controller);
+                plugins.Add(p);
+            }
+
+            Console.WriteLine(plugins.Count);
+
+
+            /*
+            AssemblyName asmName = AssemblyName.GetAssemblyName(pluginPath);
+            Assembly pluginAsm = Assembly.Load(asmName);
+            Type type = typeof(ITarget);
+            Type[] types = pluginAsm.GetTypes();
+
+            _target = (ITarget)Activator.CreateInstance(pluginAsm.GetType());
+            _target.Init(_cli, _controller);
+            */
+        }
+
+        private string GetDefaultPlugin()
+        {
+            switch (CliOptions.Arch.Arch)
+            {
+                case System.Reflection.ProcessorArchitecture.Amd64:
+                    return "GasX86_64";
+            }
+
+            return "";
         }
     }
 
+    class TargetPluginNotFoundException : Exception
+    {
+        public TargetPluginNotFoundException(string msg) : base(msg)
+        {
 
+        }
+    }
 }

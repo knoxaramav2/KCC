@@ -1,6 +1,8 @@
 ﻿using CodeTranslator;
 using CommonLangLib;
 using KCC;
+using System;
+using System.IO;
 
 namespace Compiler
 {
@@ -23,15 +25,22 @@ namespace Compiler
             errorReporter.ValidateAndFlush();
 
             //TODO replace with ErrorReporter.FatalError?
+
             if (!cliOptions.IsValid())
             {
-                ColorIO.WriteLineError("Fatal Errors Found: Cannot Continue");
-                return -1;
-            }
+                if (cliOptions.InfoMode)
+                {
+                    return 0;
+                }
 
-            if (cliOptions.Src == null)
-            {
-                ColorIO.WriteLineError("Source file is either unspecified or unable to be read");
+                if (cliOptions.Src == null)
+                {
+                    ColorIO.WriteError("Src file not specified");
+                } else
+                {
+                    ColorIO.WriteError("Unable to continue. Exiting.");
+                }
+
                 return -1;
             }
 
@@ -62,7 +71,16 @@ namespace Compiler
                 return -1;
             }
 
-            converter.Build();
+            try
+            {
+                converter.Build();
+            } catch(Exception e)
+            {
+                errorReporter.Add(e.Message, ErrorCode.PluginNotFound);
+                errorReporter.ValidateAndFlush();
+                return -1;
+            }
+            
 
             return 0;
         }

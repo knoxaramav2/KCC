@@ -11,6 +11,7 @@ namespace KCC
         public static AutoArch Arch { get; internal set; }
 
         private bool _canContinue;
+        public bool InfoMode;
 
         //Start Switches
         private bool ReadHelpDoc { get; set; }
@@ -32,6 +33,7 @@ namespace KCC
         private CliOptions()
         {
             _canContinue = true;
+            InfoMode = false;
 
             ReadHelpDoc = false;
             EnableDebugMessages = false;
@@ -79,6 +81,7 @@ namespace KCC
                         {
                             case 'h':
                                 ReadHelpDoc = true;
+                                InfoMode = true;
                                 break;
                             case 'v':
                                 var val = DetectOptionValue(arg, j);
@@ -170,7 +173,7 @@ namespace KCC
                             OutputInternals = true;
                             break;
                         case "--target":
-                            TargetOption = "/libs/" + value + ".dll";
+                            TargetOption = value;
                             Debug.PrintDbg($"Selecting {TargetOption}");
                             break;
                         default:

@@ -10,6 +10,11 @@ namespace GasX86_64
         private CliOptions _cli;
         private InstDeclController _ctrl;
 
+        public GasX86_64()
+        {
+
+        }
+
         public string TargetName
         {
             get
@@ -31,6 +36,8 @@ namespace GasX86_64
         {
             _cli = cli;
             _ctrl = controller;
+
+            Console.WriteLine("__TEST__");
         }
     }
 }
