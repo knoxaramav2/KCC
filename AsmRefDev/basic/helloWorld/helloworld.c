@@ -1,19 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void function(int c){
-	
-	printf("Sup %c", c);
-}
-
 int main(){
 
-	int c = 2;
-	
-	char * x = malloc(2);
+	float a = 10.0;
+	float b = -32.5;
 
-	function(c+7);
-    printf("%d\r\n", c);
+	a *= b;
+
+	float c = a + b;
+
+
 
     return c;
 

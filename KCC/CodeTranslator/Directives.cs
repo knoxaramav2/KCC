@@ -5,6 +5,8 @@
         Align,
         Ascii,
         Float,
+        Double,
+        Long,
         Lc,
         File,
         Global,

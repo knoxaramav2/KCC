@@ -2,6 +2,7 @@
 using CodeTranslator;
 using KCC;
 using TargetPluginSDK;
+using CommonLangLib;
 
 namespace GasX86_64
 {
@@ -37,7 +38,9 @@ namespace GasX86_64
             _cli = cli;
             _ctrl = controller;
 
-            Console.WriteLine("__TEST__");
+            Debug.PrintDbg($"Loaded {TargetName}");
+
+
         }
     }
 }

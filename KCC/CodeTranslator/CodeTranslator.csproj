@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
     <Compile Include="Directives.cs" />
+    <Compile Include="Intermediates\IndTriples\FauxReg.cs" />
     <Compile Include="Intermediates\IndTriples\IDatumTable.cs" />
     <Compile Include="Intermediates\IndTriples\IndInstTable.cs" />
     <Compile Include="Intermediates\IndTriples\InstDeclController.cs" />

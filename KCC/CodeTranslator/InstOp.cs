@@ -66,15 +66,6 @@
 
         #region MEM_SWAP
         RgMemSwap = 300,
-        
-        Ld,                     //Load byte
-        LdU,                    //Load upper immediate
-        LdW,                    //Load word
-        MfH,                    //Move from HI
-        MfL,                    //Move from LOW
-
-        StB,                    //Store byte
-        StW,                    //Store word
 
         ShL,                    //Shift Left
         ShR,                    //Shift Right

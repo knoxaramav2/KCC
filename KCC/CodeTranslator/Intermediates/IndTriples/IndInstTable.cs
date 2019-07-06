@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CodeTranslator.Intermediates.IndTriples;
+using System.Collections.Generic;
 
 namespace CodeTranslator
 {
@@ -55,6 +56,7 @@ namespace CodeTranslator
         public InstOp Op;
         public string Arg0, Arg1;
         public OpModifier OpModifier;
+        public FauxUnit result;
 
         public InstEntry(InstOp op, string arg0, string arg1, OpModifier opModifier=OpModifier.None)
         {

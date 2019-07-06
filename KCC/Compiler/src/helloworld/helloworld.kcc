@@ -3,7 +3,10 @@
     void main(string[]args){
 		int a = 5;
 		int b = 7;
+		float c = 7.5;
+		char d = 'd';
 		a *= b;
+		c = (a * c) - d;
 		print("Hi");
 		print("Hix");
 		print("Hix");

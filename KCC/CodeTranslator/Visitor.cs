@@ -556,7 +556,11 @@ namespace CodeTranslator
 
         public override object VisitDecimal([NotNull] KCCParser.DecimalContext context)
         {
-            return context.GetText();
+            var value = context.GetText();
+
+            _controller.AddDirective(Directives.Lc, value);
+            var x = _controller.AddDirective(Directives.Double, value, true);
+            return x;
         }
 
         public override object VisitSymbol_id([NotNull] KCCParser.Symbol_idContext context)

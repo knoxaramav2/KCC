@@ -154,7 +154,7 @@ namespace Converterx
         {
             switch (CliOptions.Arch.Arch)
             {
-                case System.Reflection.ProcessorArchitecture.Amd64:
+                case ProcessorArchitecture.Amd64:
                     return "GasX86_64";
             }
 
