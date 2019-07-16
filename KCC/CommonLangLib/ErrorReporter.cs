@@ -39,7 +39,10 @@ namespace CommonLangLib
         //Platform
         UnrecognizedInstructionFamily,
         UnrecognizedOS,
-        UnsupportedOS
+        UnsupportedOS,
+
+        Plugins,
+        PluginNotFound
     }
 
     public class ErrorReporter

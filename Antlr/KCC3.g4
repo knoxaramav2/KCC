@@ -78,6 +78,7 @@ rval_op             : INCREMENT accessor        #pre_inc
 expression          : //accessor #simple_accessor
                      lval_op #lv
                     | rval_op #rv
+                    | unary_op='-' expression                               #unary
                     | expression prod_op=('*'|'/'|'%'|'**') expression      #math1
                     | expression sum_op=('+'|'-') expression                #math2
                     | expression shift_op=('<<'|'>>') expression            #shift
@@ -191,8 +192,8 @@ ASSEMBLY            : 'asm' | 'assembly';
 STRINGLIT       : STRINGLITPART '"';
 STRINGLITPART   : '"' (~["\\\n] | '\\' (. | EOF))*;
 
-INTEGER         : '-'?[0-9];
-DECIMAL         : '-'?[0-9]+('.'([0-9])+)?;
+INTEGER         : [0-9]+;
+DECIMAL         : [0-9]+('.'([0-9])+)?;
 IDENTIFIER      : ALPHA+ (DECIMAL+)?;//[a-zA-Z_]([a-zA-Z_0-9])+;
 SEMI            : ';';
 WS              : [ \r\t\u000C\n]+ -> skip ;

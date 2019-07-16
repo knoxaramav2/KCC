@@ -9,6 +9,8 @@ namespace CodeTranslator
     /// <summary>
     /// Compliments the database
     /// Used for recursive symbol resolution
+    /// 
+    /// DEPRECATED
     /// </summary>
     public class ProgramGraph
     {

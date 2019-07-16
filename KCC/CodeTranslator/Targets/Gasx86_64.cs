@@ -73,6 +73,8 @@ namespace CodeTranslator.Targets
                 case Directives.Lc: return $".LC{info}:";
                 case Directives.Ascii: return $".ascii \"{info}\\0\"";
                 case Directives.Text: return ".text";
+                case Directives.Long: return $".long {info}";
+                case Directives.Double: return $".double {info}";
 
                 default: return null;
             }

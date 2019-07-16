@@ -10,6 +10,7 @@ namespace CommonLangLib
     {
         public static string BaseUri { get; internal set; }
         public static string ExeUri { get; internal set; }
+        public static string RootUri { get; internal set; }
 
         public static void Init()
         {

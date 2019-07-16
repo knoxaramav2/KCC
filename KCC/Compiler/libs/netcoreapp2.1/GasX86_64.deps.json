@@ -1,0 +1,120 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v2.1",
+    "signature": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v2.1": {
+      "GasX86_64/1.0.0": {
+        "dependencies": {
+          "TargetPluginSDK": "1.0.0"
+        },
+        "runtime": {
+          "GasX86_64.dll": {}
+        }
+      },
+      "CodeTranslator/1.0.0": {
+        "dependencies": {
+          "CommonLangLib": "1.0.0",
+          "System.Data.SQLite": "1.0.110.0",
+          "Antlr4.Runtime": "4.6.0.0"
+        },
+        "runtime": {
+          "CodeTranslator.dll": {}
+        }
+      },
+      "CommonLangLib/1.0.0": {
+        "runtime": {
+          "CommonLangLib.dll": {}
+        }
+      },
+      "Compiler/1.0.0": {
+        "dependencies": {
+          "CodeTranslator": "1.0.0",
+          "CommonLangLib": "1.0.0",
+          "PreProcessor": "1.0.0"
+        },
+        "runtime": {
+          "KCC.exe": {}
+        }
+      },
+      "PreProcessor/1.0.0": {
+        "dependencies": {
+          "CommonLangLib": "1.0.0"
+        },
+        "runtime": {
+          "PreProcessor.dll": {}
+        }
+      },
+      "TargetPluginSDK/1.0.0": {
+        "dependencies": {
+          "CodeTranslator": "1.0.0",
+          "CommonLangLib": "1.0.0",
+          "Compiler": "1.0.0"
+        },
+        "runtime": {
+          "TargetPluginSDK.dll": {}
+        }
+      },
+      "System.Data.SQLite.Reference/1.0.110.0": {
+        "runtime": {
+          "System.Data.SQLite.dll": {
+            "assemblyVersion": "1.0.110.0",
+            "fileVersion": "1.0.110.0"
+          }
+        }
+      },
+      "Antlr4.Runtime.Reference/4.6.0.0": {
+        "runtime": {
+          "Antlr4.Runtime.dll": {
+            "assemblyVersion": "4.6.0.0",
+            "fileVersion": "4.6.6.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "GasX86_64/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CodeTranslator/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "CommonLangLib/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Compiler/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "PreProcessor/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TargetPluginSDK/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Data.SQLite.Reference/1.0.110.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Antlr4.Runtime.Reference/4.6.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using CommonLangLib;
 
 namespace KCC
@@ -13,6 +11,7 @@ namespace KCC
         public static AutoArch Arch { get; internal set; }
 
         private bool _canContinue;
+        public bool InfoMode;
 
         //Start Switches
         private bool ReadHelpDoc { get; set; }
@@ -24,6 +23,7 @@ namespace KCC
         //String Options
         public string OutputName;
         public List<string> Libraries;
+        public string TargetOption;
         public string Src { get; private set; }
 
         //Level Options
@@ -33,12 +33,14 @@ namespace KCC
         private CliOptions()
         {
             _canContinue = true;
+            InfoMode = false;
 
             ReadHelpDoc = false;
             EnableDebugMessages = false;
             OutputInternals = false;
 
             Libraries = new List<string>();
+
             Src = null;
 
             OptimizeLevel = 0;
@@ -47,6 +49,14 @@ namespace KCC
             OutputName = "out";
 
             Arch = new AutoArch();
+
+            switch (Arch.Arch)
+            {
+
+                default:
+                    TargetOption = "GasX86_64";
+                    break;
+            }
         }
 
         public static CliOptions GetInstance()
@@ -71,6 +81,7 @@ namespace KCC
                         {
                             case 'h':
                                 ReadHelpDoc = true;
+                                InfoMode = true;
                                 break;
                             case 'v':
                                 var val = DetectOptionValue(arg, j);
@@ -160,6 +171,10 @@ namespace KCC
                             break;
                         case "--pintern":
                             OutputInternals = true;
+                            break;
+                        case "--target":
+                            TargetOption = value;
+                            Debug.PrintDbg($"Selecting {TargetOption}");
                             break;
                         default:
                             _canContinue = false;

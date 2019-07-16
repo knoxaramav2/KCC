@@ -1,0 +1,14 @@
+﻿asm dev{
+
+    void main(string[]args){
+		int a = 5;
+		int b = 7;
+		a *= b;
+		print("Hi");
+		print("Hix");
+		print("Hix");
+		print("Hi");
+		print("Hic");
+    }
+
+}

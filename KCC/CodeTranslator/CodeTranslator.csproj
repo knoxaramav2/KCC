@@ -10,11 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CodeTranslator</RootNamespace>
     <AssemblyName>CodeTranslator</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -83,6 +84,7 @@
   <ItemGroup>
     <Compile Include="AbstractRecordMaster.cs" />
     <Compile Include="Directives.cs" />
+    <Compile Include="Intermediates\IndTriples\FauxReg.cs" />
     <Compile Include="Intermediates\IndTriples\IDatumTable.cs" />
     <Compile Include="Intermediates\IndTriples\IndInstTable.cs" />
     <Compile Include="Intermediates\IndTriples\InstDeclController.cs" />

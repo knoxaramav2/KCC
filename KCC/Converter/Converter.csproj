@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeTranslator\CodeTranslator.csproj" />
+    <ProjectReference Include="..\CommonLangLib\CommonLangLib.csproj" />
+    <ProjectReference Include="..\TargetSDK2\TargetSDK2.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -2,9 +2,10 @@
 
     void main(string[]args){
 		int a = 5;
-		int b = 7;
-		a *= b;
-		print("Hi");
+		char b='b';
+		int c = 200;
+
+		test(a+3,b,c*2-a);
     }
 
 }

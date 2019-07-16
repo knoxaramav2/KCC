@@ -171,11 +171,14 @@ namespace CodeTranslator
 
         public override object VisitCall_group([NotNull] KCCParser.Call_groupContext context)
         {
+            Debug.PrintDbg("VisitCallGroup");
+
             _controller.AddInstruction(InstOp.StartFncCall, null, null);
 
             foreach (var e in context.expression())
             {
                 var res = (string) Visit(e);
+                Debug.PrintDbg($"Call res {res}");
                 _controller.AddInstruction(InstOp.MarkAsArg, res, null);
             }
 
@@ -221,6 +224,21 @@ namespace CodeTranslator
         }
 
         //Math*************************
+        public override object VisitUnary([NotNull] KCCParser.UnaryContext context)
+        {
+
+            switch (context.unary_op.Text)
+            {
+                case "-":
+                    {
+                        var result = (string)Visit(context.expression());
+                        _controller.AddInstruction(InstOp.Negate, result, null);
+                        break;
+                    }
+            }
+            return null;
+        }
+
         public override object VisitMath1([NotNull] KCCParser.Math1Context context)
         {
             var lval = (string) Visit(context.expression()[0]);
@@ -490,14 +508,19 @@ namespace CodeTranslator
         //Note: Null values indicate expression results, not specific values/symbols
         public override object VisitList([NotNull] KCCParser.ListContext context)
         {
+            Debug.PrintDbg("VisitList");
             var ret = new List<string>();
-
+            
             foreach(var e in context.expression())
             {
-                ret.Add((string) Visit(e));
+                var res = (string)Visit(e);
+
+                
+                Debug.PrintDbg($"List res {res}");
+                _controller.AddInstruction(InstOp.MarkAsArg, res, null);
             }
 
-            return base.VisitList(context);
+            return null;
         }
 
         public override object VisitParan([NotNull] KCCParser.ParanContext context)
@@ -510,10 +533,10 @@ namespace CodeTranslator
             return null;
         }
 
-        public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)
+        /*public override object VisitSimple_value([NotNull] KCCParser.Simple_valueContext context)
         {
             return (string)VisitValue_id(context.value_id());
-        }
+        }*/
 
         public override object VisitAccessor([NotNull] KCCParser.AccessorContext context)
         {
@@ -532,6 +555,43 @@ namespace CodeTranslator
             return ret;
         }
 
+        public override object VisitString([NotNull] KCCParser.StringContext context)
+        {
+            _controller.AddDirective(Directives.Lc, context.GetText());
+            var x= _controller.AddDirective(Directives.Ascii, context.GetText(), true);
+            return x;
+        }
+
+        public override object VisitIndex_string([NotNull] KCCParser.Index_stringContext context)
+        {
+            return base.VisitIndex_string(context);
+        }
+
+        public override object VisitInteger([NotNull] KCCParser.IntegerContext context)
+        {
+            return context.GetText();
+        }
+
+        public override object VisitChar([NotNull] KCCParser.CharContext context)
+        {
+            return context.GetText();
+        }
+
+        public override object VisitDecimal([NotNull] KCCParser.DecimalContext context)
+        {
+            var value = context.GetText();
+
+            _controller.AddDirective(Directives.Lc, value);
+            var x = _controller.AddDirective(Directives.Double, value, true);
+            return x;
+        }
+
+        public override object VisitSymbol_id([NotNull] KCCParser.Symbol_idContext context)
+        {
+            return context.GetText();
+        }
+
+        /*
         public override object VisitValue_id([NotNull] KCCParser.Value_idContext context)
         {
             if (context.@bool() != null)
@@ -557,6 +617,6 @@ namespace CodeTranslator
             }
 
             return null;
-        }
+        }*/
     }
 }
