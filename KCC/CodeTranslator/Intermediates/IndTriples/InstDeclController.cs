@@ -62,7 +62,7 @@ namespace CodeTranslator
                     break;
                 case OpModifier.LTempRRaw:
                     entry.tArg0 = _currentScope.Instructions.PopTempEntry();
-                    entry.Arg1 = _currentScope.SearchRecord(arg0);
+                    entry.Arg1 = _currentScope.SearchRecord(arg1);
                     break;
                 case OpModifier.LTempRTemp:
                     entry.tArg1 = _currentScope.Instructions.PopTempEntry();
@@ -78,7 +78,7 @@ namespace CodeTranslator
                     entry.Arg1 = null;//TODO Figure out default scheme
                     break;
                 case OpModifier.Immediate:
-
+                    entry.Arg0 = _currentScope.SearchRecord(arg0);
                     break;
             }
 
@@ -113,7 +113,7 @@ namespace CodeTranslator
 
             var instOp = isHeader ? InstOp.DeclareHeaderVar : InstOp.DeclareVar;
 
-            AddInstruction(instOp, id, type);
+            AddInstruction(instOp, id, type, null, OpModifier.Immediate);
 
             Debug.PrintDbg($"Declared {id}:{type} :: Header? {isHeader}");
 
@@ -173,7 +173,7 @@ namespace CodeTranslator
 
         public string DumpInternalCode(int formattedWidth)
         {
-            var cTbl = _root.GetFormattedLog(formattedWidth);
+            var cTbl = _root.GetFormattedLog(formattedWidth*(5/2));
             return cTbl;
         }
 

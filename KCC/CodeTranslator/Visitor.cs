@@ -105,8 +105,8 @@ namespace CodeTranslator
             
             if (context.expression() != null)
             {
-                VisitExpression(context.expression());
-                _controller.AddInstruction(InstOp.Set, id, null, null, OpModifier.FromLastTemp);
+                var val = (string)VisitExpression(context.expression());
+                _controller.AddInstruction(InstOp.Set, id, val, null, OpModifier.FromLastTemp);
             }
 
             return null;
@@ -148,7 +148,7 @@ namespace CodeTranslator
                 }
 
                 var value = (string) Visit(dCtx);
-                OpModifier valueType = value == null ? OpModifier.FromLastTemp : OpModifier.None;
+                OpModifier valueType = value == null ? OpModifier.LRawRTemp : OpModifier.LRawRRaw;
                 _controller.AddInstruction(instOp, symbolId, value, index, valueType);
             } else
             {

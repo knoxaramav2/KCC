@@ -63,6 +63,16 @@ namespace CodeTranslator
 
         public SymbolEntry AddRecord(SymbolEntry t)
         {
+            if (t.IsLiteral)
+            {
+                _entries.TryGetValue(t.Id, out var entry);
+                if (entry == null)
+                {
+                    _entries.Add(t.Id, t);
+                }
+                return t;
+            }
+
             if (_entries.TryGetValue(t.Id, out var e))
             {
                 ErrorReporter.GetInstance().Add($"{t.Id} already exists in scope", ErrorCode.SymbolRedefinition);
@@ -98,7 +108,7 @@ namespace CodeTranslator
 
             if (isLiteral)
             {
-                var entry = _entries[id];
+                _entries.TryGetValue(id, out SymbolEntry entry);
                 if (entry != null) return entry;
                 return AddRecord(new SymbolEntry(id, t.Width, t, true));
             } else
@@ -185,13 +195,15 @@ namespace CodeTranslator
             var InstArg0 = "Arg0 |";
             var InstArg1 = "Arg1 |";
             var InstMod = "Mod |";
+            var Line = "#";
             var header = ('<' + _header?.Id + ">::(" + Id + ' ' + BodyType.ToString() + ')' + $" ${_stackWidth} B").PadLeft(hWidth / 2) + headerSymbol.PadLeft(hWidth / 2) + headerInstruct.PadLeft(hWidth);
             var subHeader = symId.PadLeft(hWidth / 2) + symType.PadLeft(hWidth / 2) +
-                InstOp.PadLeft(hWidth / 4) + InstArg0.PadLeft(hWidth / 4) + InstArg1.PadLeft(hWidth / 4) +
+                Line.PadLeft(hWidth/16) +
+                InstOp.PadLeft(hWidth /16*3) + InstArg0.PadLeft(hWidth / 4) + InstArg1.PadLeft(hWidth / 4) +
                 InstMod.PadLeft(hWidth / 4);
 
 
-            string id, type, op, arg0, arg1, mod;
+            string id, type, op, arg0, arg1, mod, line;
             string underscore = Environment.NewLine + (new string('_', maxWidth)) + Environment.NewLine;
             string scopeUnderscore = Environment.NewLine + (new string('+', maxWidth)) + Environment.NewLine;
             string ret = header + underscore + subHeader + underscore;
@@ -199,26 +211,62 @@ namespace CodeTranslator
 
             for (int i = 0; (i < symLen) || (i < instLen); ++i)
             {
-                id = type = op = arg0 = arg1 = mod = "";
+                id = type = op = arg0 = arg1 = mod = line = "";
 
                 if (i < instLen)
                 {
                     var inst = Instructions.Inst[i];
+                    line = inst.EntryNo + " |";
                     op = inst.Op.ToString() + " |";
-                    arg0 = inst.Arg0 + " |";
-                    arg1 = inst.Arg1 + " |";
+
+                    switch (inst.OpModifier)
+                    {
+                        case OpModifier.FromLastTemp:
+                            arg0 = $"({inst.tArg0.EntryNo})";
+                            break;
+                        case OpModifier.Immediate:
+                            arg0 = $"{inst.Arg0.Id}";
+                            break;
+                        case OpModifier.LRawRRaw:
+                            arg0 = inst.Arg0.Id;
+                            arg1 = inst.Arg1.Id;
+                            break;
+                        case OpModifier.LRawRTemp:
+                            arg0 = inst.Arg0.Id;
+                            arg1 = $"({inst.tArg1.EntryNo})";
+                            break;
+                        case OpModifier.LTempRRaw:
+                            arg0 = $"({inst.tArg0.EntryNo})";
+                            arg1 = inst.Arg1.Id;
+                            break;
+                        case OpModifier.LTempRTemp:
+                            arg0 = $"({inst.tArg0.EntryNo})";
+                            arg1 = $"({inst.tArg1.EntryNo})";
+                            break;
+                        case OpModifier.None:
+                            arg0 = inst?.Arg0?.Id;
+                            break;
+                        case OpModifier.NullOrDefault:
+
+                            break;
+                    }
+
+                    arg0 += " |";
+                    arg1 += " |";
                     mod = inst.OpModifier.ToString() + " |";
                 }
 
                 if (i < symLen)
                 {
                     var entry = _entries.Values.ElementAt(i);
+                    //if (entry.IsLiteral) continue;
                     id = entry.Id + " |";
                     type = entry.Type.SymbolId + " |";
                 }
 
                 ret += id.PadLeft(hWidth / 2) + type.PadLeft(hWidth / 2) +
-                op.PadLeft(hWidth / 4) + arg0.PadLeft(hWidth / 4) + arg1.PadLeft(hWidth / 4) +
+                line.PadLeft(hWidth/16) +
+                op.PadLeft(hWidth / 16*3) + arg0.PadLeft(hWidth / 4) + arg1.PadLeft(hWidth / 4) +
                 mod.PadLeft(hWidth / 4) + Environment.NewLine;
             }
 

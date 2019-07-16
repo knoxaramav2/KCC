@@ -15,6 +15,7 @@ namespace CodeTranslator
         {
             Inst = new List<InstEntry>();
             SymbolTable = symbolAddrTable;
+            TempStack = new List<InstEntry>();
         }
 
         public IDatumTable<InstEntry> AddTable(string id, string type)

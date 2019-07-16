@@ -1,11 +1,7 @@
 ﻿asm dev{
 
     void main(string[]args){
-		int a = 5;
-		char b='b';
-		int c = 200;
-
-		test(a+3,b,c*2-a);
+		int a = (3-2) * (5*6);
     }
 
 }
