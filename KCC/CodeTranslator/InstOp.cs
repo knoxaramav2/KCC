@@ -58,6 +58,8 @@
         Modulo,
         Power,
 
+        Negate,
+
         PostIncrement,
         PostDecrement,
         PreIncrement,

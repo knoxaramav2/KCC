@@ -21,6 +21,7 @@ namespace CodeTranslator
 
         public InstEntry AddRecord(InstEntry t)
         {
+            //Prevent duplicate argument markers
             Inst.Add(t);
 
             return t;
@@ -53,17 +54,21 @@ namespace CodeTranslator
 
     public class InstEntry
     {
+        public short EntryNo {get; private set;}
         public InstOp Op;
-        public string Arg0, Arg1;
+        public string Arg0, Arg1;       //For literals, variables
+        public InstEntry tArg0, tArg1;  //
         public OpModifier OpModifier;
-        public FauxUnit result;
 
-        public InstEntry(InstOp op, string arg0, string arg1, OpModifier opModifier=OpModifier.None)
+        public InstEntry(InstOp op, string arg0, string arg1, short entryNo, OpModifier opModifier=OpModifier.None)
         {
+            EntryNo = entryNo;
             Op = op;
             Arg0 = arg0;
             Arg1 = arg1;
             OpModifier = opModifier;
+
+            tArg0 = tArg1 = null;
         }
     }
 }

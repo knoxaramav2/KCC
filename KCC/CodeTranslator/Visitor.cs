@@ -171,11 +171,14 @@ namespace CodeTranslator
 
         public override object VisitCall_group([NotNull] KCCParser.Call_groupContext context)
         {
+            Debug.PrintDbg("VisitCallGroup");
+
             _controller.AddInstruction(InstOp.StartFncCall, null, null);
 
             foreach (var e in context.expression())
             {
                 var res = (string) Visit(e);
+                Debug.PrintDbg($"Call res {res}");
                 _controller.AddInstruction(InstOp.MarkAsArg, res, null);
             }
 
@@ -221,6 +224,21 @@ namespace CodeTranslator
         }
 
         //Math*************************
+        public override object VisitUnary([NotNull] KCCParser.UnaryContext context)
+        {
+
+            switch (context.unary_op.Text)
+            {
+                case "-":
+                    {
+                        var result = (string)Visit(context.expression());
+                        _controller.AddInstruction(InstOp.Negate, result, null);
+                        break;
+                    }
+            }
+            return null;
+        }
+
         public override object VisitMath1([NotNull] KCCParser.Math1Context context)
         {
             var lval = (string) Visit(context.expression()[0]);
@@ -490,14 +508,19 @@ namespace CodeTranslator
         //Note: Null values indicate expression results, not specific values/symbols
         public override object VisitList([NotNull] KCCParser.ListContext context)
         {
+            Debug.PrintDbg("VisitList");
             var ret = new List<string>();
-
+            
             foreach(var e in context.expression())
             {
-                ret.Add((string) Visit(e));
+                var res = (string)Visit(e);
+
+                
+                Debug.PrintDbg($"List res {res}");
+                _controller.AddInstruction(InstOp.MarkAsArg, res, null);
             }
 
-            return base.VisitList(context);
+            return null;
         }
 
         public override object VisitParan([NotNull] KCCParser.ParanContext context)
