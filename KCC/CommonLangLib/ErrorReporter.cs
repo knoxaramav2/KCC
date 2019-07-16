@@ -42,7 +42,12 @@ namespace CommonLangLib
         UnsupportedOS,
 
         Plugins,
-        PluginNotFound
+        PluginNotFound,
+
+        //Intermediates
+        TempInstStackEmpty,
+
+
     }
 
     public class ErrorReporter

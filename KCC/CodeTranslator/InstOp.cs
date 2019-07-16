@@ -51,6 +51,7 @@
         SetOr,
         SetXor,
 
+        #region Intermediate
         Add,
         Sub,
         Mult,
@@ -65,20 +66,24 @@
         PreIncrement,
         PreDecrement,
         #endregion
+        #endregion
 
         #region MEM_SWAP
         RgMemSwap = 300,
 
+        #region Intermediate
         ShL,                    //Shift Left
         ShR,                    //Shift Right
 
         IndexAccess,
+        #endregion
 
         #endregion
 
         #region LOGIC
         RgLogic = 500,
 
+        #region Intermediate
         Or,                     //Logic OR
         Nor,
         Xor,
@@ -100,6 +105,7 @@
         GtrEqu,                 //Greater Than or Equal
         Equ,                    //Equal
         NEqu,                   //Not Equal
+        #endregion
 
         #endregion
 

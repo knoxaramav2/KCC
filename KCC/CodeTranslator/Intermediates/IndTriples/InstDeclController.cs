@@ -41,7 +41,58 @@ namespace CodeTranslator
 
         public bool AddInstruction(InstOp op, string arg0, string arg1, string special=null, OpModifier opModifier=OpModifier.None)
         {
-            _currentScope.Instructions.AddRecord(new InstEntry(op, arg0, arg1, (short)_currentScope.Instructions.Inst.Count,opModifier));
+            var entry = new InstEntry(op, (short)_currentScope.Instructions.Inst.Count, opModifier);
+
+            switch (opModifier)
+            {
+                //Use last calculated value
+                //Useful for long math and logic operations
+                case OpModifier.FromLastTemp:
+                    entry.tArg0 = _currentScope.Instructions.PopTempEntry();
+                    break;
+                //Both inputs are literals or variable names
+                //Can be optimized later
+                case OpModifier.LRawRRaw:
+                    entry.Arg0 = _currentScope.SearchRecord(arg0);
+                    entry.Arg1 = _currentScope.SearchRecord(arg1);
+                    break;
+                case OpModifier.LRawRTemp:
+                    entry.Arg0 = _currentScope.SearchRecord(arg0);
+                    entry.tArg1 = _currentScope.Instructions.PopTempEntry();
+                    break;
+                case OpModifier.LTempRRaw:
+                    entry.tArg0 = _currentScope.Instructions.PopTempEntry();
+                    entry.Arg1 = _currentScope.SearchRecord(arg0);
+                    break;
+                case OpModifier.LTempRTemp:
+                    entry.tArg1 = _currentScope.Instructions.PopTempEntry();
+                    entry.tArg0 = _currentScope.Instructions.PopTempEntry();
+                    break;
+                //No arguments
+                case OpModifier.None:
+
+                    break;
+                //Assume no inputs
+                case OpModifier.NullOrDefault:
+                    entry.Arg0 = _currentScope.SearchRecord(arg0);
+                    entry.Arg1 = null;//TODO Figure out default scheme
+                    break;
+                case OpModifier.Immediate:
+
+                    break;
+            }
+
+            //Check for intermediate command
+            if ((op>=InstOp.Add && op <= InstOp.PreDecrement) ||
+                (op>= InstOp.ShL && op <= InstOp.IndexAccess) ||
+                (op >= InstOp.Or && op <= InstOp.NEqu))
+            {
+                _currentScope.Instructions.AddTempEntry(entry);
+                Debug.PrintDbg($"Temp: {entry.EntryNo}");
+            }
+
+            _currentScope.Instructions.AddRecord(entry);
+
             Debug.PrintDbg($"{op} {arg0} {arg1} {opModifier}");
 
             return true;
@@ -65,6 +116,18 @@ namespace CodeTranslator
             AddInstruction(instOp, id, type);
 
             Debug.PrintDbg($"Declared {id}:{type} :: Header? {isHeader}");
+
+            return true;
+        }
+
+        public bool DeclareLiteral(string value, string type)
+        {
+            var result = _currentScope.AddRecord(_currentScope.AddRecord(value, type, true));
+
+            if (result != null)
+            {
+                Debug.PrintDbg($"Literal: {value} : {type}");
+            }
 
             return true;
         }

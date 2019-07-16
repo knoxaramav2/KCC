@@ -71,7 +71,7 @@ namespace CodeTranslator
 
             //TODO Better alignment
             var dblk = _offset % _blockSize;
-            var tWidth = t.Width == 0 ? (uint) CliOptions.Arch.MAX_BUS_WIDTH : t.Width;
+            var tWidth = t.Width == 0 ? (uint)CliOptions.Arch.MAX_BUS_WIDTH : t.Width;
             if (tWidth > dblk)
             {
                 _offset += dblk;
@@ -87,7 +87,7 @@ namespace CodeTranslator
             return t;
         }
 
-        public SymbolEntry AddRecord(string id, string type)
+        public SymbolEntry AddRecord(string id, string type, bool isLiteral=false)
         {
             var t = _typeTable.GetPrimitive(type);
             if (t == null)
@@ -96,7 +96,15 @@ namespace CodeTranslator
                 return null;
             }
 
-            return AddRecord(new SymbolEntry(id, t.Width, t));
+            if (isLiteral)
+            {
+                var entry = _entries[id];
+                if (entry != null) return entry;
+                return AddRecord(new SymbolEntry(id, t.Width, t, true));
+            } else
+            {
+                return AddRecord(new SymbolEntry(id, t.Width, t));
+            }
         }
 
         public void SetType(BodyType t)
@@ -107,10 +115,7 @@ namespace CodeTranslator
         //TODO Merge with add record
         public SymbolEntry AddCString(string msg)
         {
-            var e = new SymbolEntry($"{LDCounter++}", (uint) msg.Length, _typeTable.GetPrimitive("cstring"));
-
-
-
+            var e = new SymbolEntry($"{LDCounter++}", (uint)msg.Length, _typeTable.GetPrimitive("cstring"));
             return e;
         }
 
@@ -131,14 +136,14 @@ namespace CodeTranslator
 
         public List<SymbolAddrTable> SearchAll()
         {
-            var ret = new List<SymbolAddrTable> {this};
+            var ret = new List<SymbolAddrTable> { this };
 
             foreach (var e in _entries)
             {
                 if (e.Value.Target == null)
                 {
                     continue;
-                } 
+                }
 
                 ret.AddRange(e.Value.Target.SearchAll());
             }
@@ -172,25 +177,25 @@ namespace CodeTranslator
             var symLen = _entries.Count;
             var instLen = Instructions.Inst.Count;
 
-            var headerSymbol    = "Symbol |";
-            var headerInstruct  = "Instruction |";
-            var symId           = "ID |";
-            var symType         = "Type |";
-            var InstOp          = "Op |";
-            var InstArg0        = "Arg0 |";
-            var InstArg1        = "Arg1 |";
-            var InstMod         = "Mod |";
-            var header = ('<'+_header?.Id+">::(" + Id + ' ' + BodyType.ToString()+')' + $" ${_stackWidth} B").PadLeft(hWidth/2) + headerSymbol.PadLeft(hWidth/2) + headerInstruct.PadLeft(hWidth);
-            var subHeader = symId.PadLeft(hWidth/2)+symType.PadLeft(hWidth/2)+
-                InstOp.PadLeft(hWidth/4)+InstArg0.PadLeft(hWidth/4)+InstArg1.PadLeft(hWidth/4)+
-                InstMod.PadLeft(hWidth/4);
+            var headerSymbol = "Symbol |";
+            var headerInstruct = "Instruction |";
+            var symId = "ID |";
+            var symType = "Type |";
+            var InstOp = "Op |";
+            var InstArg0 = "Arg0 |";
+            var InstArg1 = "Arg1 |";
+            var InstMod = "Mod |";
+            var header = ('<' + _header?.Id + ">::(" + Id + ' ' + BodyType.ToString() + ')' + $" ${_stackWidth} B").PadLeft(hWidth / 2) + headerSymbol.PadLeft(hWidth / 2) + headerInstruct.PadLeft(hWidth);
+            var subHeader = symId.PadLeft(hWidth / 2) + symType.PadLeft(hWidth / 2) +
+                InstOp.PadLeft(hWidth / 4) + InstArg0.PadLeft(hWidth / 4) + InstArg1.PadLeft(hWidth / 4) +
+                InstMod.PadLeft(hWidth / 4);
 
 
             string id, type, op, arg0, arg1, mod;
-            string underscore = Environment.NewLine+(new string('_', maxWidth))+Environment.NewLine;
+            string underscore = Environment.NewLine + (new string('_', maxWidth)) + Environment.NewLine;
             string scopeUnderscore = Environment.NewLine + (new string('+', maxWidth)) + Environment.NewLine;
             string ret = header + underscore + subHeader + underscore;
-            
+
 
             for (int i = 0; (i < symLen) || (i < instLen); ++i)
             {
@@ -228,6 +233,7 @@ namespace CodeTranslator
 
             return ret;
         }
+        
     }
 
     public class SymbolEntry
@@ -239,14 +245,17 @@ namespace CodeTranslator
         public string Id { get; }
         public uint Offset { get; internal set; }
         public DataType Type { get; }
+        public bool IsLiteral { get; }
 
-        public SymbolEntry(string id, uint width, DataType type)
+        public SymbolEntry(string id, uint width, DataType type, bool literal=false)
         {
             Width = width;
             Id = id;
             Type = type;
+            IsLiteral = literal;
 
             Target = null;
+
         }
 
         internal void SetScope(SymbolAddrTable scope)

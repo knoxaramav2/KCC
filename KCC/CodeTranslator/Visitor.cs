@@ -559,6 +559,7 @@ namespace CodeTranslator
         {
             _controller.AddDirective(Directives.Lc, context.GetText());
             var x= _controller.AddDirective(Directives.Ascii, context.GetText(), true);
+            _controller.DeclareLiteral(x, "cstring");
             return x;
         }
 
@@ -569,11 +570,15 @@ namespace CodeTranslator
 
         public override object VisitInteger([NotNull] KCCParser.IntegerContext context)
         {
+            var value = context.GetText();
+            _controller.DeclareLiteral(value, "int");
             return context.GetText();
         }
 
         public override object VisitChar([NotNull] KCCParser.CharContext context)
         {
+            var value = context.GetText();
+            _controller.DeclareLiteral(value, "char");
             return context.GetText();
         }
 
@@ -583,6 +588,7 @@ namespace CodeTranslator
 
             _controller.AddDirective(Directives.Lc, value);
             var x = _controller.AddDirective(Directives.Double, value, true);
+            _controller.DeclareVariable(value, "double");
             return x;
         }
 
