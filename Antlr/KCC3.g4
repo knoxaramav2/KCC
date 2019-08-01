@@ -81,6 +81,7 @@ control             :
 expression          : //accessor #simple_accessor
                      lval_op #lv
                     | rval_op #rv
+                    | var_decl                                              #exp_var_decl
                     | unary_op='-' expression                               #unary
                     | expression prod_op=('*'|'/'|'%'|'**') expression      #math1
                     | expression sum_op=('+'|'-') expression                #math2
@@ -94,6 +95,7 @@ expression          : //accessor #simple_accessor
                     | expression lg_or=('||'|'!|'|'|||'|'!||') expression   #l_or
                     | symbol_id? accessor op_sum=('='|'+='|'-='|'*='|'/='|'%='|'&='|'^='|'|=') expression index_anyvalue? #set_alt
                     | expression list=',' expression #list
+                    | kw=('return'|'const') expression?                     #keyword
                     | '(' paran=expression ')'  #paran
                     | value_id  #simple_value
                     //|symbol_id  #simple_symbol

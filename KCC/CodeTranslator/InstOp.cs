@@ -122,6 +122,7 @@
         Call,                   //Invoke function
 
         Exit,
+        Return,
 
         #endregion
 

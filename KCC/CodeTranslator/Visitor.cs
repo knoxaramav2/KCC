@@ -112,13 +112,18 @@ namespace CodeTranslator
             return null;
         }
 
+        public override object VisitExp_var_decl([NotNull] KCCParser.Exp_var_declContext context)
+        {
+            return VisitVar_decl(context.var_decl());
+        }
+
         //Expressions***********************************
 
         public override object VisitSet_alt([NotNull] KCCParser.Set_altContext context)
         {
             string declType;
             string symbolId;
-            string op = context.op_sum.Text;
+            string op = context?.op_sum?.Text;
             string index = context.index_anyvalue()?.GetText();
             InstOp instOp = InstOp.NoOp;
 
@@ -595,6 +600,31 @@ namespace CodeTranslator
         public override object VisitSymbol_id([NotNull] KCCParser.Symbol_idContext context)
         {
             return context.GetText();
+        }
+
+        public override object VisitKeyword([NotNull] KCCParser.KeywordContext context)
+        {
+            OpModifier mod = OpModifier.None;
+            string op = null;
+
+            if (context.expression() != null)
+            {
+                op = (string)Visit(context.expression());
+
+                if (op == null)
+                {
+                    mod = OpModifier.FromLastTemp;
+                }
+            }
+
+            switch (context.kw.Text)
+            {
+                case "return":
+                    _controller.AddInstruction(InstOp.Return, op, null, null, mod);
+                    break;
+            }
+
+            return null;
         }
 
         /*

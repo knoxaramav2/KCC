@@ -139,6 +139,12 @@ namespace CodeTranslator
             _entries.Clear();
         }
 
+        public SymbolEntry SearchLocalEntry(string id)
+        {
+            _entries.TryGetValue(id, out var e);
+            return e;
+        }
+
         public SymbolEntry SearchRecord(string id)
         {
             return !_entries.TryGetValue(id, out var e) ? _header?.SearchRecord(id) : e;

@@ -59,6 +59,7 @@ namespace TargetPluginSDK
                     );
             }
 
+            subRange.Add(new Tuple<string, int>(name, width));
 
             return this;
         }
