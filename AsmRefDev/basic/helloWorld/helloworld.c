@@ -8,18 +8,14 @@ void test(int a, int b, int c, int d, int e){
 
 int main(){
 
-	int a, b, c, d, e, f;
-	float h, i, j;
-	double k, l, m, n;
-	char o, p, q;
+	float a = 5;
+	float b = 4.6;
+	float c = 33.33;
+	float d = 55.55;
+	float e = a*b;
+	a+=b+d-e;
 
-	a=1;
-	b=2;
-	c=3;
-	e=4;
-	f=5;
-
-	test(a,b,c,d,e);
+	printf("%f %f %f %f %e",a, b, c, d, e);
 
     return 0;
 }

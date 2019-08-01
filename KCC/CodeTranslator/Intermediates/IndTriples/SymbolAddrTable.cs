@@ -196,16 +196,18 @@ namespace CodeTranslator
             var InstArg1 = "Arg1 |";
             var InstMod = "Mod |";
             var Line = "#";
-            var header = ('<' + _header?.Id + ">::(" + Id + ' ' + BodyType.ToString() + ')' + $" ${_stackWidth} B").PadLeft(hWidth / 2) + headerSymbol.PadLeft(hWidth / 2) + headerInstruct.PadLeft(hWidth);
-            var subHeader = symId.PadLeft(hWidth / 2) + symType.PadLeft(hWidth / 2) +
+            var header = ('<' + _header?.Id + ">::(" + Id + ' ' + BodyType.ToString() + ')' 
+                + $" ${_stackWidth} B").PadLeft(hWidth / 4) + headerSymbol.PadLeft(hWidth / 4) 
+                + headerInstruct.PadLeft(hWidth);
+            var subHeader = symId.PadLeft(hWidth / 4) + symType.PadLeft(hWidth / 4) +
                 Line.PadLeft(hWidth/16) +
                 InstOp.PadLeft(hWidth /16*3) + InstArg0.PadLeft(hWidth / 4) + InstArg1.PadLeft(hWidth / 4) +
                 InstMod.PadLeft(hWidth / 4);
 
 
             string id, type, op, arg0, arg1, mod, line;
-            string underscore = Environment.NewLine + (new string('_', maxWidth)) + Environment.NewLine;
-            string scopeUnderscore = Environment.NewLine + (new string('+', maxWidth)) + Environment.NewLine;
+            string underscore = Environment.NewLine + (new string('_', 12*maxWidth/16)) + Environment.NewLine;
+            string scopeUnderscore = Environment.NewLine + (new string('+', 12*maxWidth/16)) + Environment.NewLine;
             string ret = header + underscore + subHeader + underscore;
 
 
@@ -264,7 +266,7 @@ namespace CodeTranslator
                     type = entry.Type.SymbolId + " |";
                 }
 
-                ret += id.PadLeft(hWidth / 2) + type.PadLeft(hWidth / 2) +
+                ret += id.PadLeft(hWidth / 4) + type.PadLeft(hWidth / 4) +
                 line.PadLeft(hWidth/16) +
                 op.PadLeft(hWidth / 16*3) + arg0.PadLeft(hWidth / 4) + arg1.PadLeft(hWidth / 4) +
                 mod.PadLeft(hWidth / 4) + Environment.NewLine;

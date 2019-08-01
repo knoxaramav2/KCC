@@ -75,6 +75,9 @@ rval_op             : INCREMENT accessor        #pre_inc
                     | '('symbol_id')' val_var       #type_cast
                     ;
 
+control             : 
+                    ;
+
 expression          : //accessor #simple_accessor
                      lval_op #lv
                     | rval_op #rv
