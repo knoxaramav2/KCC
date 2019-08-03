@@ -114,9 +114,10 @@
       <Name>PreProcessor</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="libs\GasX86_64.dll" />
+    <Folder Include="libs\" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="srcdocs\cli.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

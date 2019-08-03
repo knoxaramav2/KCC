@@ -20,12 +20,14 @@ namespace Converterx
         private LocaleArchFrags _fragments;
         private InstDeclController _controller;
         private ITarget _target;
+        private ErrorReporter _reporter;
 
         public Converter()
         {
             _asm = new List<string>();
             _cli = CliOptions.GetInstance();
             _controller = InstDeclController.GetInstance();
+            _reporter = ErrorReporter.GetInstance();
         }
 
         public void LogInternalTranslation()
@@ -53,7 +55,10 @@ namespace Converterx
         public void Build()
         {
             //TODO Support other architectures than x86-x64
-            LoadTargetPlugin();
+            if (!LoadTargetPlugin())
+            {
+                return;
+            }
             CreateAssembly();
         }
 
@@ -61,6 +66,8 @@ namespace Converterx
         {
 
             //TODO Choose from list
+            _target.Build();
+            return;
 
             IArchAgent agent = new Gasx86_64();
             agent.Init(_controller);
@@ -86,7 +93,7 @@ namespace Converterx
             }
         }
 
-        public void LoadTargetPlugin()
+        public bool LoadTargetPlugin()
         {
             //var target = _cli.TargetOption;
 
@@ -132,22 +139,22 @@ namespace Converterx
             foreach(Type t in pluginTypes)
             {
                 ITarget p = (ITarget)Activator.CreateInstance(t);
-                p.Init(_cli, _controller);
-                plugins.Add(p);
+                Console.WriteLine(p.TargetName);
+                if (_cli.TargetOption.ToLower() == p.TargetName.ToLower())
+                {
+                    _target = p;
+                    _target.Init(_cli, _controller);
+                    break;
+                }
             }
 
-            Console.WriteLine(plugins.Count);
+            if (_target == null)
+            {
+                _reporter.Add($"Target plugin {_cli.TargetOption} not found", ErrorCode.PluginNotFound);
+                return false;
+            }
 
-
-            /*
-            AssemblyName asmName = AssemblyName.GetAssemblyName(pluginPath);
-            Assembly pluginAsm = Assembly.Load(asmName);
-            Type type = typeof(ITarget);
-            Type[] types = pluginAsm.GetTypes();
-
-            _target = (ITarget)Activator.CreateInstance(pluginAsm.GetType());
-            _target.Init(_cli, _controller);
-            */
+            return true;
         }
 
         private string GetDefaultPlugin()

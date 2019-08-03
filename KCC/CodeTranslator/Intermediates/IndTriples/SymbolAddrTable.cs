@@ -303,6 +303,8 @@ namespace CodeTranslator
         public DataType Type { get; }
         public bool IsLiteral { get; }
 
+        public bool IsFunction { get { return Target != null; } }
+
         public SymbolEntry(string id, uint width, DataType type, bool literal=false)
         {
             Width = width;

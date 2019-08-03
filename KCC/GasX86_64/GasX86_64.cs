@@ -20,7 +20,7 @@ namespace GasX86_64
         {
             get
             {
-                return "Gas64";
+                return "GasX86_64";
             }
         }
 
@@ -28,9 +28,46 @@ namespace GasX86_64
         {
             var ret = "";
 
-
+            var root = _ctrl.GetRoot();
+            ExecuteFrame(root);
 
             return ret;
+        }
+
+        public bool ExecuteFrame(SymbolAddrTable table)
+        {
+            var entries = table._entries;
+            foreach (var v in entries)
+            {
+                var e = v.Value;
+
+                if (e.IsFunction)
+                {
+                    string prologue = GetPrologue(e);
+                    string vars = GetVarDeclarations(e);
+
+
+                } else if (e.IsLiteral)
+                {
+
+                } else
+                {
+
+                }
+                
+            }
+
+            return true;
+        }
+
+        private string GetPrologue(SymbolEntry e)
+        {
+            return null;
+        }
+
+        private string GetVarDeclarations(SymbolEntry e)
+        {
+            return null;
         }
 
         public void Init(CliOptions cli, InstDeclController controller)
@@ -39,8 +76,6 @@ namespace GasX86_64
             _ctrl = controller;
 
             Debug.PrintDbg($"Loaded {TargetName}");
-
-
         }
     }
 }

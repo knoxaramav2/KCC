@@ -27,6 +27,11 @@ namespace CodeTranslator
             return _self ?? (_self = new InstDeclController());
         }
 
+        public SymbolAddrTable GetRoot()
+        {
+            return _root;
+        }
+
         public string AddDirective(Directives d, string info, bool nested=false)
         {
             if (nested)
@@ -135,12 +140,13 @@ namespace CodeTranslator
         public bool CreateScope(string id, string type, BodyType t)
         {
             var table = (SymbolAddrTable)_currentScope.AddTable(id, type);
-            table.SetType(t);
 
             if (table == null)
             {
                 return false;
             }
+
+            table.SetType(t);
 
             _currentScope = table;
             Debug.PrintDbg($"Now pointed to {id}");
