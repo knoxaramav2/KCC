@@ -303,7 +303,22 @@ namespace CodeTranslator
         public DataType Type { get; }
         public bool IsLiteral { get; }
 
-        public bool IsFunction { get { return Target != null; } }
+        public bool IsFunction()
+        {
+            return (Target != null) && (Target.BodyType == BodyType.Function);
+        }
+
+        public bool IsAssembly()
+        {
+            return (Target != null) && (Target.BodyType == BodyType.Asm);
+
+        }
+
+        public bool IsClass()
+        {
+            return (Target != null) && (Target.BodyType == BodyType.Class);
+
+        }
 
         public SymbolEntry(string id, uint width, DataType type, bool literal=false)
         {

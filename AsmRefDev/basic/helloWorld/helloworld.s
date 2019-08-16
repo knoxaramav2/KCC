@@ -18,7 +18,7 @@ test:
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	subq	$48, %rsp
+	subq	$64, %rsp
 	call	__main
 	movss	.LC0(%rip), %xmm0
 	movss	%xmm0, -4(%rbp)
@@ -27,14 +27,20 @@ main:
 	movss	-4(%rbp), %xmm0
 	addss	-8(%rbp), %xmm0
 	movss	%xmm0, -12(%rbp)
+	movsd	.LC2(%rip), %xmm0
+	movsd	%xmm0, -24(%rbp)
 	movl	$0, %eax
 	leave
 	ret
 	.section .rdata,"dr"
 	.align 4
 .LC0:
-	.long	1084856730
+	.long	1084961587
 	.align 4
 .LC1:
-	.long	1080033280
+	.long	1080172950
+	.align 8
+.LC2:
+	.long	1614907703
+	.long	1075908837
 	.ident	"GCC: (GNU) 6.4.0"

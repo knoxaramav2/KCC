@@ -67,15 +67,11 @@ namespace Converterx
 
             //TODO Choose from list
             _target.Build();
-            return;
+            var asm = _target.DumpAssembly();
 
-            IArchAgent agent = new Gasx86_64();
-            agent.Init(_controller);
-
-            //TODO support multiple files
             while (true)
             {
-                _asm.Add(agent.GetAll());
+                _asm.Add(asm);
 
                 string asmPath = $@"{KCCEnv.BaseUri}/{_cli.OutputName}.s";
 
@@ -87,7 +83,7 @@ namespace Converterx
                     }
                 }
 
-                agent.InvokeLocalAssembler(asmPath);
+                InvokeLocalAssembler(asmPath);
 
                 break;
             }
@@ -166,6 +162,64 @@ namespace Converterx
             }
 
             return "";
+        }
+
+        public bool InvokeLocalAssembler(string asmPath)
+        {
+            //TODO Watch for required libraries
+            string shell, exec;
+            string libs = "";
+
+            if (CliOptions.Arch.OS == OS.Linux)
+            {
+                shell = "/bin/bash";
+                exec = "-c";
+            }
+            else
+            {
+                shell = "CMD.exe";
+                exec = "/C";
+            }
+
+            var process = new System.Diagnostics.Process
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = shell,
+                    Arguments = $"{exec} \"gcc {asmPath} {libs} -o " +
+                    $"{KCCEnv.BaseUri}/{_cli.OutputName}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.EnableRaisingEvents = true;
+
+            string stdOut = "", stdErr = "";
+
+            process.Start();
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                stdOut += process.StandardOutput.ReadLine() + Environment.NewLine;
+            }
+
+            while (!process.StandardError.EndOfStream)
+            {
+                stdErr += process.StandardError.ReadLine() + Environment.NewLine;
+            }
+
+            CommonLangLib.Debug.PrintDbg(stdOut);
+            CommonLangLib.Debug.PrintDbg(stdErr);
+
+            if (stdErr != "")
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 
