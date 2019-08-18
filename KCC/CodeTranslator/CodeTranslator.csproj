@@ -100,7 +100,6 @@
     <Compile Include="Reserved.cs" />
     <Compile Include="Intermediates\IndTriples\SymbolAddrTable.cs" />
     <Compile Include="Intermediates\Old\SymbolTable.cs" />
-    <Compile Include="Targets\Gasx86_64.cs" />
     <Compile Include="Targets\Nasm32.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="KCC.g4.lexer.cs">

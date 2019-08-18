@@ -40,6 +40,7 @@ namespace GasX86_64
 
             var root = _ctrl.GetRoot();
             ExecuteFrame(root);
+            _constants.Add(GetConstants());
 
             return ret;
         }
@@ -60,7 +61,6 @@ namespace GasX86_64
 
                     _functions.Add(prologue+vars+epilogue+_nl);
 
-                    _constants.Add(GetConstants());
                 } else if (e.IsLiteral)
                 {
 
@@ -124,8 +124,20 @@ namespace GasX86_64
 
             foreach(var dcl in InstDeclController.Meta.GetDirectives())
             {
-                string directive = dcl.Directive.ToString().ToLower();
+                string directive = null;
 
+                if (dcl.Directive==Directives.Lc)
+                {
+                    directive = ".LC" + dcl.Info+_nl;
+
+                    foreach (var n in dcl.Nested)
+                    {
+                        directive += $"  .{n.Directive.ToString().ToLower()}\t{dcl.Nested[0].Info}";
+                    }
+                    
+                }
+
+                constants += directive + _nl;
             }
 
             return constants;
