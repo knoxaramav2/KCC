@@ -5,6 +5,7 @@
 	}
 
     void main(string[]args){
+		int a = 45;
 		test(5,4);
     }
 

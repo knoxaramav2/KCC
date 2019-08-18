@@ -100,14 +100,24 @@ namespace CodeTranslator
         {
             var type = context.symbol_id()[0].GetText();
             var id = context.symbol_id()[1].GetText();
+            var mod = OpModifier.NullOrDefault;
+            string val = null;
 
             _controller.DeclareVariable(id, type);
             
             if (context.expression() != null)
             {
-                var val = (string)VisitExpression(context.expression());
-                _controller.AddInstruction(InstOp.Set, id, val, null, OpModifier.FromLastTemp);
+                val = (string)VisitExpression(context.expression());
+                if (val == null)
+                {
+                    mod = OpModifier.FromLastTemp;
+                } else
+                {
+                    mod = OpModifier.LRawRRaw;
+                }
             }
+
+            _controller.AddInstruction(InstOp.Set, id, val, null, mod);
 
             return null;
         }
@@ -184,7 +194,7 @@ namespace CodeTranslator
             {
                 var res = (string) Visit(e);
                 Debug.PrintDbg($"Call res {res}");
-                _controller.AddInstruction(InstOp.MarkAsArg, res, null);
+                //_controller.AddInstruction(InstOp.MarkAsArg, res, null);
             }
 
             _controller.AddInstruction(InstOp.EndFncCall, null, null);
@@ -522,7 +532,7 @@ namespace CodeTranslator
 
                 
                 Debug.PrintDbg($"List res {res}");
-                _controller.AddInstruction(InstOp.MarkAsArg, res, null);
+                _controller.AddInstruction(InstOp.MarkAsArg, res, null, null, OpModifier.Immediate);
             }
 
             return null;

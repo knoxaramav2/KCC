@@ -117,6 +117,7 @@ namespace GasX86_64
 
         private string GetConstants(InstDeclController ctrl)
         {
+            var meta = InstDeclController.Meta;
             var constants = "";
 
             foreach(var dcl in InstDeclController.Meta.GetDirectives())
