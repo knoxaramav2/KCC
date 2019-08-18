@@ -59,6 +59,8 @@ namespace GasX86_64
                     string epilogue = GetEpilogue(e.Target);
 
                     _functions.Add(prologue+vars+epilogue+_nl);
+
+                    _constants.Add(GetConstants());
                 } else if (e.IsLiteral)
                 {
 
@@ -115,13 +117,14 @@ namespace GasX86_64
             return epilogue;
         }
 
-        private string GetConstants(InstDeclController ctrl)
+        private string GetConstants()
         {
             var meta = InstDeclController.Meta;
             var constants = "";
 
             foreach(var dcl in InstDeclController.Meta.GetDirectives())
             {
+                string directive = dcl.Directive.ToString().ToLower();
 
             }
 

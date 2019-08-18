@@ -257,6 +257,14 @@ namespace CodeTranslator
                         case OpModifier.NullOrDefault:
 
                             break;
+                        case OpModifier.LRawRConst:
+                            arg0 = inst.Arg0.Id;
+                            arg1 = inst.Arg1.Id;
+                            break;
+                        case OpModifier.LTempRConst:
+                            arg0 = $"({inst.tArg0.EntryNo})";
+                            arg1 = inst.Arg1.Id;
+                            break;
                     }
 
                     arg0 += " |";

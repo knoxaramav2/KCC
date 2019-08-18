@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CommonLangLib;
+using System.Linq;
 
 namespace CodeTranslator
 {
@@ -73,6 +74,21 @@ namespace CodeTranslator
         public static ushort GetLcCounter()
         {
             return _lcCounter;
+        }
+
+        public SymbolEntry GetDirectiveSymbol(string id)
+        {
+            var entry = Entries.FirstOrDefault(t=>
+                (t.Directive.ToString().ToUpper()+t.Info)==id);
+            if (entry == null)
+            {
+                return null;
+            }
+
+            DataType type = DataTypeTable.GetInstance().GetPrimitive(entry.Nested[0].Directive.ToString().ToLower());
+            SymbolEntry ret = new SymbolEntry(id, type.Width, type, true);
+
+            return ret;
         }
 
         private string FindConstByValue(string value)

@@ -68,7 +68,8 @@ namespace CodeTranslator
         {
             if (TempStack.Count == 0)
             {
-                ErrorReporter.GetInstance().Add("Temporary Inst Stack Empty", ErrorCode.TempInstStackEmpty);
+                ErrorReporter.GetInstance()
+                    .Add("Temporary Inst Stack Empty", ErrorCode.TempInstStackEmpty);
                 return null;
             }
 

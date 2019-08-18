@@ -113,7 +113,7 @@ namespace CodeTranslator
                     mod = OpModifier.FromLastTemp;
                 } else
                 {
-                    mod = OpModifier.LRawRRaw;
+                    mod = OpModifier.LRawRConst;
                 }
             }
 

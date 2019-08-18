@@ -172,6 +172,8 @@
         LTempRTemp,
         LRawRTemp,
         LTempRRaw,
-        LRawRRaw
+        LRawRRaw,
+        LRawRConst,
+        LTempRConst
     }
 }

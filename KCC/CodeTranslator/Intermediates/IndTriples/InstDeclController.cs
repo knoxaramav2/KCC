@@ -85,6 +85,14 @@ namespace CodeTranslator
                 case OpModifier.Immediate:
                     entry.Arg0 = _currentScope.SearchRecord(arg0);
                     break;
+                case OpModifier.LRawRConst:
+                    entry.Arg0 = _currentScope.SearchRecord(arg0);
+                    entry.Arg1 = Meta.GetDirectiveSymbol(arg1);
+                    break;
+                case OpModifier.LTempRConst:
+                    entry.tArg0 = _currentScope.Instructions.PopTempEntry();
+                    entry.Arg1 = Meta.GetDirectiveSymbol(arg1);
+                    break;
             }
 
             //Check for intermediate command
