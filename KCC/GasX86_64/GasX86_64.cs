@@ -77,6 +77,15 @@ namespace GasX86_64
             return true;
         }
 
+        private string AssemblyFrameCode(IndInstTable inst)
+        {
+            var ret = "";
+
+
+
+            return ret;
+        }
+
         private string GetPrologue(SymbolAddrTable sat)
         {
             var prologue = "";
